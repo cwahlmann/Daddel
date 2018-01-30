@@ -1,3 +1,15 @@
+*/build
+*/bin
+*/.settings
+*/.project
+*/.classpath
+build
+bin
+.settings
+.project
+.classpath
+.gradle
+
 # Compiled class file
 *.class
 

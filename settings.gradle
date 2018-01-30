@@ -1,0 +1,4 @@
+rootProject.name = 'javagame'
+
+include 'engine'
+include 'game'
