@@ -3,8 +3,10 @@ package de.dreierschach.engine;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
@@ -51,8 +53,8 @@ public abstract class JavaGame extends Application {
 
 	public final static String GFX_STERN = "gfx/invader/stern.png";
 
-	public final static String[] GFX_EXPLOSION = { "gfx/invader/explosion-1.png", "gfx/invader/explosion-2.png", "gfx/invader/explosion-3.png",
-			"gfx/invader/explosion-4.png" };
+	public final static String[] GFX_EXPLOSION = { "gfx/invader/explosion-1.png", "gfx/invader/explosion-2.png",
+			"gfx/invader/explosion-3.png", "gfx/invader/explosion-4.png" };
 
 	// Pacman
 
@@ -159,19 +161,136 @@ public abstract class JavaGame extends Application {
 
 	// Lifecycle
 
-	public LifecycleAction TO_TITLE = new LifecycleAction(() -> titleScreen());
-	public LifecycleAction TO_INTRO = new LifecycleAction(() -> introScreen());
-	public LifecycleAction TO_MENU = new LifecycleAction(() -> menuScreen());
-	public LifecycleAction TO_SETUP = new LifecycleAction(() -> setupScreen());
-	public LifecycleAction TO_LEVEL_INTRO = new LifecycleAction(() -> levelIntroScreen(level));
-	public LifecycleAction TO_LEVEL = new LifecycleAction(() -> {
+	public interface LifecycleAction extends Runnable {}
+
+	public enum Lifecycle {
+		TITLE, INTRO, MENU, SETUP, LEVEL_INTRO, LEVEL, GAMEOVER, WINGAME, CREDITS, HIGHSCORE
+	}
+
+	public Map<Lifecycle, LifecycleAction> lifecycles = new HashMap<>();
+
+	public JavaGame lifecycleAction(Lifecycle lifeCycle, LifecycleAction action) {
+		this.lifecycles.put(lifeCycle, action);
+		return this;
+	}
+	
+	private void runLifecycleAction(Lifecycle lifecycle) {
+		if (lifecycles.containsKey(lifecycle)) {
+			lifecycles.get(lifecycle).run();
+		}
+	}
+
+	public abstract void init();
+	
+	public void toTitle() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runLifecycleAction(Lifecycle.TITLE);
+	}
+
+	public void toIntro() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runLifecycleAction(Lifecycle.INTRO);
+	}
+
+	public void toMenu() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runLifecycleAction(Lifecycle.MENU);
+	}
+
+	public void toSetup() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runLifecycleAction(Lifecycle.SETUP);
+	}
+
+	public void toLevelIntro() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runLifecycleAction(Lifecycle.LEVEL_INTRO);
+	}
+
+	public void toLevel() {
+		clear();
 		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicGameLoop(gesamtZeit, deltaZeit));
-		startLevel(level);
-	});
-	public LifecycleAction TO_GAMEOVER = new LifecycleAction(() -> gameOver());
-	public LifecycleAction TO_WINGAME = new LifecycleAction(() -> win());
-	public LifecycleAction TO_CREDITS = new LifecycleAction(() -> credits());
-	public LifecycleAction TO_HIGHSCORE = new LifecycleAction(() -> highscore());
+		runLifecycleAction(Lifecycle.LEVEL);
+	}
+
+	public void toGameover() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runLifecycleAction(Lifecycle.GAMEOVER);
+	}
+
+	public void toWinGame() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runLifecycleAction(Lifecycle.WINGAME);
+	}
+
+	public void toCredits() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runLifecycleAction(Lifecycle.CREDITS);
+	}
+
+	public void toHighscore() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runLifecycleAction(Lifecycle.HIGHSCORE);
+	}
+
+	public JavaGame toTitle(LifecycleAction action) {
+		lifecycleAction(Lifecycle.TITLE, action);
+		return this;
+	}
+
+	public JavaGame toIntro(LifecycleAction action) {
+		lifecycleAction(Lifecycle.INTRO, action);
+		return this;
+	}
+
+	public JavaGame toMenu(LifecycleAction action) {
+		lifecycleAction(Lifecycle.MENU, action);
+		return this;
+	}
+
+	public JavaGame toSetup(LifecycleAction action) {
+		lifecycleAction(Lifecycle.SETUP, action);
+		return this;
+	}
+
+	public JavaGame toLevelIntro(LifecycleAction action) {
+		lifecycleAction(Lifecycle.LEVEL_INTRO, action);
+		return this;
+	}
+
+	public JavaGame toLevel(LifecycleAction action) {
+		lifecycleAction(Lifecycle.LEVEL, action);
+		return this;
+	}
+
+	public JavaGame toGameover(LifecycleAction action) {
+		lifecycleAction(Lifecycle.GAMEOVER, action);
+		return this;
+	}
+
+	public JavaGame toWinGame(LifecycleAction action) {
+		lifecycleAction(Lifecycle.WINGAME, action);
+		return this;
+	}
+
+	public JavaGame toCredits(LifecycleAction action) {
+		lifecycleAction(Lifecycle.CREDITS, action);
+		return this;
+	}
+
+	public JavaGame toHighscore(LifecycleAction action) {
+		lifecycleAction(Lifecycle.HIGHSCORE, action);
+		return this;
+	}
 
 	// default sprite gameloops
 
@@ -194,20 +313,6 @@ public abstract class JavaGame extends Application {
 		};
 	}
 
-	public class LifecycleAction {
-		private Runnable action;
-
-		public LifecycleAction(Runnable action) {
-			this.action = action;
-		}
-
-		public void run() {
-			clear();
-			screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-			action.run();
-		}
-	}
-
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.stage = stage;
@@ -222,8 +327,8 @@ public abstract class JavaGame extends Application {
 
 		this.transformation = new Transformation(this.witdh, this.height);
 		screen = new Screen(witdh, height, new Font(12), foreground, background);
-		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.5f).color(Color.WHITE).relativePos(transformation.getRasterLeftUpper())
-				.align(TextAlignment.LEFT, VPos.TOP));
+		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.5f).color(Color.WHITE)
+				.relativePos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
 		Scene scene = new Scene(screen.getPane(), witdh, height);
 		if (fullscreen) {
 			scene.setCursor(Cursor.NONE);
@@ -231,9 +336,10 @@ public abstract class JavaGame extends Application {
 		stage.setTitle("JavaGame");
 		stage.setScene(scene);
 		stage.show();
-		TO_TITLE.run();
+		init();
+		toTitle();
 	}
-	
+
 	// API methods
 
 	public void exit() {
@@ -244,11 +350,11 @@ public abstract class JavaGame extends Application {
 	public TextSprite debugInfo() {
 		return screen.getDebugInfo();
 	}
-	
+
 	public void debug(boolean debug) {
 		screen.setDebug(debug);
 	}
-	
+
 	public boolean debug() {
 		return screen.isDebug();
 	}
@@ -360,7 +466,7 @@ public abstract class JavaGame extends Application {
 		screen.setTileMap(tileMap);
 		return tileMap;
 	}
-	
+
 	public Entity entity(int type, float maxSize, String... imagefiles) {
 		Entity entity = new Entity(transformation, screen.getTileMap(), type, maxSize, imagefiles);
 		entity.parent(screen.getTileMap());
@@ -386,17 +492,17 @@ public abstract class JavaGame extends Application {
 		return (float) delta / (float) 1000 * speed;
 	}
 
-	public int getLevel() {
+	public int level() {
 		return level;
 	}
 
-	public void setLevel(int level) {
+	public void level(int level) {
 		this.level = level;
 	}
 
 	public void nextLevel() {
 		this.level++;
-		TO_LEVEL_INTRO.run();
+		toLevelIntro();
 	}
 
 	public void clear() {
@@ -406,40 +512,20 @@ public abstract class JavaGame extends Application {
 	}
 	// abstract methods
 
-	public abstract void titleScreen();
-
-	public abstract void menuScreen();
-
-	public abstract void setupScreen();
-
-	public abstract void introScreen();
-
-	public abstract void levelIntroScreen(int level);
-
-	public abstract void startLevel(int level);
-
 	public abstract void gameLoop(long gesamtZeit, long deltaZeit);
-
-	public abstract void win();
-
-	public abstract void gameOver();
-
-	public abstract void highscore();
-
-	public abstract void credits();
 
 	// private methods
 
 	private void basicScreenLoop(long gesamtZeit, long deltaZeit) {
-		runTileMap(deltaZeit);
 		runSprites(deltaZeit);
 		runTexts(deltaZeit);
+		runTileMap(deltaZeit);
 	}
 
 	private void basicGameLoop(long gesamtZeit, long deltaZeit) {
-		runTileMap(deltaZeit);
 		runSprites(deltaZeit);
 		runTexts(deltaZeit);
+		runTileMap(deltaZeit);
 		gameLoop(gesamtZeit, deltaZeit);
 		checkCollisions();
 	}

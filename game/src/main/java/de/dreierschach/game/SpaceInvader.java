@@ -23,22 +23,22 @@ import javafx.scene.text.TextAlignment;
 public class SpaceInvader extends JavaGame {
 
 	// ---------- Einstellungen für Rocket --
-	
+
 	private static float xwingRichtung = 0;
 	private static float xwingGeschwindigkeit = 15f; // raster / s
 	private static float xwingLaserGeschwindigkeit = 30f; // raster / s
 
 	private static long rocketLaserVerzoegerung = 100; // ms
 	private long rocketLaserVerbleibendeWartezeit = 0; // ms
-	
+
 	private static long rocketSchutzschirmDauer = 2000;
 	private long rocketSchutzschirm = rocketSchutzschirmDauer;
-	
+
 	private static long neueRocketVerzoegerungDauer = 2000;
 	private long neueRocketVerzoegerung = 0;
 
 	// ---------- Einstellungen für Gegner --
-	
+
 	private float gegnerLaserGeschwindigkeit = 20f; // raster / s
 
 	// ---------- Sprites --
@@ -55,7 +55,7 @@ public class SpaceInvader extends JavaGame {
 	private static int TYP_EXPLOSION = 5;
 
 	// ---------- Spielvariablen --
-	
+
 	private int anzahlFeinde;
 	private int punkte = 0;
 	private int leben = 5;
@@ -66,200 +66,207 @@ public class SpaceInvader extends JavaGame {
 	private static String SETUP_HIGHSCORE_LISTE = "setup_highscore_liste";
 
 	// ---------- Titel-Bildschirm --
-	
+
 	@Override
-	public void titleScreen() {
-		initHighscore();
+	public void init() {
+		initTitleScreen();
+		initIntroScreen();
+		initMenuScreen();
+		initSetupScreen();
+		initHighscoreScreen();
+		initWinGameScreen();
+		initGameOverScreen();
+		initCreditsScreen();
+		initLevelIntroScreen();
+		initLevelScreen();
+	}
 
-		grid(-16, 16, -10, 10);
-		erzeugeFrontalScrollendeSterne();
+	public void initTitleScreen() {
+		toTitle(() -> {
+			initHighscore();
 
-		textParticle("SPACE", 4000, "sans-serif", 3f, Color.YELLOW).relativePos(new Pos(0, -2.5f)).weight(FontWeight.BLACK)
-				.size(20f, 3.5f).endOfLifeStrategy(EndOfLifeStrategy.stop);
+			grid(-16, 16, -10, 10);
+			erzeugeFrontalScrollendeSterne();
 
-		textParticle("I N V A D E R", 4000, "sans-serif", 1.5f, Color.RED).relativePos(new Pos(0, 1.5f))
-				.weight(FontWeight.BOLD).size(0.01f, 1.3f).endOfLifeStrategy(EndOfLifeStrategy.stop);
+			textParticle("SPACE", 4000, "sans-serif", 3f, Color.YELLOW).relativePos(new Pos(0, -2.5f))
+					.weight(FontWeight.BLACK).size(20f, 3.5f).endOfLifeStrategy(EndOfLifeStrategy.stop);
 
-		particle(TYP_FEIND, 10000, 3, GFX_UFO_1).rotation(0, 360).relativePos(new Pos(-7f, 1.5f))
-				.endOfLifeStrategy(EndOfLifeStrategy.restart).alpha(0.5f, 1f);
+			textParticle("I N V A D E R", 4000, "sans-serif", 1.5f, Color.RED).relativePos(new Pos(0, 1.5f))
+					.weight(FontWeight.BOLD).size(0.01f, 1.3f).endOfLifeStrategy(EndOfLifeStrategy.stop);
 
-		particle(TYP_FEIND, 15000, 3, GFX_UFO_2).rotation(360, 0).relativePos(new Pos(7f, 1.5f))
-				.endOfLifeStrategy(EndOfLifeStrategy.restart).alpha(1f, 0.5f);
+			particle(TYP_FEIND, 10000, 3, GFX_UFO_1).rotation(0, 360).relativePos(new Pos(-7f, 1.5f))
+					.endOfLifeStrategy(EndOfLifeStrategy.restart).alpha(0.5f, 1f);
 
-		particle(TYP_SPIELER, 0, 3, GFX_ROCKET).relativePos(new Pos(0, -0.2f));
+			particle(TYP_FEIND, 15000, 3, GFX_UFO_2).rotation(360, 0).relativePos(new Pos(7f, 1.5f))
+					.endOfLifeStrategy(EndOfLifeStrategy.restart).alpha(1f, 0.5f);
 
-		key(KeyCode.ENTER, () -> TO_INTRO.run());
-		key(KeyCode.ESCAPE, () -> TO_CREDITS.run());
+			particle(TYP_SPIELER, 0, 3, GFX_ROCKET).relativePos(new Pos(0, -0.2f));
+
+			key(KeyCode.ENTER, () -> toIntro());
+			key(KeyCode.ESCAPE, () -> toCredits());
+		});
 	}
 
 	// ---------- Intro-Bildschirm --
 
-	@Override
-	public void introScreen() {
-		// TODO Auto-generated method stub
-		TO_MENU.run();
+	public void initIntroScreen() {
+		toIntro(() -> toMenu());
 	}
 
 	// ---------- Menu-Bildschirm --
 
-	@Override
-	public void menuScreen() {
-		initGame();
-		grid(-16, 16, -10, 10);
-		erzeugeHochscrollendeSterne();
-		text("SPACE", "sans-serif", 3f, Color.YELLOW).relativePos(new Pos(0, -7)).weight(FontWeight.BLACK);
-		text("INVADER", "sans-serif", 1.7f, Color.RED).relativePos(new Pos(0, -4.5f)).weight(FontWeight.BLACK);
-		
-		menu()
-		.pos(new Pos(0,0))
-		.color(Color.GREEN, Color.WHITE)
-		.weight(FontWeight.BLACK, FontWeight.BLACK)
-		.size(1.5f, 1.5f)
-		.lineHeight(2)
-		.family("sans-serif", "sans-serif")
-		.item("new game", () -> TO_LEVEL_INTRO.run())
-		.item("highscore", () -> TO_HIGHSCORE.run())
-		.item("setup", () -> TO_SETUP.run())
-		.item("title", () -> TO_TITLE.run())
-		.item("exit", () -> TO_CREDITS.run())
-		.create()
-		;		
-		key(KeyCode.ESCAPE, () -> TO_CREDITS.run());
+	public void initMenuScreen() {
+		toMenu(() -> {
+			initGame();
+			grid(-16, 16, -10, 10);
+			erzeugeHochscrollendeSterne();
+			text("SPACE", "sans-serif", 3f, Color.YELLOW).relativePos(new Pos(0, -7)).weight(FontWeight.BLACK);
+			text("INVADER", "sans-serif", 1.7f, Color.RED).relativePos(new Pos(0, -4.5f)).weight(FontWeight.BLACK);
+
+			menu().pos(new Pos(0, 0)).color(Color.GREEN, Color.WHITE).weight(FontWeight.BLACK, FontWeight.BLACK)
+					.size(1.5f, 1.5f).lineHeight(2).family("sans-serif", "sans-serif")
+					.item("new game", () -> toLevelIntro()).item("highscore", () -> toHighscore())
+					.item("setup", () -> toSetup()).item("title", () -> toTitle()).item("exit", () -> toCredits())
+					.create();
+			key(KeyCode.ESCAPE, () -> toCredits());
+		});
 	}
-	
+
 	// ---------- Setup-Bildschirm --
 
-	@Override
-	public void setupScreen() {
-		TO_MENU.run();
+	public void initSetupScreen() {
+		toSetup(() -> toMenu());
 	}
 
 	// ---------- Highscore-Bildschirm --
 
-	@Override
-	public void highscore() {
-		grid(-16, 16, -10, 10);
-		erzeugeHochscrollendeSterne();
-		text("HIGHSCORE", "sans-serif", 2f, Color.YELLOW).relativePos(new Pos(0, -8)).weight(FontWeight.BLACK);
-		for (int i = 0; i < highscoreListe.size(); i++) {
-			HighscoreEintrag eintrag = highscoreListe.get(i);
-			text(String.format("%2d. %20s %10d", i + 1, eintrag.name, eintrag.score), "monospaced", 1f, Color.WHITE)
-					.relativePos(new Pos(0, 1.4f * i - 4.5f)).weight(FontWeight.BLACK);
-		}
+	public void initHighscoreScreen() {
+		toHighscore(() -> {
+			grid(-16, 16, -10, 10);
+			erzeugeHochscrollendeSterne();
+			text("HIGHSCORE", "sans-serif", 2f, Color.YELLOW).relativePos(new Pos(0, -8)).weight(FontWeight.BLACK);
+			for (int i = 0; i < highscoreListe.size(); i++) {
+				HighscoreEintrag eintrag = highscoreListe.get(i);
+				text(String.format("%2d. %20s %10d", i + 1, eintrag.name, eintrag.score), "monospaced", 1f, Color.WHITE)
+						.relativePos(new Pos(0, 1.4f * i - 4.5f)).weight(FontWeight.BLACK);
+			}
 
-		key(KeyCode.ENTER, () -> TO_MENU.run());
-		key(KeyCode.ESCAPE, () -> TO_CREDITS.run());
+			key(KeyCode.ENTER, () -> toMenu());
+			key(KeyCode.ESCAPE, () -> toCredits());
+		});
 	}
-	
+
 	// ---------- Gewonnen-Bildschirm --
 
-	@Override
-	public void win() {
-		
+	public void initWinGameScreen() {
+		toWinGame(() -> {
+		});
+
 		// TODO Auto-generated method stub
 	}
 
 	// ---------- Verloren-Bildschirm --
 
-	@Override
-	public void gameOver() {
-		grid(-16, 16, -10, 10);
+	public void initGameOverScreen() {
+		toGameover(() -> {
+			grid(-16, 16, -10, 10);
 
-		erzeugeHochscrollendeSterne();
+			erzeugeHochscrollendeSterne();
 
-		TextSprite gameoverText = text("GAME OVER", "sans-serif", 3f, Color.RED).relativePos(new Pos(0, 0))
-				.weight(FontWeight.BLACK);
-
-		if (istNeuerHighscore()) {
-			HighscoreEintrag eintrag = new HighscoreEintrag("", punkte);
-			text("You got a new highscore!!", "sans-serif", 1f, Color.YELLOW).relativePos(new Pos(0, 3))
+			TextSprite gameoverText = text("GAME OVER", "sans-serif", 3f, Color.RED).relativePos(new Pos(0, 0))
 					.weight(FontWeight.BLACK);
-			text("enter your name: ", "monospaced", 1f, Color.YELLOW).relativePos(new Pos(0, 7)).weight(FontWeight.BLACK)
-					.align(TextAlignment.RIGHT, VPos.CENTER);
 
-			TextSprite inputText = text("", "monospaced", 1f, Color.WHITE).relativePos(new Pos(0, 7)).weight(FontWeight.BLACK)
-					.align(TextAlignment.LEFT, VPos.CENTER);
+			if (istNeuerHighscore()) {
+				HighscoreEintrag eintrag = new HighscoreEintrag("", punkte);
+				text("You got a new highscore!!", "sans-serif", 1f, Color.YELLOW).relativePos(new Pos(0, 3))
+						.weight(FontWeight.BLACK);
+				text("enter your name: ", "monospaced", 1f, Color.YELLOW).relativePos(new Pos(0, 7))
+						.weight(FontWeight.BLACK).align(TextAlignment.RIGHT, VPos.CENTER);
 
-			input(20, input -> {
-				inputText.text(input.toUpperCase());
-				eintrag.name = input.toUpperCase();
-			});
+				TextSprite inputText = text("", "monospaced", 1f, Color.WHITE).relativePos(new Pos(0, 7))
+						.weight(FontWeight.BLACK).align(TextAlignment.LEFT, VPos.CENTER);
 
-			key(KeyCode.ENTER, () -> {
-				noInput();
-				neuerHighscore(eintrag);
-				TO_HIGHSCORE.run();
-			});
-		} else {
-			text("press <ENTER> to continue", "sans-serif", 1f, Color.YELLOW).relativePos(new Pos(0, 3))
-					.weight(FontWeight.BLACK);
-			key(KeyCode.ENTER, () -> TO_HIGHSCORE.run());
-		}
+				input(20, input -> {
+					inputText.text(input.toUpperCase());
+					eintrag.name = input.toUpperCase();
+				});
+
+				key(KeyCode.ENTER, () -> {
+					noInput();
+					neuerHighscore(eintrag);
+					toHighscore();
+				});
+			} else {
+				text("press <ENTER> to continue", "sans-serif", 1f, Color.YELLOW).relativePos(new Pos(0, 3))
+						.weight(FontWeight.BLACK);
+				key(KeyCode.ENTER, () -> toHighscore());
+			}
+		});
 	}
 
 	// ---------- Abspann-Bildschirm --
 
-	@Override
-	public void credits() {
-		exit();
+	public void initCreditsScreen() {
+		toCredits(() -> exit());
 		// TODO Auto-generated method stub
 	}
 
 	// ---------- Level-Intro-Bildschirm --
 
-	@Override
-	public void levelIntroScreen(int level) {
-		grid(-16, 16, -10, 10);
-		erzeugeHochscrollendeSterne();
+	public void initLevelIntroScreen() {
+		toLevelIntro(() -> {
+			grid(-16, 16, -10, 10);
+			erzeugeHochscrollendeSterne();
 
-		text(String.format("LEVEL %02d", level), "sans-serif", 1.5f, Color.YELLOW).relativePos(new Pos(0, -1))
-				.weight(FontWeight.BLACK);
+			text(String.format("LEVEL %02d", level()), "sans-serif", 1.5f, Color.YELLOW).relativePos(new Pos(0, -1))
+					.weight(FontWeight.BLACK);
 
-		text("press <ENTER> when ready", "sans-serif", 0.6f, Color.WHITE).relativePos(new Pos(0, 1)).weight(FontWeight.BLACK);
+			text("press <ENTER> when ready", "sans-serif", 0.6f, Color.WHITE).relativePos(new Pos(0, 1))
+					.weight(FontWeight.BLACK);
 
-		key(KeyCode.ENTER, () -> TO_LEVEL.run());
-		key(KeyCode.ESCAPE, () -> exit());
+			key(KeyCode.ENTER, () -> toLevel());
+			key(KeyCode.ESCAPE, () -> exit());
+		});
 	}
 
 	// ---------- Level starten --
 
-	@Override
-	public void startLevel(int level) {
-		clear();
+	public void initLevelScreen() {
+		toLevel(() -> {
+			// Spielraster setzen
 
-		// Spielraster setzen
+			grid(-16, 16, -10, 10);
 
-		grid(-16, 16, -10, 10);
+			// Sprites erzeugen
 
-		// Sprites erzeugen
+			erzeugeHochscrollendeSterne();
+			erzeugeRocket(new Pos(0f, 7.5f));
+			erzeugeFeinde();
 
-		erzeugeHochscrollendeSterne();
-		erzeugeRocket(new Pos(0f, 7.5f));
-		erzeugeFeinde();
+			punkteAnzeige = text("SCORE:     ", "sans-serif", 1.0f, Color.YELLOW).relativePos(new Pos(-16f, 9.5f))
+					.align(TextAlignment.LEFT, VPos.CENTER).weight(FontWeight.BLACK);
+			punkteAnzeigen();
 
-		punkteAnzeige = text("SCORE:     ", "sans-serif", 1.0f, Color.YELLOW).relativePos(new Pos(-16f, 9.5f))
-				.align(TextAlignment.LEFT, VPos.CENTER).weight(FontWeight.BLACK);
-		punkteAnzeigen();
+			lebenAnzeige = text("LEBEN: ", "sans-serif", 1.0f, Color.YELLOW).relativePos(new Pos(16f, 9.5f))
+					.align(TextAlignment.RIGHT, VPos.CENTER).weight(FontWeight.BLACK);
+			lebenAnzeigen();
 
-		lebenAnzeige = text("LEBEN: ", "sans-serif", 1.0f, Color.YELLOW).relativePos(new Pos(16f, 9.5f))
-				.align(TextAlignment.RIGHT, VPos.CENTER).weight(FontWeight.BLACK);
-		lebenAnzeigen();
+			// Auf Tasten reagieren
 
-		// Auf Tasten reagieren
-
-		key(KeyCode.LEFT, () -> left());
-		key(KeyCode.RIGHT, () -> right());
-		key(KeyCode.DOWN, () -> stop());
-		key(KeyCode.SPACE, () -> rocketLaserAbfeuern());
-		key(KeyCode.ESCAPE, () -> TO_CREDITS.run());
+			key(KeyCode.LEFT, () -> left());
+			key(KeyCode.RIGHT, () -> right());
+			key(KeyCode.DOWN, () -> stop());
+			key(KeyCode.SPACE, () -> rocketLaserAbfeuern());
+			key(KeyCode.ESCAPE, () -> toCredits());
+		});
 	}
 
 	// ---------- Spielschleife --
- 
+
 	@Override
 	public void gameLoop(long gesamtZeit, long deltaZeit) {
 		if (leben == 0) {
-			TO_GAMEOVER.run();
+			toGameover();
 			return;
 		}
 		rocketLaserVerbleibendeWartezeit -= deltaZeit;
@@ -280,13 +287,13 @@ public class SpaceInvader extends JavaGame {
 	}
 
 	// ============= Hilfs-Methoden =======================
-	
+
 	// ------------- neues Spiel initialisieren --
 
 	private void initGame() {
 		punkte = 0;
 		leben = 5;
-		setLevel(1);
+		level(1);
 	}
 
 	// ------------- Highscore laden bzw. neu erzeugen --
@@ -335,32 +342,18 @@ public class SpaceInvader extends JavaGame {
 	// ------------- hoch-scrollende Sterne erzeugen --
 
 	public void erzeugeHochscrollendeSterne() {
-		particleSwarmBuilder(200, TYP_STERN, GFX_STERN)
-		.initialPosRange(new Pos(-16, -10), new Pos(16, 10))
-		.sizeRange(0.01f, 0.2f, 4)
-		.direction(90)
-		.speedRange(1f, 5f)
-		.outsideGridStrategy(OutsideGridStrategy.reappear)
-		.create()
-		;
+		particleSwarmBuilder(200, TYP_STERN, GFX_STERN).initialPosRange(new Pos(-16, -10), new Pos(16, 10))
+				.sizeRange(0.01f, 0.2f, 4).direction(90).speedRange(1f, 5f)
+				.outsideGridStrategy(OutsideGridStrategy.reappear).create();
 	}
 
 	// ------------- frontal-scrollende Sterne erzeugen --
 
 	public void erzeugeFrontalScrollendeSterne() {
-		particleSwarmBuilder(400, TYP_STERN, GFX_STERN)
-		.initialPosRange(new Pos(0,0), new Pos(0,0))
-		.sizeRange(0.02f, 0.4f, 4)
-		.directionRange(0,359)
-		.speedStartRange(0.1f, 5f)
-		.speedEndRange(5f, 10f)
-		.alphaStart(0f)
-		.alphaEnd(1f)
-		.lifeSpan(5000)
-		.endOfLifeStrategy(EndOfLifeStrategy.ignore)
-		.outsideGridStrategy(OutsideGridStrategy.restart)
-		.create()
-		;
+		particleSwarmBuilder(400, TYP_STERN, GFX_STERN).initialPosRange(new Pos(0, 0), new Pos(0, 0))
+				.sizeRange(0.02f, 0.4f, 4).directionRange(0, 359).speedStartRange(0.1f, 5f).speedEndRange(5f, 10f)
+				.alphaStart(0f).alphaEnd(1f).lifeSpan(5000).endOfLifeStrategy(EndOfLifeStrategy.ignore)
+				.outsideGridStrategy(OutsideGridStrategy.restart).create();
 	}
 
 	// ------------- Xwing-Raumschiff erzeugen --
@@ -407,7 +400,7 @@ public class SpaceInvader extends JavaGame {
 					rotation = 3 * Math.random() - 1.5;
 					break;
 				}
-				
+
 				// Gegner erzeugen und animieren
 
 				sprite(TYP_FEIND, 2.5f, enimy).relativePos(new Pos(((float) i) * 3f, ((float) j) * 3f))
@@ -451,7 +444,8 @@ public class SpaceInvader extends JavaGame {
 
 	public void erzeugeRocketLaser(Pos pos) {
 		particle(TYP_LASER, 0, 1.5f, GFX_LASER).relativePos(pos).collisionListener(xwingTrefferBehandeln).direction(-90)
-				.outsideRasterStrategy(OutsideGridStrategy.kill).speed(xwingLaserGeschwindigkeit, xwingLaserGeschwindigkeit);
+				.outsideRasterStrategy(OutsideGridStrategy.kill)
+				.speed(xwingLaserGeschwindigkeit, xwingLaserGeschwindigkeit);
 		sound(AUDIO_ROCKET_LASER);
 	}
 
@@ -476,7 +470,8 @@ public class SpaceInvader extends JavaGame {
 				punkte += 150;
 				punkteAnzeigen();
 
-				particle(TYP_EXPLOSION, 400, 4f, GFX_EXPLOSION).speedAnimation(10f).relativePos(getroffenerSprite.pos());
+				particle(TYP_EXPLOSION, 400, 4f, GFX_EXPLOSION).speedAnimation(10f)
+						.relativePos(getroffenerSprite.pos());
 				sound(AUDIO_UFO_EXPLOSION, 0.8);
 			}
 			laserSprite.kill();
@@ -493,7 +488,8 @@ public class SpaceInvader extends JavaGame {
 				leben--;
 				lebenAnzeigen();
 
-				particle(TYP_EXPLOSION, 400, 6f, GFX_EXPLOSION).speedAnimation(10f).relativePos(getroffenerSprite.pos());
+				particle(TYP_EXPLOSION, 400, 6f, GFX_EXPLOSION).speedAnimation(10f)
+						.relativePos(getroffenerSprite.pos());
 				sound(AUDIO_ROCKET_EXPLOSION, 1.0);
 				neueRocketVerzoegerung = neueRocketVerzoegerungDauer;
 			}

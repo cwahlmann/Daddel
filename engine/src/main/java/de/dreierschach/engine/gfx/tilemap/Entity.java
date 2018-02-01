@@ -76,6 +76,7 @@ public class Entity extends ImageSprite {
 	private long moveStartTime = 0;
 	private float moveSpeed = 1f;
 	private boolean startMove = false;
+	private boolean neatlessMove = false;
 	private boolean moving = false;
 	private Dir lastMove = Dir.STOP; 
 	private Animation animation;
@@ -88,18 +89,22 @@ public class Entity extends ImageSprite {
 			if (startMove) {
 				startMove = false;
 				moving = true;
-				moveStartTime = total;
-				moveTimeDelta = (int) (1000f / moveSpeed);
+				if (neatlessMove) {
+					moveStartTime += moveTimeDelta;
+				} else {
+					moveStartTime = total;
+				}
+				moveTimeDelta = (long) (1000f / moveSpeed);
 			}
 			if (moving) {
-				if (total > moveStartTime + moveTimeDelta) {
+				if (total >= moveStartTime + moveTimeDelta) {
 					moving = false;
 					mapPos(destMapPos);
 					moveFinishedListener.onDestinationReached(this, tileMap);
 				} else {
 					Pos start = tileMap.pos(mapPos.x(), mapPos.y());
 					Pos dest = tileMap.pos(destMapPos.x(), destMapPos.y());
-					float d = (float) (total - moveStartTime) / (float) moveTimeDelta;
+					float d = ((float) (total - moveStartTime)) / (float) moveTimeDelta;
 					Pos p = new Pos(d * (dest.x() - start.x()) + start.x(), d * (dest.y() - start.y()) + start.y());
 					me.relativePos(p);
 				}
@@ -181,8 +186,8 @@ public class Entity extends ImageSprite {
 
 	public Entity move(Dir dir) {
 		destMapPos(mapPos.add(dir.p()));
+		startMove(lastMove != Dir.STOP);
 		this.lastMove = dir;
-		startMove();
 		return this;
 	}
 
@@ -214,8 +219,9 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	public Entity startMove() {
+	public Entity startMove(boolean neatless) {
 		this.startMove = true;
+		this.neatlessMove = neatless;
 		return this;
 	}
 

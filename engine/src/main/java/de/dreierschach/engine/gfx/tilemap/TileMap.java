@@ -190,7 +190,7 @@ public class TileMap extends Sprite {
 	}
 
 	public Pos pos(int x, int y) {
-		return new Pos((float) x * tileSize, (float) y * tileSize);
+		return new Pos(((float) x) * tileSize, ((float) y) * tileSize);
 	}
 
 	@Override
