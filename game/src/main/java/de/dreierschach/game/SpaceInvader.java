@@ -258,6 +258,7 @@ public class SpaceInvader extends JavaGame {
 			key(KeyCode.DOWN, () -> stop());
 			key(KeyCode.SPACE, () -> rocketLaserAbfeuern());
 			key(KeyCode.ESCAPE, () -> toCredits());
+			key(KeyCode.F3, ()-> debug(!debug()));
 		});
 	}
 

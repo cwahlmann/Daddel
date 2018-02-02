@@ -224,6 +224,7 @@ public class Pacman extends JavaGame {
 			key(KeyCode.DOWN, () -> packmanGo(Dir.DOWN));
 			key(KeyCode.RIGHT, () -> packmanGo(Dir.RIGHT));
 			key(KeyCode.SPACE, () -> packmanGo(Dir.STOP));
+			key(KeyCode.F3, () -> debug(!debug()));
 
 			// debug
 
