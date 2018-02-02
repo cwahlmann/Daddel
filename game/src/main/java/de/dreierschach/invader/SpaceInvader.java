@@ -22,20 +22,20 @@ import javafx.scene.text.TextAlignment;
 
 public class SpaceInvader extends Daddel {
 
-	// ---------- Einstellungen für Rocket --
+	// ---------- Einstellungen für Rakete --
 
-	private static float xwingRichtung = 0;
-	private static float xwingGeschwindigkeit = 15f; // raster / s
-	private static float xwingLaserGeschwindigkeit = 30f; // raster / s
+	private static float raketeRichtung = 0;
+	private static float raketeGeschwindigkeit = 15f; // raster / s
+	private static float raketeLaserGeschwindigkeit = 30f; // raster / s
 
-	private static long rocketLaserVerzoegerung = 100; // ms
-	private long rocketLaserVerbleibendeWartezeit = 0; // ms
+	private static long raketeLaserVerzoegerung = 100; // ms
+	private long raketeLaserVerbleibendeWartezeit = 0; // ms
 
-	private static long rocketSchutzschirmDauer = 2000;
-	private long rocketSchutzschirm = rocketSchutzschirmDauer;
+	private static long raketeSchutzschirmDauer = 2000;
+	private long raketeSchutzschirm = raketeSchutzschirmDauer;
 
-	private static long neueRocketVerzoegerungDauer = 2000;
-	private long neueRocketVerzoegerung = 0;
+	private static long neueRaketeVerzoegerungDauer = 2000;
+	private long neueRaketeVerzoegerung = 0;
 
 	// ---------- Einstellungen für Gegner --
 
@@ -43,7 +43,7 @@ public class SpaceInvader extends Daddel {
 
 	// ---------- Sprites --
 
-	private ImageSprite rocketSprite;
+	private ImageSprite raketeSprite;
 	private TextSprite punkteAnzeige;
 	private TextSprite lebenAnzeige;
 
@@ -68,15 +68,15 @@ public class SpaceInvader extends Daddel {
 	// ---------- Titel-Bildschirm --
 
 	@Override
-	public void init() {
+	public void initGame() {
 		toTitle(() -> titel());
-		toIntro(() -> intro());
+		// toIntro(() -> intro());
 		toMenu(() -> hauptmenu());
-		toSetup(() -> einstellungen());
+		// toSetup(() -> einstellungen());
 		toHighscore(() -> highscore());
-		toWinGame(() -> gewonnen());
+		// toWinGame(() -> gewonnen());
 		toGameOver(() -> gameover());
-		toCredits(() -> abspann());
+		// toCredits(() -> abspann());
 		toLevelIntro(() -> levelIntro());
 		toLevel(() -> starteLevel());
 	}
@@ -87,16 +87,16 @@ public class SpaceInvader extends Daddel {
 		grid(-16, 16, -10, 10);
 		erzeugeFrontalScrollendeSterne();
 
-		textParticle("SPACE", 4000, "sans-serif", 3f, Color.YELLOW).relativePos(new Pos(0, -2.5f))
-				.weight(FontWeight.BLACK).size(20f, 3.5f).endOfLifeStrategy(EndOfLifeStrategy.stop);
+		textParticle("SPACE", 4000, "sans-serif", 3f, Color.YELLOW).relativePos(new Pos(0, -3.5f))
+				.weight(FontWeight.BLACK).size(30f, 7f).endOfLifeStrategy(EndOfLifeStrategy.stop);
 
-		textParticle("I N V A D E R", 4000, "sans-serif", 1.5f, Color.RED).relativePos(new Pos(0, 1.5f))
-				.weight(FontWeight.BOLD).size(0.01f, 1.3f).endOfLifeStrategy(EndOfLifeStrategy.stop);
+		textParticle("I N V A D E R", 4000, "sans-serif", 1.5f, Color.RED).relativePos(new Pos(0, 2f))
+				.weight(FontWeight.BOLD).size(0.01f, 1.5f).endOfLifeStrategy(EndOfLifeStrategy.stop);
 
-		particle(TYP_FEIND, 10000, 3, GFX_UFO_1).rotation(0, 360).relativePos(new Pos(-7f, 1.5f))
+		particle(TYP_FEIND, 10000, 3, GFX_UFO_1).rotation(0, 360).relativePos(new Pos(-7f, 2f))
 				.endOfLifeStrategy(EndOfLifeStrategy.restart).alpha(0.5f, 1f);
 
-		particle(TYP_FEIND, 15000, 3, GFX_UFO_2).rotation(360, 0).relativePos(new Pos(7f, 1.5f))
+		particle(TYP_FEIND, 15000, 3, GFX_UFO_2).rotation(360, 0).relativePos(new Pos(7f, 2f))
 				.endOfLifeStrategy(EndOfLifeStrategy.restart).alpha(1f, 0.5f);
 
 		particle(TYP_SPIELER, 0, 3, GFX_ROCKET).relativePos(new Pos(0, -0.2f));
@@ -107,14 +107,14 @@ public class SpaceInvader extends Daddel {
 
 	// ---------- Intro-Bildschirm --
 
-	public void intro() {
-		toMenu();
-	}
+	// public void intro() {
+	// toMenu();
+	// }
 
 	// ---------- Menu-Bildschirm --
 
 	public void hauptmenu() {
-		initGame();
+		initLevel();
 		grid(-16, 16, -10, 10);
 		erzeugeHochscrollendeSterne();
 		text("SPACE", "sans-serif", 3f, Color.YELLOW).relativePos(new Pos(0, -7)).weight(FontWeight.BLACK);
@@ -128,10 +128,10 @@ public class SpaceInvader extends Daddel {
 	}
 
 	// ---------- Setup-Bildschirm --
-
-	public void einstellungen() {
-		toMenu();
-	}
+	//
+	// public void einstellungen() {
+	// toMenu();
+	// }
 
 	// ---------- Highscore-Bildschirm --
 
@@ -151,9 +151,9 @@ public class SpaceInvader extends Daddel {
 
 	// ---------- Gewonnen-Bildschirm --
 
-	public void gewonnen() {
-		// TODO Auto-generated method stub
-	}
+	// public void gewonnen() {
+	// // TODO Auto-generated method stub
+	// }
 
 	// ---------- Verloren-Bildschirm --
 
@@ -194,10 +194,10 @@ public class SpaceInvader extends Daddel {
 
 	// ---------- Abspann-Bildschirm --
 
-	public void abspann() {
-		exit();
-		// TODO Auto-generated method stub
-	}
+	// public void abspann() {
+	// exit();
+	// // TODO Auto-generated method stub
+	// }
 
 	// ---------- Level-Intro-Bildschirm --
 
@@ -225,7 +225,7 @@ public class SpaceInvader extends Daddel {
 		// Sprites erzeugen
 
 		erzeugeHochscrollendeSterne();
-		erzeugeRocket(new Pos(0f, 7.5f));
+		erzeugeRakete(new Pos(0f, 7.5f));
 		erzeugeFeinde();
 
 		punkteAnzeige = text("SCORE:     ", "sans-serif", 1.0f, Color.YELLOW).relativePos(new Pos(-16f, 9.5f))
@@ -241,7 +241,7 @@ public class SpaceInvader extends Daddel {
 		key(KeyCode.LEFT, () -> left());
 		key(KeyCode.RIGHT, () -> right());
 		key(KeyCode.DOWN, () -> stop());
-		key(KeyCode.SPACE, () -> rocketLaserAbfeuern());
+		key(KeyCode.SPACE, () -> raketeLaserAbfeuern());
 		key(KeyCode.ESCAPE, () -> toCredits());
 		key(KeyCode.F3, () -> debug(!debug()));
 	}
@@ -254,15 +254,15 @@ public class SpaceInvader extends Daddel {
 			toGameover();
 			return;
 		}
-		rocketLaserVerbleibendeWartezeit -= deltaZeit;
-		if (rocketSchutzschirm > 0) {
-			rocketSchutzschirm -= deltaZeit;
+		raketeLaserVerbleibendeWartezeit -= deltaZeit;
+		if (raketeSchutzschirm > 0) {
+			raketeSchutzschirm -= deltaZeit;
 		}
-		if (!rocketSprite.alive()) {
-			if (neueRocketVerzoegerung > 0) {
-				neueRocketVerzoegerung -= deltaZeit;
+		if (!raketeSprite.alive()) {
+			if (neueRaketeVerzoegerung > 0) {
+				neueRaketeVerzoegerung -= deltaZeit;
 			} else {
-				erzeugeRocket(rocketSprite.pos());
+				erzeugeRakete(raketeSprite.pos());
 			}
 		}
 
@@ -275,7 +275,7 @@ public class SpaceInvader extends Daddel {
 
 	// ------------- neues Spiel initialisieren --
 
-	private void initGame() {
+	private void initLevel() {
 		punkte = 0;
 		leben = 5;
 		level(1);
@@ -287,7 +287,7 @@ public class SpaceInvader extends Daddel {
 		if (!getSetup().contains(SETUP_HIGHSCORE_LISTE)) {
 			highscoreListe.clear();
 			for (int i = 0; i < 10; i++) {
-				highscoreListe.add(new HighscoreEintrag("CHRISTIAN", 10000 - 1000 * i));
+				highscoreListe.add(new HighscoreEintrag("FREDVOMJUPITER", 10000 - 1000 * i));
 			}
 			getSetup().set(SETUP_HIGHSCORE_LISTE, highscoreListe);
 			setupSave();
@@ -341,28 +341,29 @@ public class SpaceInvader extends Daddel {
 				.outsideGridStrategy(OutsideGridStrategy.restart).create();
 	}
 
-	// ------------- Xwing-Raumschiff erzeugen --
+	// ------------- Rakete erzeugen --
 
-	public void erzeugeRocket(Pos pos) {
-		rocketSchutzschirm = rocketSchutzschirmDauer;
-		rocketSprite = sprite(TYP_SPIELER, 4f, GFX_ROCKET, GFX_ROCKET_SCHIRM).relativePos(pos).gameLoop(xwingAnimieren);
-		xwingRichtung = 0;
+	public void erzeugeRakete(Pos pos) {
+		raketeSchutzschirm = raketeSchutzschirmDauer;
+		raketeSprite = sprite(TYP_SPIELER, 4f, GFX_ROCKET, GFX_ROCKET_SCHIRM).relativePos(pos)
+				.gameLoop(raketeAnimieren);
+		raketeRichtung = 0;
 	}
 
-	// ------------- XWingRaumschiff animieren
+	// ------------- Rakete animieren
 
-	private SpriteGameLoop xwingAnimieren = (sprite, gesamtZeit, deltaZeit) -> {
-		float s = xwingRichtung * strecke(deltaZeit, xwingGeschwindigkeit);
-		if (rocketSprite.pos().x() + s < -14.5) {
+	private SpriteGameLoop raketeAnimieren = (sprite, gesamtZeit, deltaZeit) -> {
+		float s = raketeRichtung * strecke(deltaZeit, raketeGeschwindigkeit);
+		if (raketeSprite.pos().x() + s < -14.5) {
 			stop();
 			s = 0;
 		}
-		if (rocketSprite.pos().x() + s > 14.5) {
+		if (raketeSprite.pos().x() + s > 14.5) {
 			stop();
 			s = 0;
 		}
-		rocketSprite.relativePos(new Pos(rocketSprite.pos().x() + s, rocketSprite.pos().y()))
-				.actualImage(rocketSchutzschirm > 0 ? 1 : 0);
+		raketeSprite.relativePos(new Pos(raketeSprite.pos().x() + s, raketeSprite.pos().y()))
+				.actualImage(raketeSchutzschirm > 0 ? 1 : 0);
 	};
 
 	// ------------- Gegner erzeugen --
@@ -402,35 +403,35 @@ public class SpaceInvader extends Daddel {
 		}
 	}
 
-	// ------------- Rocket-Raumschiff-Steuerung --
+	// ------------- Rakete Steuerung --
 
 	public void left() {
-		xwingRichtung = -1;
+		raketeRichtung = -1;
 	}
 
 	public void right() {
-		xwingRichtung = 1;
+		raketeRichtung = 1;
 	}
 
 	public void stop() {
-		xwingRichtung = 0;
+		raketeRichtung = 0;
 	}
 
-	// ------------- Rocket-Laser abfeuern --
+	// ------------- Rakete-Laser abfeuern --
 
-	public void rocketLaserAbfeuern() {
-		if (rocketSchutzschirm > 0 || rocketLaserVerbleibendeWartezeit > 0 || !rocketSprite.alive()) {
+	public void raketeLaserAbfeuern() {
+		if (raketeSchutzschirm > 0 || raketeLaserVerbleibendeWartezeit > 0 || !raketeSprite.alive()) {
 			return;
 		}
-		rocketLaserVerbleibendeWartezeit = rocketLaserVerzoegerung;
-		erzeugeRocketLaser(new Pos(rocketSprite.pos().x() - 0.8f, rocketSprite.pos().y() - 1.5f));
-		erzeugeRocketLaser(new Pos(rocketSprite.pos().x() + 0.8f, rocketSprite.pos().y() - 1.5f));
+		raketeLaserVerbleibendeWartezeit = raketeLaserVerzoegerung;
+		erzeugeRaketeLaser(new Pos(raketeSprite.pos().x() - 0.8f, raketeSprite.pos().y() - 1.5f));
+		erzeugeRaketeLaser(new Pos(raketeSprite.pos().x() + 0.8f, raketeSprite.pos().y() - 1.5f));
 	}
 
-	public void erzeugeRocketLaser(Pos pos) {
-		particle(TYP_LASER, 0, 1.5f, GFX_LASER).relativePos(pos).collisionListener(xwingTrefferBehandeln).direction(-90)
-				.outsideRasterStrategy(OutsideGridStrategy.kill)
-				.speed(xwingLaserGeschwindigkeit, xwingLaserGeschwindigkeit);
+	public void erzeugeRaketeLaser(Pos pos) {
+		particle(TYP_LASER, 0, 1.5f, GFX_LASER).relativePos(pos).collisionListener(raketeTrefferBehandeln)
+				.direction(-90).outsideRasterStrategy(OutsideGridStrategy.kill)
+				.speed(raketeLaserGeschwindigkeit, raketeLaserGeschwindigkeit);
 		sound(AUDIO_ROCKET_LASER);
 	}
 
@@ -444,9 +445,9 @@ public class SpaceInvader extends Daddel {
 		sound(AUDIO_UFO_LASER, 0.2);
 	}
 
-	// ------------- Treffer durch Rocket behandeln --
+	// ------------- Treffer durch Rakete behandeln --
 
-	private CollisionListener xwingTrefferBehandeln = (laserSprite, getroffenerSprite) -> {
+	private CollisionListener raketeTrefferBehandeln = (laserSprite, getroffenerSprite) -> {
 		if (getroffenerSprite.type() == TYP_FEIND) {
 
 			if (getroffenerSprite.alive()) {
@@ -468,7 +469,7 @@ public class SpaceInvader extends Daddel {
 	private CollisionListener gegnerischeTrefferBehandeln = (laserSprite, getroffenerSprite) -> {
 		if (getroffenerSprite.type() == TYP_SPIELER) {
 
-			if (getroffenerSprite.alive() && rocketSchutzschirm <= 0) {
+			if (getroffenerSprite.alive() && raketeSchutzschirm <= 0) {
 				getroffenerSprite.kill();
 				leben--;
 				lebenAnzeigen();
@@ -476,7 +477,7 @@ public class SpaceInvader extends Daddel {
 				particle(TYP_EXPLOSION, 400, 6f, GFX_EXPLOSION).speedAnimation(10f)
 						.relativePos(getroffenerSprite.pos());
 				sound(AUDIO_ROCKET_EXPLOSION, 1.0);
-				neueRocketVerzoegerung = neueRocketVerzoegerungDauer;
+				neueRaketeVerzoegerung = neueRaketeVerzoegerungDauer;
 			}
 			laserSprite.kill();
 		}

@@ -38,6 +38,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
+/**
+ * @author Christian
+ *
+ */
 public abstract class Daddel extends Application {
 	private static Logger log = Logger.getLogger(Daddel.class);
 
@@ -152,6 +156,7 @@ public abstract class Daddel extends Application {
 	private Setup setup = new Setup();
 	private String setupFile = DEFAULT_SETUP_FILE;
 	private String iniFile = DEFAULT_INI_FILE;
+
 	public final static String DEFAULT_INI_FILE = "config/game.ini";
 	public final static String DEFAULT_SETUP_FILE = "config/setup.ini";
 	public final static String INI_SETUP_FILE = "setup-file";
@@ -161,158 +166,41 @@ public abstract class Daddel extends Application {
 
 	// Lifecycle
 
-	public interface LifecycleAction extends Runnable {}
-
-	public enum Lifecycle {
+	private enum GamePhase {
 		TITLE, INTRO, MENU, SETUP, LEVEL_INTRO, LEVEL, GAMEOVER, WINGAME, CREDITS, HIGHSCORE
 	}
 
-	public Map<Lifecycle, LifecycleAction> lifecycles = new HashMap<>();
+	private Map<GamePhase, GamePhaseAction> gamePhases = new HashMap<GamePhase, GamePhaseAction>() {
+		private static final long serialVersionUID = 1L;
+		{
+			// defaults
+			put(GamePhase.TITLE, () -> toIntro());
+			put(GamePhase.INTRO, () -> toMenu());
+			put(GamePhase.MENU, () -> toLevelIntro());
+			put(GamePhase.SETUP, () -> toMenu());
+			put(GamePhase.LEVEL_INTRO, () -> toLevel());
+			put(GamePhase.LEVEL, () -> toMenu());
+			put(GamePhase.GAMEOVER, () -> toHighscore());
+			put(GamePhase.WINGAME, () -> toHighscore());
+			put(GamePhase.CREDITS, () -> exit());
+			put(GamePhase.HIGHSCORE, () -> toMenu());
+		}
+	};
 
-	public Daddel lifecycleAction(Lifecycle lifeCycle, LifecycleAction action) {
-		this.lifecycles.put(lifeCycle, action);
+	private Daddel gamePhase(GamePhase gamePhase, GamePhaseAction action) {
+		this.gamePhases.put(gamePhase, action);
 		return this;
 	}
-	
-	private void runLifecycleAction(Lifecycle lifecycle) {
-		if (lifecycles.containsKey(lifecycle)) {
-			lifecycles.get(lifecycle).run();
+
+	private void runGamePhase(GamePhase gamePhase) {
+		if (gamePhases.containsKey(gamePhase)) {
+			gamePhases.get(gamePhase).run();
 		}
 	}
 
-	public abstract void init();
-	
-	public void toTitle() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.TITLE);
-	}
-
-	public void toIntro() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.INTRO);
-	}
-
-	public void toMenu() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.MENU);
-	}
-
-	public void toSetup() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.SETUP);
-	}
-
-	public void toLevelIntro() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.LEVEL_INTRO);
-	}
-
-	public void toLevel() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicGameLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.LEVEL);
-	}
-
-	public void toGameover() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.GAMEOVER);
-	}
-
-	public void toWinGame() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.WINGAME);
-	}
-
-	public void toCredits() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.CREDITS);
-	}
-
-	public void toHighscore() {
-		clear();
-		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
-		runLifecycleAction(Lifecycle.HIGHSCORE);
-	}
-
-	public Daddel toTitle(LifecycleAction action) {
-		lifecycleAction(Lifecycle.TITLE, action);
-		return this;
-	}
-
-	public Daddel toIntro(LifecycleAction action) {
-		lifecycleAction(Lifecycle.INTRO, action);
-		return this;
-	}
-
-	public Daddel toMenu(LifecycleAction action) {
-		lifecycleAction(Lifecycle.MENU, action);
-		return this;
-	}
-
-	public Daddel toSetup(LifecycleAction action) {
-		lifecycleAction(Lifecycle.SETUP, action);
-		return this;
-	}
-
-	public Daddel toLevelIntro(LifecycleAction action) {
-		lifecycleAction(Lifecycle.LEVEL_INTRO, action);
-		return this;
-	}
-
-	public Daddel toLevel(LifecycleAction action) {
-		lifecycleAction(Lifecycle.LEVEL, action);
-		return this;
-	}
-
-	public Daddel toGameOver(LifecycleAction action) {
-		lifecycleAction(Lifecycle.GAMEOVER, action);
-		return this;
-	}
-
-	public Daddel toWinGame(LifecycleAction action) {
-		lifecycleAction(Lifecycle.WINGAME, action);
-		return this;
-	}
-
-	public Daddel toCredits(LifecycleAction action) {
-		lifecycleAction(Lifecycle.CREDITS, action);
-		return this;
-	}
-
-	public Daddel toHighscore(LifecycleAction action) {
-		lifecycleAction(Lifecycle.HIGHSCORE, action);
-		return this;
-	}
-
-	// default sprite gameloops
-
-	public final static SpriteGameLoop animation(final int imageStart, final int imageEnd, final boolean bounce,
-			final float speed) {
-		return (sprite, total, delta) -> {
-			if (bounce) {
-				int d = imageEnd - imageStart;
-				int d2 = d * 2;
-				int actual = imageStart + ((int) ((float) total / 1000f * speed * (float) d) % d);
-				if (actual < d) {
-					((ImageSprite) sprite).actualImage(actual);
-				} else {
-					((ImageSprite) sprite).actualImage(d2 - actual + 1);
-				}
-				return;
-			}
-			int d = imageEnd - imageStart + 1;
-			((ImageSprite) sprite).actualImage(((int) (total / 1000f * speed * (float) d)) % d);
-		};
-	}
-
+	/* (non-Javadoc)
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.stage = stage;
@@ -336,16 +224,205 @@ public abstract class Daddel extends Application {
 		stage.setTitle("Daddel");
 		stage.setScene(scene);
 		stage.show();
-		init();
+		initGame();
 		toTitle();
 	}
 
-	// API methods
+	// ======================== API methods ==
+	
+	// ------------------------ game phase methods ==
+	
+	/**
+	 * Wird beim Start des Programms aufgerufen. Hier werden alle globalen
+	 * Spielvariablen initialisiert, und die einzelnen Spielphasen definiert.
+	 */
+	public abstract void initGame();
 
+	/**
+	 * @author Christian Interface, um die einzelnen Spielphasen zu definieren
+	 */
+	public interface GamePhaseAction extends Runnable {
+	}
+
+	/**
+	 * Startet die Spielphase "Title".
+	 */
+	public void toTitle() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.TITLE);
+	}
+
+	/**
+	 * Startet die Spielphase "Intro".
+	 */
+	public void toIntro() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.INTRO);
+	}
+
+	/**
+	 * Startet die Spielphase "Menu".
+	 */
+	public void toMenu() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.MENU);
+	}
+
+	/**
+	 * Startet die Spielphase "Setup".
+	 */
+	public void toSetup() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.SETUP);
+	}
+
+	/**
+	 * Startet die Spielphase "LevelIntro".
+	 */
+	public void toLevelIntro() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.LEVEL_INTRO);
+	}
+
+	/**
+	 * Startet die Spielphase "Level".
+	 */
+	public void toLevel() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicGameLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.LEVEL);
+	}
+
+	/**
+	 * Startet die Spielphase "GameOver".
+	 */
+	public void toGameover() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.GAMEOVER);
+	}
+
+	/**
+	 * Startet die Spielphase "WinGame".
+	 */
+	public void toWinGame() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.WINGAME);
+	}
+
+	/**
+	 * Startet die Spielphase "Credits".
+	 */
+	public void toCredits() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.CREDITS);
+	}
+
+	/**
+	 * Startet die Spielphase "Highscore".
+	 */
+	public void toHighscore() {
+		clear();
+		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
+		runGamePhase(GamePhase.HIGHSCORE);
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "Title" auszuführende Aktion.
+	 */
+	public Daddel toTitle(GamePhaseAction action) {
+		gamePhase(GamePhase.TITLE, action);
+		return this;
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "Intro" auszuführende Aktion.
+	 */
+	public Daddel toIntro(GamePhaseAction action) {
+		gamePhase(GamePhase.INTRO, action);
+		return this;
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "Menu" auszuführende Aktion.
+	 */
+	public Daddel toMenu(GamePhaseAction action) {
+		gamePhase(GamePhase.MENU, action);
+		return this;
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "Setup" auszuführende Aktion.
+	 */
+	public Daddel toSetup(GamePhaseAction action) {
+		gamePhase(GamePhase.SETUP, action);
+		return this;
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "LevelIntro" auszuführende Aktion.
+	 */
+	public Daddel toLevelIntro(GamePhaseAction action) {
+		gamePhase(GamePhase.LEVEL_INTRO, action);
+		return this;
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "Level" auszuführende Aktion.
+	 */
+	public Daddel toLevel(GamePhaseAction action) {
+		gamePhase(GamePhase.LEVEL, action);
+		return this;
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "GameOver" auszuführende Aktion.
+	 */
+	public Daddel toGameOver(GamePhaseAction action) {
+		gamePhase(GamePhase.GAMEOVER, action);
+		return this;
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "WinGame" auszuführende Aktion.
+	 */
+	public Daddel toWinGame(GamePhaseAction action) {
+		gamePhase(GamePhase.WINGAME, action);
+		return this;
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "Credits" auszuführende Aktion.
+	 */
+	public Daddel toCredits(GamePhaseAction action) {
+		gamePhase(GamePhase.CREDITS, action);
+		return this;
+	}
+
+	/**
+	 * Definiert die bei der Spielphase "Highscore" auszuführende Aktion.
+	 */
+	public Daddel toHighscore(GamePhaseAction action) {
+		gamePhase(GamePhase.HIGHSCORE, action);
+		return this;
+	}
+
+	/**
+	 * Beendet das Programm nach Sichern des aktuellen Setup-Stands.
+	 */
 	public void exit() {
 		setupSave();
 		this.stage.close();
 	}
+
+	// ------------------------ debug methods --
 
 	public TextSprite debugInfo() {
 		return screen.getDebugInfo();
@@ -359,6 +436,8 @@ public abstract class Daddel extends Application {
 		return screen.isDebug();
 	}
 
+	// ------------------------ setup methods --
+
 	public Setup getSetup() {
 		return this.setup;
 	}
@@ -370,6 +449,8 @@ public abstract class Daddel extends Application {
 	public void setupLoad() {
 		this.setup.load(this.setupFile);
 	}
+
+	// ------------------------ keyboard methods --
 
 	public void key(KeyCode keyCode, KeyListener keyListener) {
 		getScreen().addKeyListener(keyCode, keyListener);
@@ -397,13 +478,47 @@ public abstract class Daddel extends Application {
 		getScreen().clearInput();
 	}
 
+	// ------------------------ sprite methods --
+
+	/**
+	 * erzeugt eine Animation, die einem Sprite zugeordnet werden kann
+	 * 
+	 * @param imageStart
+	 *            Index des Startbilds der Animation
+	 * @param imageEnd
+	 *            Index des Startbilds der Animation
+	 * @param bounce
+	 *            true: animiere die Bilder in beide Richtungen
+	 * @param speed
+	 *            Geschwindigkeit der Animation in Frames / s
+	 * @return die SpriteGameLoop, die an den Sprite angehangen werden kann
+	 */
+	public final static SpriteGameLoop animation(final int imageStart, final int imageEnd, final boolean bounce,
+			final float speed) {
+		return (sprite, total, delta) -> {
+			if (bounce) {
+				int d = imageEnd - imageStart;
+				int d2 = d * 2;
+				int actual = imageStart + ((int) ((float) total / 1000f * speed * (float) d) % d);
+				if (actual < d) {
+					((ImageSprite) sprite).actualImage(actual);
+				} else {
+					((ImageSprite) sprite).actualImage(d2 - actual + 1);
+				}
+				return;
+			}
+			int d = imageEnd - imageStart + 1;
+			((ImageSprite) sprite).actualImage(((int) (total / 1000f * speed * (float) d)) % d);
+		};
+	}
+
 	public ImageSprite sprite(int type, float groesse, String... bilder) {
 		ImageSprite sprite = new ImageSprite(transformation, type, groesse, bilder);
 		screen.addSprite(sprite);
 		return sprite;
 	}
 
-	public Particle particle(int type, long lebensdauerMS, float groesse, String... bilder) {
+		public Particle particle(int type, long lebensdauerMS, float groesse, String... bilder) {
 		Particle particle = new Particle(transformation, type, groesse, lebensdauerMS, bilder);
 		screen.addSprite(particle);
 		return particle;
@@ -414,7 +529,7 @@ public abstract class Daddel extends Application {
 				swarm -> swarm.getParticles().forEach(particle -> screen.addSprite(particle)));
 		return builder;
 	}
-
+	
 	public void killSprites(int type) {
 		screen.getSprites().stream().filter(sprite -> sprite.type() == type).forEach(sprite -> sprite.kill());
 	}
@@ -426,6 +541,8 @@ public abstract class Daddel extends Application {
 	public void killallText() {
 		screen.getTexts().stream().forEach(text -> text.kill());
 	}
+
+	// ------------------------ sound methods --
 
 	public void sound(String path) {
 		sound(path, 1.0);
@@ -444,6 +561,8 @@ public abstract class Daddel extends Application {
 		AudioLib.audioclip(url).play(volume, balance, rate, pan, priority);
 	}
 
+	// ------------------------ text methods --
+
 	public TextSprite text(String text, String family, float size, Color color) {
 		TextSprite textSprite = new TextSprite(transformation, text).family(family).color(color).size(size);
 		screen.addText(textSprite);
@@ -461,6 +580,8 @@ public abstract class Daddel extends Application {
 		return new MenuBuilder(transformation, screen);
 	}
 
+	// ------------------------ tilemap methods --
+
 	public TileMap tilemap(float tileSize) {
 		TileMap tileMap = new TileMap(transformation, tileSize);
 		screen.setTileMap(tileMap);
@@ -473,6 +594,8 @@ public abstract class Daddel extends Application {
 		screen.addSprite(entity);
 		return entity;
 	}
+
+	// ------------------------ screen methods --
 
 	public Screen getScreen() {
 		return screen;
@@ -488,9 +611,13 @@ public abstract class Daddel extends Application {
 		getScreen().getDebugInfo().relativePos(transformation.getRasterLeftUpper());
 	}
 
+	// ------------------------ utility methods --
+
 	public float strecke(long delta, float speed) {
 		return (float) delta / (float) 1000 * speed;
 	}
+
+	// ------------------------ level methods --
 
 	public int level() {
 		return level;
@@ -505,21 +632,24 @@ public abstract class Daddel extends Application {
 		toLevelIntro();
 	}
 
-	public void clear() {
-		removeKeys();
-		killallSprites();
-		killallText();
-	}
+	// ------------------------ gameloop methods --
+
 	// abstract methods
 
 	public abstract void gameLoop(long gesamtZeit, long deltaZeit);
 
-	// private methods
+	// ------------------------ private methods --
 
 	private void basicScreenLoop(long gesamtZeit, long deltaZeit) {
 		runSprites(deltaZeit);
 		runTexts(deltaZeit);
 		runTileMap(deltaZeit);
+	}
+
+	private void clear() {
+		removeKeys();
+		killallSprites();
+		killallText();
 	}
 
 	private void basicGameLoop(long gesamtZeit, long deltaZeit) {
