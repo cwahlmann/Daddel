@@ -1,10 +1,11 @@
 apply plugin: "java"
 apply plugin: "eclipse"
 
-project(':engine') {	
+project(':daddel-api') {	
 	
 	apply plugin: "java"
 	apply plugin: "eclipse"
+	apply plugin: "maven"
 
 	repositories {
 	    jcenter()
@@ -20,7 +21,7 @@ project(':engine') {
 	}
 }
 
-project(':game') {	
+project(':daddel-example') {	
 	
 	apply plugin: "java"
 	apply plugin: "eclipse"
@@ -31,7 +32,7 @@ project(':game') {
 	}
 
 	dependencies {
-		compile project(':engine')
+		compile project(':daddel-api')
 		compile 'log4j:log4j:1.2.17'
 		compile 'commons-lang:commons-lang:2.6'
 		
