@@ -19,6 +19,20 @@ project(':daddel-api') {
 		
 		testCompile 'junit:junit:4.12'
 	}
+	
+	javadoc {
+	    options.charSet= 'UTF-8'
+	}
+
+	uploadArchives {
+	    repositories {
+	        mavenDeployer {
+	            repository(url: "file://localhost/tmp/myRepo/")
+	            pom.version = '1.0Maven'
+	            pom.artifactId = 'myMavenName'
+	        }
+	    }
+	}
 }
 
 project(':daddel-example') {	
@@ -29,6 +43,10 @@ project(':daddel-example') {
 	repositories {
 	    jcenter()
 		mavenCentral()
+	}
+
+	javadoc {
+	    options.charSet= 'UTF-8'
 	}
 
 	dependencies {

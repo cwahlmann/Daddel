@@ -42,6 +42,14 @@ import javafx.stage.Stage;
  * @author Christian
  *
  */
+/**
+ * @author Christian
+ *
+ */
+/**
+ * @author Christian
+ *
+ */
 public abstract class Daddel extends Application {
 	private static Logger log = Logger.getLogger(Daddel.class);
 
@@ -164,74 +172,10 @@ public abstract class Daddel extends Application {
 	public final static String INI_HEIGHT = "height";
 	public final static String INI_FULLSCREEN = "fullscreen";
 
-	// Lifecycle
-
-	private enum GamePhase {
-		TITLE, INTRO, MENU, SETUP, LEVEL_INTRO, LEVEL, GAMEOVER, WINGAME, CREDITS, HIGHSCORE
-	}
-
-	private Map<GamePhase, GamePhaseAction> gamePhases = new HashMap<GamePhase, GamePhaseAction>() {
-		private static final long serialVersionUID = 1L;
-		{
-			// defaults
-			put(GamePhase.TITLE, () -> toIntro());
-			put(GamePhase.INTRO, () -> toMenu());
-			put(GamePhase.MENU, () -> toLevelIntro());
-			put(GamePhase.SETUP, () -> toMenu());
-			put(GamePhase.LEVEL_INTRO, () -> toLevel());
-			put(GamePhase.LEVEL, () -> toMenu());
-			put(GamePhase.GAMEOVER, () -> toHighscore());
-			put(GamePhase.WINGAME, () -> toHighscore());
-			put(GamePhase.CREDITS, () -> exit());
-			put(GamePhase.HIGHSCORE, () -> toMenu());
-		}
-	};
-
-	private Daddel gamePhase(GamePhase gamePhase, GamePhaseAction action) {
-		this.gamePhases.put(gamePhase, action);
-		return this;
-	}
-
-	private void runGamePhase(GamePhase gamePhase) {
-		if (gamePhases.containsKey(gamePhase)) {
-			gamePhases.get(gamePhase).run();
-		}
-	}
-
-	/* (non-Javadoc)
-	 * @see javafx.application.Application#start(javafx.stage.Stage)
-	 */
-	@Override
-	public void start(Stage stage) throws Exception {
-		this.stage = stage;
-		readIniFile(iniFile);
-		this.witdh = Integer.valueOf(properties.getProperty(INI_WIDTH, "1920" + this.witdh));
-		this.height = Integer.valueOf(properties.getProperty(INI_HEIGHT, "1080" + this.height));
-		boolean fullscreen = Boolean.valueOf(properties.getProperty(INI_FULLSCREEN, "true"));
-		this.setupFile = (String) properties.getProperty(INI_SETUP_FILE, DEFAULT_SETUP_FILE);
-		setupLoad();
-
-		stage.setFullScreen(fullscreen);
-
-		this.transformation = new Transformation(this.witdh, this.height);
-		screen = new Screen(witdh, height, new Font(12), foreground, background);
-		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.5f).color(Color.WHITE)
-				.relativePos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
-		Scene scene = new Scene(screen.getPane(), witdh, height);
-		if (fullscreen) {
-			scene.setCursor(Cursor.NONE);
-		}
-		stage.setTitle("Daddel");
-		stage.setScene(scene);
-		stage.show();
-		initGame();
-		toTitle();
-	}
-
 	// ======================== API methods ==
-	
+
 	// ------------------------ game phase methods ==
-	
+
 	/**
 	 * Wird beim Start des Programms aufgerufen. Hier werden alle globalen
 	 * Spielvariablen initialisiert, und die einzelnen Spielphasen definiert.
@@ -336,6 +280,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "Title" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toTitle(GamePhaseAction action) {
 		gamePhase(GamePhase.TITLE, action);
@@ -344,6 +292,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "Intro" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toIntro(GamePhaseAction action) {
 		gamePhase(GamePhase.INTRO, action);
@@ -352,6 +304,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "Menu" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toMenu(GamePhaseAction action) {
 		gamePhase(GamePhase.MENU, action);
@@ -360,6 +316,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "Setup" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toSetup(GamePhaseAction action) {
 		gamePhase(GamePhase.SETUP, action);
@@ -368,6 +328,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "LevelIntro" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toLevelIntro(GamePhaseAction action) {
 		gamePhase(GamePhase.LEVEL_INTRO, action);
@@ -376,6 +340,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "Level" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toLevel(GamePhaseAction action) {
 		gamePhase(GamePhase.LEVEL, action);
@@ -384,6 +352,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "GameOver" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toGameOver(GamePhaseAction action) {
 		gamePhase(GamePhase.GAMEOVER, action);
@@ -392,6 +364,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "WinGame" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toWinGame(GamePhaseAction action) {
 		gamePhase(GamePhase.WINGAME, action);
@@ -400,6 +376,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "Credits" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toCredits(GamePhaseAction action) {
 		gamePhase(GamePhase.CREDITS, action);
@@ -408,6 +388,10 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Definiert die bei der Spielphase "Highscore" auszuführende Aktion.
+	 * 
+	 * @param action
+	 *            Aktion
+	 * @return this
 	 */
 	public Daddel toHighscore(GamePhaseAction action) {
 		gamePhase(GamePhase.HIGHSCORE, action);
@@ -424,46 +408,99 @@ public abstract class Daddel extends Application {
 
 	// ------------------------ debug methods --
 
+	/**
+	 * @return der Text-Sprite, mit dem Debug-Informationen angezeigt werden.
+	 *         Enthält per default die aktuellen Frames Per Second (FPS) und kann in
+	 *         der eigenen Spielschleife ergänzt werden.
+	 * 
+	 */
 	public TextSprite debugInfo() {
 		return screen.getDebugInfo();
 	}
 
+	/**
+	 * Steuert die Aazeige des Debut-Text-Sprite
+	 * 
+	 * @param debug
+	 *            true: Debug wird angezeit, false: Debug wird nicht angezeigt
+	 */
 	public void debug(boolean debug) {
 		screen.setDebug(debug);
 	}
 
+	/**
+	 * @return true, wenn die Debug-Anzeige aktiviert ist.
+	 */
 	public boolean debug() {
 		return screen.isDebug();
 	}
 
 	// ------------------------ setup methods --
 
+	/**
+	 * @return Die Hashmap mit den aktuell gespeicherten Setup-Informationen, z.B.
+	 *         eine Highscoreliste.
+	 */
 	public Setup getSetup() {
 		return this.setup;
 	}
 
+	/**
+	 * Speichert das aktuelle Setup auf Festplatte.
+	 */
 	public void setupSave() {
 		this.setup.save(this.setupFile);
 	}
 
+	/**
+	 * Lädt das Setup von Festplatte.
+	 */
 	public void setupLoad() {
 		this.setup.load(this.setupFile);
 	}
 
 	// ------------------------ keyboard methods --
 
+	/**
+	 * Bindet eine Aktion an einen Tastendruck.
+	 * 
+	 * @param keyCode
+	 *            Der KeyCode der Taste
+	 * @param keyListener
+	 *            Die auszuführende Aktion
+	 */
 	public void key(KeyCode keyCode, KeyListener keyListener) {
 		getScreen().addKeyListener(keyCode, keyListener);
 	}
 
+	/**
+	 * Entfernt die einer Taste zugeordnete Aktion
+	 * 
+	 * @param keyCode
+	 *            Der KeyCode der Taste
+	 * 
+	 */
 	public void key(KeyCode keyCode) {
 		getScreen().removeKeyListener(keyCode);
 	}
 
+	/**
+	 * Entfernt alle bestimmten Tasten zugeordnete Aktionen
+	 */
 	public void removeKeys() {
 		getScreen().removeKeyListeners();
 	}
 
+	/**
+	 * Aktiviert die Eingabe einer Textzeile. Bei Tastendruck wird die angegebene
+	 * Aktion ausgeführt. Diese ist auch für die Anzeige auf dem Bildschirm
+	 * verantwortlich, z.B. durch die Aktualisierung eines Text-Sprites.
+	 * 
+	 * @param laenge
+	 *            Maximale Länge der Textzeile
+	 * @param inputListener
+	 *            Aktion, die bei Tastendruck ausgeführt wird
+	 */
 	public void input(int laenge, InputListener inputListener) {
 		getScreen().clearInput();
 		getScreen().setInputLaenge(laenge);
@@ -471,6 +508,9 @@ public abstract class Daddel extends Application {
 		getScreen().setEnableInput(true);
 	}
 
+	/**
+	 * schaltet die Eingabe in eine Textzeile aus.
+	 */
 	public void noInput() {
 		getScreen().setEnableInput(false);
 		getScreen().setInputListener(input -> {
@@ -512,50 +552,139 @@ public abstract class Daddel extends Application {
 		};
 	}
 
+	/**
+	 * Erzeugt einen neuen Sprite und hängt ihn in die View-Hierarchie ein.
+	 * 
+	 * @param type
+	 *            Benutzerdefinierter Typ, ein Integer
+	 * @param groesse
+	 *            Die maximale Breite und Höhe des Sprite, in Spielrasterpunkten.
+	 * @param bilder
+	 *            Die einzelnen Bilder (Frames) des Sprite. Diese können über die
+	 *            Methode animation() gesteuert werden.
+	 * @return Eine neue Instanz der Klasse ImageSprite
+	 */
 	public ImageSprite sprite(int type, float groesse, String... bilder) {
 		ImageSprite sprite = new ImageSprite(transformation, type, groesse, bilder);
 		screen.addSprite(sprite);
 		return sprite;
 	}
 
-		public Particle particle(int type, long lebensdauerMS, float groesse, String... bilder) {
+	/**
+	 * Erzeugt einen neuen Partikel und hängt ihn in die View-Hierarchie ein.
+	 * 
+	 * @param type
+	 *            Benutzerdefinierter Typ, ein Integer
+	 * @param lebensdauerMS
+	 *            Die Lebensdauer des Partikel in ms.
+	 * @param groesse
+	 *            Die maximale Breite und Höhe des Sprite, in Spielrasterpunkten. *
+	 * @param bilder
+	 *            Die einzelnen Bilder (Frames) des Sprite. Diese können über die
+	 *            Methode animation() gesteuert werden.
+	 * @return eine neue Instanz der Klasse Particle.
+	 */
+	public Particle particle(int type, long lebensdauerMS, float groesse, String... bilder) {
 		Particle particle = new Particle(transformation, type, groesse, lebensdauerMS, bilder);
 		screen.addSprite(particle);
 		return particle;
 	}
 
+	/**
+	 * Erzeugt einen Partikel-Schwarm-Builder.
+	 * 
+	 * @param count
+	 *            Anzahl zu erzeugender Partikel
+	 * @param typ
+	 *            Benutzerdefinierter Typ, ein Integer
+	 * @param images
+	 *            Die einzelnen Bilder (Frames) des Sprite. Diese können über die
+	 *            Methode animation() gesteuert werden.
+	 * @return eine Instanz der Klasse ParticleSwarmBuilder. Über die Methode
+	 *         create() wird der Partikel erzeugt und in die View-Hierarchie
+	 *         eingefügt.
+	 */
 	public ParticleSwarmBuilder particleSwarmBuilder(int count, int typ, String... images) {
 		ParticleSwarmBuilder builder = new ParticleSwarmBuilder(count, transformation, typ, images,
 				swarm -> swarm.getParticles().forEach(particle -> screen.addSprite(particle)));
 		return builder;
 	}
-	
+
+	/**
+	 * Markiert alle Sprites eines Typs als gestorben. Sie werden dann bei der
+	 * nächsten Gelegenheit aus der View-Hierarchie entfernt.
+	 * 
+	 * @param type
+	 *            Benutzerdefinierter Typ, ein Integer
+	 */
 	public void killSprites(int type) {
 		screen.getSprites().stream().filter(sprite -> sprite.type() == type).forEach(sprite -> sprite.kill());
 	}
 
+	/**
+	 * Markiert alle Sprites als gestorben. Sie werden dann bei der nächsten
+	 * Gelegenheit aus der View-Hierarchie entfernt.
+	 */
 	public void killallSprites() {
 		screen.getSprites().stream().forEach(sprite -> sprite.kill());
 	}
 
-	public void killallText() {
-		screen.getTexts().stream().forEach(text -> text.kill());
-	}
-
 	// ------------------------ sound methods --
 
+	/**
+	 * Spielt unmittelbar den angegebenen Sampler ab.
+	 * 
+	 * @param path
+	 *            Pfad des Samplers
+	 */
 	public void sound(String path) {
 		sound(path, 1.0);
 	}
 
+	/**
+	 * Spielt unmittelbar den angegebenen Sampler ab.
+	 * 
+	 * @param path
+	 *            Pfad des Samplers
+	 * @param volume
+	 *            Lautstärke (0 ... 1.0)
+	 */
 	public void sound(String path, double volume) {
 		sound(path, volume, 0.0);
 	}
 
+	/**
+	 * Spielt unmittelbar den angegebenen Sampler ab.
+	 * 
+	 * @param path
+	 *            Pfad des Samplers
+	 * @param volume
+	 *            Lautstärke (0 ... 1.0)
+	 * @param balance
+	 *            Balance (-1.0 ... 1.0)
+	 */
 	public void sound(String path, double volume, double balance) {
 		sound(path, volume, balance, 1.0, balance, 1);
 	}
 
+	/**
+	 * Spielt unmittelbar den angegebenen Sampler ab.
+	 * 
+	 * @param path
+	 *            Pfad des Samplers
+	 * @param volume
+	 *            Lautstärke (0 ... 1.0)
+	 * @param balance
+	 *            relative Lauststärke des Samples bzgl. linker / rechter
+	 *            Lautsprecher (-1.0 ... 1.0)
+	 * @param rate
+	 *            Geschwindigkeit (0.125 ... 8.0)
+	 * @param pan
+	 *            verschiebt die Mitte des Samples bzgl. linker / rechter
+	 *            Lautsprecher (-1.0 ... 1.0)
+	 * @param priority
+	 *            Priorität, mit der der Sample abgespielt wird
+	 */
 	public void sound(String path, double volume, double balance, double rate, double pan, int priority) {
 		String url = Daddel.class.getResource(path).toExternalForm();
 		AudioLib.audioclip(url).play(volume, balance, rate, pan, priority);
@@ -563,12 +692,40 @@ public abstract class Daddel extends Application {
 
 	// ------------------------ text methods --
 
+	/**
+	 * erzeugt ein Text-Sprite und fügt ihn der View-Hierarchie hinzu.
+	 * 
+	 * @param text
+	 *            Der anzuzeigende Text
+	 * @param family
+	 *            Die Zeichensatz-Familie des Text-Sprites (z.B. sans-serif)
+	 * @param size
+	 *            Die Zeichensatz-Höhe des Texts
+	 * @param color
+	 *            Die Farbe des Texts
+	 * @return eine Instanz der Klasse TextSprite
+	 */
 	public TextSprite text(String text, String family, float size, Color color) {
 		TextSprite textSprite = new TextSprite(transformation, text).family(family).color(color).size(size);
 		screen.addText(textSprite);
 		return textSprite;
 	}
 
+	/**
+	 * erzeugt ein Text-Partikel und fügt ihn der View-Hierarchie hinzu.
+	 * 
+	 * @param text
+	 *            Der anzuzeigende Text
+	 * @param lebensdauer
+	 *            Die Lebensdauer des Text-Partikels in ms
+	 * @param family
+	 *            Die Zeichensatz-Familie des Text-Sprites (z.B. sans-serif)
+	 * @param size
+	 *            Die Zeichensatz-Höhe des Texts
+	 * @param color
+	 *            Die Farbe des Texts
+	 * @return eine Instanz der Klasse TextParticle
+	 */
 	public TextParticle textParticle(String text, long lebensdauer, String family, float size, Color color) {
 		TextParticle textParticle = new TextParticle(transformation, lebensdauer, text).family(family).color(color)
 				.size(size);
@@ -576,18 +733,53 @@ public abstract class Daddel extends Application {
 		return textParticle;
 	}
 
+	/**
+	 * Erzeugt einen Menu-Builder
+	 * 
+	 * @return Eine Instanz der Klasse MenuBuilder. Mit der Methode create() wird
+	 *         eine Instanz der Klasse Menu erzeugt und in die View-Hierarchie
+	 *         eingebunden.
+	 */
 	public MenuBuilder menu() {
 		return new MenuBuilder(transformation, screen);
 	}
 
+	/**
+	 * Markiert alle Text-Sprites als gestorben. Sie werden dann bei der nächsten
+	 * Gelegenheit aus der View-Hierarchie entfernt.
+	 */
+	public void killallText() {
+		screen.getTexts().stream().forEach(text -> text.kill());
+	}
+
 	// ------------------------ tilemap methods --
 
+	/**
+	 * Erzeugt ein Spielfeld, das aus Kacheln zusammengesetzt ist. In diesem
+	 * Spielfeld können sich Entities (besondere Sprites) bewegen.
+	 * 
+	 * @param tileSize
+	 *            Größe einer Kachel in Spielraster-Punkten.
+	 * @return eine Instanz der Klasse TileMap
+	 */
 	public TileMap tilemap(float tileSize) {
 		TileMap tileMap = new TileMap(transformation, tileSize);
 		screen.setTileMap(tileMap);
 		return tileMap;
 	}
 
+	/**
+	 * Erzeugt eine bewegliche Entität, die sich auf einer TileMap bewegen kann
+	 * 
+	 * @param type
+	 *            Benutzerdefinierter Typ, Integer
+	 * @param maxSize
+	 *            Maximale Breite und Höhe der Entität in Spielrasterpunkten
+	 * @param imagefiles
+	 *            Die einzelnen Bilder (Frames) der Entität. Diese können über die
+	 *            Methode animation() gesteuert werden.
+	 * @return this
+	 */
 	public Entity entity(int type, float maxSize, String... imagefiles) {
 		Entity entity = new Entity(transformation, screen.getTileMap(), type, maxSize, imagefiles);
 		entity.parent(screen.getTileMap());
@@ -597,10 +789,26 @@ public abstract class Daddel extends Application {
 
 	// ------------------------ screen methods --
 
+	/**
+	 * @return Gibt die ScreenView des Spiels zurück
+	 */
 	public Screen getScreen() {
 		return screen;
 	}
 
+	/**
+	 * Definiert die Größe des Spielrasters (Grid). Der Zoom wird automatisch so
+	 * gewählt, dass das gesamte Grid auf den Bildschirm passt.
+	 * 
+	 * @param x0
+	 *            die linke Ausdehnung des Spielrasters
+	 * @param x1
+	 *            die rechte Ausdehnung des Spielrasters
+	 * @param y0
+	 *            die obere Ausdehnung des Spielrasters
+	 * @param y1
+	 *            die untere Ausdehnung des Spielrasters
+	 */
 	public void grid(float x0, float x1, float y0, float y1) {
 		Pos pos0 = new Pos(x0, y0);
 		Pos pos1 = new Pos(x1, y1);
@@ -613,20 +821,42 @@ public abstract class Daddel extends Application {
 
 	// ------------------------ utility methods --
 
+	/**
+	 * errechnet aus der verstrichenen Zeit die mit der angegebenen Geschwindigkeit
+	 * zurückgelegte Strecke
+	 * 
+	 * @param delta
+	 *            verstrichene Zeit in ms
+	 * @param speed
+	 *            Geschwindigkeit in Spielrasterpunkten / s
+	 * @return zurückgelegte Strecke in Spielrasterpunkten
+	 */
 	public float strecke(long delta, float speed) {
 		return (float) delta / (float) 1000 * speed;
 	}
 
 	// ------------------------ level methods --
 
+	/**
+	 * @return der aktuelle Level
+	 */
 	public int level() {
 		return level;
 	}
 
+	/**
+	 * setzt den aktuellen Lebel
+	 * 
+	 * @param level
+	 *            zu setzender Level
+	 */
 	public void level(int level) {
 		this.level = level;
 	}
 
+	/**
+	 * startet den nächsten Level
+	 */
 	public void nextLevel() {
 		this.level++;
 		toLevelIntro();
@@ -636,10 +866,54 @@ public abstract class Daddel extends Application {
 
 	// abstract methods
 
+	/**
+	 * Diese Methode muss für ein Spiel implementiert werden. Sie stellt die
+	 * Spielschleife dar und wird pro Frame einmal aufgerufen.
+	 * 
+	 * @param gesamtZeit
+	 *            Gesamte bisher verstrichene Zeit in ms
+	 * @param deltaZeit
+	 *            Seit dem letzten Frame verstrichene Zeit in ms
+	 */
 	public abstract void gameLoop(long gesamtZeit, long deltaZeit);
 
 	// ------------------------ private methods --
 
+	// Lifecycle
+
+	private enum GamePhase {
+		TITLE, INTRO, MENU, SETUP, LEVEL_INTRO, LEVEL, GAMEOVER, WINGAME, CREDITS, HIGHSCORE
+	}
+
+	private Map<GamePhase, GamePhaseAction> gamePhases = new HashMap<GamePhase, GamePhaseAction>() {
+		private static final long serialVersionUID = 1L;
+		{
+			// defaults
+			put(GamePhase.TITLE, () -> toIntro());
+			put(GamePhase.INTRO, () -> toMenu());
+			put(GamePhase.MENU, () -> toLevelIntro());
+			put(GamePhase.SETUP, () -> toMenu());
+			put(GamePhase.LEVEL_INTRO, () -> toLevel());
+			put(GamePhase.LEVEL, () -> toMenu());
+			put(GamePhase.GAMEOVER, () -> toHighscore());
+			put(GamePhase.WINGAME, () -> toHighscore());
+			put(GamePhase.CREDITS, () -> exit());
+			put(GamePhase.HIGHSCORE, () -> toMenu());
+		}
+	};
+
+	private Daddel gamePhase(GamePhase gamePhase, GamePhaseAction action) {
+		this.gamePhases.put(gamePhase, action);
+		return this;
+	}
+
+	private void runGamePhase(GamePhase gamePhase) {
+		if (gamePhases.containsKey(gamePhase)) {
+			gamePhases.get(gamePhase).run();
+		}
+	}
+
+	// screen loop
 	private void basicScreenLoop(long gesamtZeit, long deltaZeit) {
 		runSprites(deltaZeit);
 		runTexts(deltaZeit);
@@ -651,6 +925,8 @@ public abstract class Daddel extends Application {
 		killallSprites();
 		killallText();
 	}
+
+	// game loop
 
 	private void basicGameLoop(long gesamtZeit, long deltaZeit) {
 		runSprites(deltaZeit);
@@ -717,6 +993,40 @@ public abstract class Daddel extends Application {
 				}
 			}
 		}
+	}
+
+	// ======================== Programmstart durch JavaFx ==
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see javafx.application.Application#start(javafx.stage.Stage)
+	 */
+	@Override
+	public void start(Stage stage) throws Exception {
+		this.stage = stage;
+		readIniFile(iniFile);
+		this.witdh = Integer.valueOf(properties.getProperty(INI_WIDTH, "1920" + this.witdh));
+		this.height = Integer.valueOf(properties.getProperty(INI_HEIGHT, "1080" + this.height));
+		boolean fullscreen = Boolean.valueOf(properties.getProperty(INI_FULLSCREEN, "true"));
+		this.setupFile = (String) properties.getProperty(INI_SETUP_FILE, DEFAULT_SETUP_FILE);
+		setupLoad();
+
+		stage.setFullScreen(fullscreen);
+
+		this.transformation = new Transformation(this.witdh, this.height);
+		screen = new Screen(witdh, height, new Font(12), foreground, background);
+		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.5f).color(Color.WHITE)
+				.relativePos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
+		Scene scene = new Scene(screen.getPane(), witdh, height);
+		if (fullscreen) {
+			scene.setCursor(Cursor.NONE);
+		}
+		stage.setTitle("Daddel");
+		stage.setScene(scene);
+		stage.show();
+		initGame();
+		toTitle();
 	}
 
 	private void readIniFile(String inifile) {
