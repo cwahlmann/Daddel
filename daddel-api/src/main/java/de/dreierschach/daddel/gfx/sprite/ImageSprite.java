@@ -7,6 +7,7 @@ import de.dreierschach.daddel.gfx.ImageLib;
 import de.dreierschach.daddel.listener.CollisionListener;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
+import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;

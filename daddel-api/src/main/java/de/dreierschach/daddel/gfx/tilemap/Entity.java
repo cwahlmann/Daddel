@@ -2,14 +2,28 @@ package de.dreierschach.daddel.gfx.tilemap;
 
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
-import de.dreierschach.daddel.gfx.sprite.SpriteGameLoop;
 import de.dreierschach.daddel.listener.CollisionListener;
 import de.dreierschach.daddel.model.MapPos;
 import de.dreierschach.daddel.model.Pos;
+import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
+import de.dreierschach.daddel.model.Validator;
 
+/**
+ * eine Entity ist eine selbständige Einheit, die sich auf einem gekachelten
+ * Spielfeld (TileMap) bewegt
+ * 
+ * @author Christian
+ *
+ */
 public class Entity extends ImageSprite {
 
+	/**
+	 * die acht möglichen Richtungen auf einem gekachelten Spielfeld
+	 * 
+	 * @author Christian
+	 *
+	 */
 	public enum Dir {//
 		STOP(new MapPos(0, 0, 0), 0), //
 		LEFT(new MapPos(-1, 0, 0), 0), //
@@ -35,34 +49,52 @@ public class Entity extends ImageSprite {
 		public double rotation() {
 			return rotation;
 		}
-		
+
 		public Dir left() {
 			switch (this) {
-			case LEFT: return DOWN;
-			case LEFT_UP: return LEFT_DOWN;
-			case UP: return LEFT;
-			case RIGHT_UP: return LEFT_UP;
-			case RIGHT: return UP;
-			case RIGHT_DOWN: return RIGHT_UP;
-			case DOWN: return RIGHT;
-			case LEFT_DOWN: return RIGHT_DOWN;
+			case LEFT:
+				return DOWN;
+			case LEFT_UP:
+				return LEFT_DOWN;
+			case UP:
+				return LEFT;
+			case RIGHT_UP:
+				return LEFT_UP;
+			case RIGHT:
+				return UP;
+			case RIGHT_DOWN:
+				return RIGHT_UP;
+			case DOWN:
+				return RIGHT;
+			case LEFT_DOWN:
+				return RIGHT_DOWN;
 			default:
-			case STOP: return STOP; 
+			case STOP:
+				return STOP;
 			}
 		}
 
 		public Dir right() {
 			switch (this) {
-			case LEFT: return UP;
-			case LEFT_UP: return RIGHT_UP;
-			case UP: return RIGHT;
-			case RIGHT_UP: return RIGHT_DOWN;
-			case RIGHT: return DOWN;
-			case RIGHT_DOWN: return LEFT_DOWN;
-			case DOWN: return LEFT;
-			case LEFT_DOWN: return LEFT_UP;
+			case LEFT:
+				return UP;
+			case LEFT_UP:
+				return RIGHT_UP;
+			case UP:
+				return RIGHT;
+			case RIGHT_UP:
+				return RIGHT_DOWN;
+			case RIGHT:
+				return DOWN;
+			case RIGHT_DOWN:
+				return LEFT_DOWN;
+			case DOWN:
+				return LEFT;
+			case LEFT_DOWN:
+				return LEFT_UP;
 			default:
-			case STOP: return STOP; 
+			case STOP:
+				return STOP;
 			}
 		}
 	}
@@ -78,9 +110,22 @@ public class Entity extends ImageSprite {
 	private boolean startMove = false;
 	private boolean neatlessMove = false;
 	private boolean moving = false;
-	private Dir lastMove = Dir.STOP; 
+	private Dir lastMove = Dir.STOP;
 	private Animation animation;
 
+	/**
+	 * @param transformation
+	 *            Informationen zur Umrechnung von Spielraster-Punkten in
+	 *            Bildschirmpixel
+	 * @param tileMap
+	 *            das gekachelte Spielfeld, auf dem sich die Entity bewegt
+	 * @param type
+	 *            ein benutzerdefinierter Typ, Integer
+	 * @param maxSize
+	 *            die maximale Breite und Höhe der Entity in Spielraster-Punkten
+	 * @param imagefiles
+	 *            die Bilder der Entity
+	 */
 	public Entity(Transformation transformation, TileMap tileMap, int type, float maxSize, String... imagefiles) {
 		super(transformation, type, maxSize, imagefiles);
 		this.animation = new Animation();
@@ -116,22 +161,63 @@ public class Entity extends ImageSprite {
 		this.tileMap = tileMap;
 	}
 
+	/**
+	 * prüft, ob auf dem Spielfeld in der angegebenen Richtung eine bestimmte Kachel
+	 * liegt
+	 * 
+	 * @param dir
+	 *            die Richtung, in der geprüft wird
+	 * @param isId
+	 *            eine Funktion, die die gefundene Id prüft
+	 * @return true, wenn das Ergebnis der Funktion isId true ist
+	 */
 	public boolean checkId(Dir dir, Validator<Integer> isId) {
 		return isId.validate(tileMap.id(this.mapPos().add(dir.p())));
 	}
 
+	/**
+	 * prüft, ob auf dem Spielfeld unter der Entity eine bestimmte Kachel liegt
+	 * 
+	 * @param isId
+	 *            eine Funktion, die die gefundene Id prüft
+	 * @return true, wenn das ergebnis der Funktion isId true ist
+	 */
 	public boolean checkId(Validator<Integer> isId) {
 		return isId.validate(tileMap.id(this.mapPos()));
 	}
 
+	/**
+	 * prüft, ob auf dem Spielfeld in der angegebenen Richtung eine bestimmte Kachel
+	 * liegt
+	 * 
+	 * @param dir
+	 *            die Richtung, in der geprüft wird
+	 * @param isType
+	 *            eine Funktion, die den gefundene Typ prüft
+	 * @return true, wenn das Ergebnis der Funktion isTyp true ist
+	 */
 	public boolean checkType(Dir dir, Validator<Integer> isType) {
 		return isType.validate(tileMap.type(this.mapPos().add(dir.p())));
 	}
 
+	/**
+	 * prüft, ob auf dem Spielfeld unter der Entity eine bestimmte Kachel liegt
+	 * 
+	 * @param isType
+	 *            eine Funktion, die den gefundene Typ prüft
+	 * @return true, wenn das Ergebnis der Funktion isTyp true ist
+	 */
 	public boolean checkType(Validator<Integer> isType) {
 		return isType.validate(tileMap.type(this.mapPos()));
 	}
 
+	/**
+	 * nimmt die Kachel in der angegebenen Richtung auf
+	 * 
+	 * @param dir
+	 *            die Richtung
+	 * @return die Id der aufgenommenen Kachel
+	 */
 	public int take(Dir dir) {
 		MapPos p = mapPos.add(dir.p());
 		int id = tileMap.id(p);
@@ -139,51 +225,122 @@ public class Entity extends ImageSprite {
 		return id;
 	}
 
+	/**
+	 * nimmt die Kachel unter der Entity auf
+	 * 
+	 * @return die Id der aufgenommenen Kachel
+	 */
 	public int take() {
 		int id = tileMap.id(mapPos);
 		tileMap.id(mapPos, TileMap.NO_ID);
 		return id;
 	}
 
+	/**
+	 * Legt in der angegebenen Richtung eine Kachel ab
+	 * 
+	 * @param dir
+	 *            die Richtung
+	 * @param id
+	 *            die Id der abzulegeneden Kachel
+	 * @return this
+	 */
 	public Entity drop(Dir dir, int id) {
 		MapPos p = mapPos.add(dir.p());
 		tileMap.id(p, id);
 		return this;
 	}
 
+	/**
+	 * Legt unter der Entity eine Kachel ab
+	 * 
+	 * @param id
+	 *            die Id der abzulegeneden Kachel
+	 * @return this
+	 */
 	public Entity drop(int id) {
 		tileMap.id(mapPos, id);
 		return this;
 	}
 
+	/**
+	 * prüft, ob die angegebene Position innerhalb des Spielfelds liegt
+	 * 
+	 * @param p
+	 *            die Position vom Typ MapPos
+	 * @return true, wenn die Position innnerhalb des Spielfelds liegt
+	 */
 	public boolean insideMap(MapPos p) {
 		return tileMap.isValidPosition(p);
 	}
-	
+
+	/**
+	 * prüft, ob die angegebene Position links vom Spielfeld liegt
+	 * 
+	 * @param p
+	 *            die Position vom Typ MapPos
+	 * @return true, wenn die Position links vom Spielfeld liegt
+	 */
 	public boolean leftOfMap(MapPos p) {
 		return tileMap.leftOfMap(p);
 	}
 
+	/**
+	 * prüft, ob die angegebene Position rechts vom Spielfeld liegt
+	 * 
+	 * @param p
+	 *            die Position vom Typ MapPos
+	 * @return true, wenn die Position rechts vom Spielfeld liegt
+	 */
 	public boolean rightOfMap(MapPos p) {
 		return tileMap.rightOfMap(p);
 	}
 
+	/**
+	 * prüft, ob die angegebene Position oberhalb des Spielfelds liegt
+	 * 
+	 * @param p
+	 *            die Position vom Typ MapPos
+	 * @return true, wenn die Position oberhalb des Spielfelds liegt
+	 */
 	public boolean onTopOfMap(MapPos p) {
 		return tileMap.onTopOfMap(p);
 	}
 
+	/**
+	 * prüft, ob die angegebene Position unterhalb des Spielfelds liegt
+	 * 
+	 * @param p
+	 *            die Position vom Typ MapPos
+	 * @return true, wenn die Position unterhalb des Spielfelds liegt
+	 */
 	public boolean belowBottomOfMap(MapPos p) {
 		return tileMap.belowBottomOfMap(p);
 	}
 
+	/**
+	 * @return die zuletzt eingeschlagene Richtung der Entity
+	 */
 	public Dir lastMove() {
 		return this.lastMove;
 	}
-	
+
+	/**
+	 * Bewegt die Entity in die zuletzt eingeschlagene Richtung
+	 *
+	 * @return this
+	 */
 	public Entity move() {
 		return move(lastMove);
 	}
 
+	/**
+	 * Bewegt die Entity in die angegebene Richtung
+	 *
+	 * @param dir
+	 *            die Richtung
+	 * @return this
+	 */
 	public Entity move(Dir dir) {
 		destMapPos(mapPos.add(dir.p()));
 		startMove(lastMove != Dir.STOP);
@@ -191,34 +348,72 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
+	/**
+	 * @return die Bewegungsgeschwindigkeit in Spielraster-Punkten / s
+	 */
 	public float moveSpeed() {
 		return moveSpeed;
 	}
 
+	/**
+	 * Legt die Bewegungsgeschwindigkeit fest
+	 * 
+	 * @param moveSpeed
+	 *            die Bewegungsgeschwindigkeit in Spielraster-Punkten / s
+	 * @return this
+	 */
 	public Entity moveSpeed(float moveSpeed) {
 		this.moveSpeed = moveSpeed;
 		return this;
 	}
 
+	/**
+	 * @return die Position auf dem gekachelten Spielfeld
+	 */
 	public MapPos mapPos() {
 		return mapPos;
 	}
 
+	/**
+	 * Setzt die Position auf dem gekachelten Spielfeld
+	 * 
+	 * @param mapPos
+	 *            die Position auf dem gekachelten Spielfeld
+	 * @return this
+	 */
 	public Entity mapPos(MapPos mapPos) {
 		this.mapPos = mapPos;
 		// this.destMapPos = mapPos;
 		return this;
 	}
 
+	/**
+	 * @return die Zielposition auf dem gekachelten Spielfeld
+	 */
 	public MapPos destMapPos() {
 		return destMapPos;
 	}
 
+	/**
+	 * setzt die Zielposition auf dem gekachelten Spielfeld
+	 * 
+	 * @param destMapPos
+	 *            die Zielposition auf dem gekachelten Spielfeld
+	 * @return this
+	 */
 	public Entity destMapPos(MapPos destMapPos) {
 		this.destMapPos = destMapPos;
 		return this;
 	}
 
+	/**
+	 * Startet die Bewegung zur Zielposition
+	 * 
+	 * @param neatless
+	 *            true: Legt fest, ob das Timing der Bewegungen nahtlos an die
+	 *            vorherige anschließen soll
+	 * @return this
+	 */
 	public Entity startMove(boolean neatless) {
 		this.startMove = true;
 		this.neatlessMove = neatless;
@@ -227,89 +422,142 @@ public class Entity extends ImageSprite {
 
 	//
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.ImageSprite#relativePos(de.dreierschach.
+	 * daddel.model.Pos)
+	 */
 	@Override
 	public Entity relativePos(Pos pos) {
 		super.relativePos(pos);
 		return this;
 	}
 
+	/**
+	 * Legt die Aktion fest, die ausgeführt wird, wenn die Zielposition erreicht ist
+	 * 
+	 * @param moveFinishedListener
+	 *            die Aktion
+	 * @return this
+	 */
 	public Entity onFinishMove(MoveFinishedListener moveFinishedListener) {
 		this.moveFinishedListener = moveFinishedListener;
 		return this;
 	}
 
+	/**
+	 * @return die Bild-Animationsparameter der Entity
+	 */
 	public Animation animation() {
 		return animation;
 	}
 
 	// -------------- override methods to return correct type --
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#actualImage(int)
+	 */
 	@Override
 	public Entity actualImage(int actualImage) {
 		super.actualImage(actualImage);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#alpha(float)
+	 */
 	@Override
 	public Entity alpha(float alpha) {
 		super.alpha(alpha);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#collisionListener(de.dreierschach.daddel.listener.CollisionListener)
+	 */
 	@Override
 	public Entity collisionListener(CollisionListener collisionListener) {
 		super.collisionListener(collisionListener);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#rotation(double)
+	 */
 	@Override
 	public Entity rotation(double rotation) {
 		super.rotation(rotation);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#rotate(double)
+	 */
 	@Override
 	public Entity rotate(double angle) {
 		super.rotate(angle);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#direction(double)
+	 */
 	@Override
 	public Entity direction(double direction) {
 		super.direction(direction);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#r(float)
+	 */
 	@Override
 	public Entity r(float r) {
 		super.r(r);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#type(int)
+	 */
 	@Override
 	public Entity type(int type) {
 		super.type(type);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#gameLoop(de.dreierschach.daddel.model.SpriteGameLoop[])
+	 */
 	@Override
 	public Entity gameLoop(SpriteGameLoop... gameLoops) {
 		super.gameLoop(gameLoops);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#parent(de.dreierschach.daddel.gfx.sprite.Sprite)
+	 */
 	@Override
 	public Entity parent(Sprite parent) {
 		super.parent(parent);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(de.dreierschach.daddel.model.Pos)
+	 */
 	@Override
 	public Entity move(Pos direction) {
 		super.move(direction);
 		return this;
 	}
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(float)
+	 */
 	@Override
 	public Entity move(float distance) {
 		super.move(distance);

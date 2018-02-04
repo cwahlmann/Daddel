@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
+import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;

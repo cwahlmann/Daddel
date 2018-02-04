@@ -160,14 +160,14 @@ public class Pacman extends Daddel {
 
 		// keys
 
-		key(KeyCode.ESCAPE, () -> exit());
+		key(KeyCode.ESCAPE, (keyCode) -> exit());
 
-		key(KeyCode.LEFT, () -> packmanGo(Dir.LEFT));
-		key(KeyCode.UP, () -> packmanGo(Dir.UP));
-		key(KeyCode.DOWN, () -> packmanGo(Dir.DOWN));
-		key(KeyCode.RIGHT, () -> packmanGo(Dir.RIGHT));
-		key(KeyCode.SPACE, () -> packmanGo(Dir.STOP));
-		key(KeyCode.F3, () -> debug(!debug()));
+		key(KeyCode.LEFT, (keyCode) -> packmanGo(Dir.LEFT));
+		key(KeyCode.UP, (keyCode) -> packmanGo(Dir.UP));
+		key(KeyCode.DOWN, (keyCode) -> packmanGo(Dir.DOWN));
+		key(KeyCode.RIGHT, (keyCode) -> packmanGo(Dir.RIGHT));
+		key(KeyCode.SPACE, (keyCode) -> packmanGo(Dir.STOP));
+		key(KeyCode.F3, (keyCode) -> debug(!debug()));
 
 		// debug
 

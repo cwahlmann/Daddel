@@ -1,9 +1,9 @@
 package de.dreierschach.daddel.gfx.text;
 
 import de.dreierschach.daddel.gfx.sprite.Sprite;
-import de.dreierschach.daddel.gfx.sprite.SpriteGameLoop;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
+import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;

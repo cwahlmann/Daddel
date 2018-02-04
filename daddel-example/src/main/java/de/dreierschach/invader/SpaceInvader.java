@@ -8,12 +8,12 @@ import java.util.Random;
 
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
-import de.dreierschach.daddel.gfx.sprite.SpriteGameLoop;
 import de.dreierschach.daddel.gfx.text.TextSprite;
 import de.dreierschach.daddel.listener.CollisionListener;
 import de.dreierschach.daddel.model.EndOfLifeStrategy;
 import de.dreierschach.daddel.model.OutsideGridStrategy;
 import de.dreierschach.daddel.model.Pos;
+import de.dreierschach.daddel.model.SpriteGameLoop;
 import javafx.geometry.VPos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -101,8 +101,8 @@ public class SpaceInvader extends Daddel {
 
 		particle(TYP_SPIELER, 0, 3, GFX_ROCKET).relativePos(new Pos(0, -0.2f));
 
-		key(KeyCode.ENTER, () -> toIntro());
-		key(KeyCode.ESCAPE, () -> toCredits());
+		key(KeyCode.ENTER, (keyCode) -> toIntro());
+		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
 	}
 
 	// ---------- Intro-Bildschirm --
@@ -122,9 +122,9 @@ public class SpaceInvader extends Daddel {
 
 		menu().pos(new Pos(0, 0)).color(Color.GREEN, Color.WHITE).weight(FontWeight.BLACK, FontWeight.BLACK)
 				.size(1.5f, 1.5f).lineHeight(2).family("sans-serif", "sans-serif")
-				.item("new game", () -> toLevelIntro()).item("highscore", () -> toHighscore())
-				.item("setup", () -> toSetup()).item("title", () -> toTitle()).item("exit", () -> toCredits()).create();
-		key(KeyCode.ESCAPE, () -> toCredits());
+				.item("new game", (keyCode) -> toLevelIntro()).item("highscore", (keyCode) -> toHighscore())
+				.item("setup", (keyCode) -> toSetup()).item("title", (keyCode) -> toTitle()).item("exit", (keyCode) -> toCredits()).create();
+		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
 	}
 
 	// ---------- Setup-Bildschirm --
@@ -145,8 +145,8 @@ public class SpaceInvader extends Daddel {
 					.relativePos(new Pos(0, 1.4f * i - 4.5f)).weight(FontWeight.BLACK);
 		}
 
-		key(KeyCode.ENTER, () -> toMenu());
-		key(KeyCode.ESCAPE, () -> toCredits());
+		key(KeyCode.ENTER, (keyCode) -> toMenu());
+		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
 	}
 
 	// ---------- Gewonnen-Bildschirm --
@@ -180,7 +180,7 @@ public class SpaceInvader extends Daddel {
 				eintrag.name = input.toUpperCase();
 			});
 
-			key(KeyCode.ENTER, () -> {
+			key(KeyCode.ENTER, (keyCode) -> {
 				noInput();
 				neuerHighscore(eintrag);
 				toHighscore();
@@ -188,7 +188,7 @@ public class SpaceInvader extends Daddel {
 		} else {
 			text("press <ENTER> to continue", "sans-serif", 1f, Color.YELLOW).relativePos(new Pos(0, 3))
 					.weight(FontWeight.BLACK);
-			key(KeyCode.ENTER, () -> toHighscore());
+			key(KeyCode.ENTER, (keyCode) -> toHighscore());
 		}
 	}
 
@@ -211,8 +211,8 @@ public class SpaceInvader extends Daddel {
 		text("press <ENTER> when ready", "sans-serif", 0.6f, Color.WHITE).relativePos(new Pos(0, 1))
 				.weight(FontWeight.BLACK);
 
-		key(KeyCode.ENTER, () -> toLevel());
-		key(KeyCode.ESCAPE, () -> exit());
+		key(KeyCode.ENTER, (keyCode) -> toLevel());
+		key(KeyCode.ESCAPE, (keyCode) -> exit());
 	}
 
 	// ---------- Level starten --
@@ -238,12 +238,12 @@ public class SpaceInvader extends Daddel {
 
 		// Auf Tasten reagieren
 
-		key(KeyCode.LEFT, () -> left());
-		key(KeyCode.RIGHT, () -> right());
-		key(KeyCode.DOWN, () -> stop());
-		key(KeyCode.SPACE, () -> raketeLaserAbfeuern());
-		key(KeyCode.ESCAPE, () -> toCredits());
-		key(KeyCode.F3, () -> debug(!debug()));
+		key(KeyCode.LEFT, (keyCode) -> left());
+		key(KeyCode.RIGHT, (keyCode) -> right());
+		key(KeyCode.DOWN, (keyCode) -> stop());
+		key(KeyCode.SPACE, (keyCode) -> raketeLaserAbfeuern());
+		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
+		key(KeyCode.F3, (keyCode) -> debug(!debug()));
 	}
 
 	// ---------- Spielschleife --

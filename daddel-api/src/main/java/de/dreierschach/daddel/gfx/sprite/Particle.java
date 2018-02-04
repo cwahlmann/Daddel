@@ -5,6 +5,7 @@ import de.dreierschach.daddel.listener.ParticleDiesListener;
 import de.dreierschach.daddel.model.EndOfLifeStrategy;
 import de.dreierschach.daddel.model.OutsideGridStrategy;
 import de.dreierschach.daddel.model.Pos;
+import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
 
 /**
@@ -241,6 +242,7 @@ public class Particle extends ImageSprite {
 			switch (outsideGridStrategy) {
 			case kill:
 				kill();
+				particleDiesListener.onDeath(this);
 				break;
 			case bounce:
 				// TODO

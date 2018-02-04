@@ -1,7 +1,5 @@
 package de.dreierschach.daddel.setup;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -17,36 +15,81 @@ import com.google.gson.GsonBuilder;
 
 import javafx.scene.paint.Color;
 
+/**
+ * Lädt und speichert Setup-Werte
+ * 
+ * @author Christian
+ *
+ */
 public class Setup {
 	private static Logger log = Logger.getLogger(Setup.class);
 
 	private Properties properties = new Properties();
-	
+
+	/**
+	 * Lade eine Setup-Datei
+	 * 
+	 * @param setupFile
+	 *            Dateipfad
+	 */
 	public void load(String setupFile) {
 		this.properties = new Properties();
 		try (FileReader reader = new FileReader(setupFile)) {
 			this.properties.load(reader);
 		} catch (IOException e) {
 			log.warn(String.format("Konnte Setup-File '%s' nicht laden.", setupFile), e);
-		}		
+		}
 	}
-	
+
+	/**
+	 * Speichere das Setup in eine Setup-Datei
+	 * 
+	 * @param setupFile
+	 *            Dateipfad der Datei
+	 */
 	public void save(String setupFile) {
 		try (FileWriter writer = new FileWriter(setupFile)) {
 			this.properties.store(writer, setupFile);
 		} catch (IOException e) {
 			log.warn(String.format("Konnte Setup-File '%s' nicht speichern.") + setupFile, e);
-		}				
+		}
 	}
-	
+
+	/**
+	 * Hole einen Setup-Wert
+	 * 
+	 * @param key
+	 *            Key des Werts
+	 * @param defaultValue
+	 *            Default-Inhalt des Setup-Werts
+	 * @return dee Setup-Wert
+	 */
 	public String get(String key, String defaultValue) {
 		return properties.getProperty(key, defaultValue);
 	}
-	
+
+	/**
+	 * Prüft, ob ein Setup-Wert existiert
+	 * 
+	 * @param key
+	 *            Key des Werts
+	 * @return true, wenn der Wert existiert
+	 */
 	public boolean contains(String key) {
 		return properties.containsKey(key);
 	}
-	
+
+	/**
+	 * Hole ein Setup-Objekt
+	 * 
+	 * @param key
+	 *            der Key des Setup-Objekts
+	 * @param clazz
+	 *            die Klasse des Setup-Objekts
+	 * @param <T>
+	 *            Typ des Setup-Objekts
+	 * @return der Wert des Setup-Objekts
+	 */
 	public <T> T get(String key, Class<T> clazz) {
 		if (!contains(key)) {
 			return null;
@@ -58,36 +101,30 @@ public class Setup {
 		return t;
 	}
 
+	/**
+	 * Setzt ein Setup-Werts
+	 * 
+	 * @param key
+	 *            der Schlüssel des Setup-Werts
+	 * @param value
+	 *            der Setup-Wert
+	 */
 	public void set(String key, String value) {
 		properties.setProperty(key, value);
 	}
 
+	/**
+	 * Setzt ein Setup-Objekt
+	 * 
+	 * @param key
+	 *            der Schlüssel des Setup-Objekts
+	 * @param o
+	 *            der Setup-Objekt
+	 */
 	public void set(String key, Object o) {
 		Gson gson = new GsonBuilder().create();
 		String json = gson.toJson(o);
 		String base64 = Base64.getEncoder().encodeToString(json.getBytes());
 		properties.setProperty(key, base64);
-	}
-	
-	public static void main(String[] args) {
-		String setupFile = "test.ini";
-		Setup setup = new Setup();
-		setup.set("eins", "1");
-		List<Color> list = Arrays.asList(
-				new Color[] {
-				Color.ALICEBLUE,
-				Color.AQUA,
-		}); 
-		setup.set("list", list);
-		setup.save(setupFile);
-		System.out.println("--------------- saved --");
-
-		setup = new Setup();
-		setup.load(setupFile);
-		List<Color> readList = Arrays.asList(setup.get("list", Color[].class));
-		for (int i=0; i<readList.size(); i++) {
-			Color color = readList.get(i);
-			System.out.println(color.hashCode());
-		}
 	}
 }

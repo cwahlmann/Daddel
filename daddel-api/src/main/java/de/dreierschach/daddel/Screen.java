@@ -11,6 +11,7 @@ import de.dreierschach.daddel.gfx.text.TextSprite;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.listener.InputListener;
 import de.dreierschach.daddel.listener.KeyListener;
+import de.dreierschach.daddel.model.GameLoop;
 import de.dreierschach.daddel.model.Scr;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -29,6 +30,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+/**
+ * Screen realisiert die Bildschirmdarstellung in JavaFx. Einziges
+ * Darstellungselement ist ein Canvas.
+ * 
+ * @author Christian
+ *
+ */
 public class Screen {
 	private Pane pane;
 
@@ -48,10 +56,9 @@ public class Screen {
 	};
 
 	// debug
-	
+
 	private boolean debug = false;
 	private TextSprite debugInfo = null;
-
 
 	final LongProperty elapsedTime = new SimpleLongProperty();
 	final AnimationTimer timer = new AnimationTimer() {
@@ -62,8 +69,8 @@ public class Screen {
 			}
 			long delta = nano - elapsedTime.get();
 			if (debug) {
-//				double fps = 1000d / ((double)delta / 1000000d);
-				double fps = 1000000000d / ((double)delta );
+				// double fps = 1000d / ((double)delta / 1000000d);
+				double fps = 1000000000d / ((double) delta);
 				debugInfo.text(String.format("fps: %.1f\n", fps));
 			}
 			gameLoop.run(nano / 1000000, delta / 1000000);
@@ -72,6 +79,21 @@ public class Screen {
 		}
 	};
 
+	/**
+	 * @param screenWidth
+	 *            Fensterbreite
+	 * @param screenHeight
+	 *            Fensterhöhe
+	 * @param font
+	 *            Standart-Zeichensatz
+	 * @param foreground
+	 *            Vordergrundfarbe, wird derzeit nicht verwendet
+	 * @param background
+	 *            Hintergrundfarbe
+	 * @throws IOException
+	 *             wird geworfen, wenn die Resource "screen.fxml" nicht geladen
+	 *             werden kann
+	 */
 	public Screen(int screenWidth, int screenHeight, Font font, Color foreground, Color background) throws IOException {
 
 		this.foreground = foreground;
@@ -99,96 +121,163 @@ public class Screen {
 		timer.start();
 	}
 
+	/**
+	 * Aktiviert / deaktiviert die Debug-Anzeige
+	 * 
+	 * @param debug
+	 *            true: Debug-Informationen werden angezeigt (Standart: FPS)
+	 */
 	public void setDebug(boolean debug) {
 		this.debug = debug;
 	}
-	
+
+	/**
+	 * @return true, wenn die Debug-Anzeige aktiviert ist
+	 */
 	public boolean isDebug() {
 		return debug;
 	}
-	
+
+	/**
+	 * legt den Textsprite fest, der im Debug-Modus angezeigt wird
+	 * 
+	 * @param debugInfo
+	 *            ein TextSprite
+	 */
 	public void setDebugInfo(TextSprite debugInfo) {
 		this.debugInfo = debugInfo;
 	}
-	
+
+	/**
+	 * @return Textsprite, der im Debug-Modus angezeigt wird
+	 */
 	public TextSprite getDebugInfo() {
 		return debugInfo;
 	}
-	
+
+	/**
+	 * Wandelt ein Farbobjekt in einen entsprechenden CSS-Farbcode um; wird für die
+	 * Textdarstellung verwendet
+	 * 
+	 * @param color
+	 *            Farbe
+	 * @return Farbcode
+	 */
 	public String getRGB(Color color) {
 		return String.format("#%02X%02X%02X", ((int) color.getRed()) * 255, ((int) color.getGreen()) * 255,
 				((int) color.getBlue()) * 255);
 	}
 
+	/**
+	 * Legt den anzuzeigenden Bildschirmausschnitt fest
+	 * 
+	 * @param scr0
+	 *            linke, obere Ecke
+	 * @param scr1
+	 *            rechte, untere Ecke
+	 */
 	public void setClipping(Scr scr0, Scr scr1) {
 		output.setClip(new Rectangle(scr0.x(), scr0.y(), //
 				scr1.x() - scr0.x(), scr1.y() - scr0.y()));
 	}
 
+	/**
+	 * legt die Aktion fest, die bei jecem Durchlauf der Spielschleife durchgeführt
+	 * werden soll
+	 * 
+	 * @param gameLoop
+	 *            Aktion
+	 */
 	public void setGameLoop(GameLoop gameLoop) {
 		this.gameLoop = gameLoop;
 	}
 
+	/**
+	 * Legt eine Aktion fest, die bei Drücken einer bestimmten Taste ausgeführt
+	 * werden soll
+	 * 
+	 * @param keyCode
+	 *            der KeyCode der Taste, z.B. KeyCode.SPACE
+	 * @param keyListener
+	 *            die Aktion
+	 */
 	public void addKeyListener(KeyCode keyCode, KeyListener keyListener) {
 		this.keyListener.put(keyCode, keyListener);
 	}
 
+	/**
+	 * legt fest, dass für die angegebene Taste keine Aktion mehr ausgeführt werden
+	 * soll
+	 * 
+	 * @param keyCode
+	 *            der KeyCode der Taste, z.B. KeyCode.SPACE
+	 */
 	public void removeKeyListener(KeyCode keyCode) {
 		this.keyListener.remove(keyCode);
 	}
 
+	/**
+	 * legt fest, dass für keine Taste mehr keine Aktion mehr ausgeführt werden soll
+	 */
 	public void removeKeyListeners() {
 		this.keyListener.clear();
 	}
 
-	public void onOutputKeyTyped(KeyEvent keyEvent) {
-		manageInput(keyEvent);
-		if (this.keyListener.containsKey(keyEvent.getCode())) {
-			this.keyListener.get(keyEvent.getCode()).onKey();
-		}
-	}
-
+	/**
+	 * legt eine Aktion fest, die bei Eingabe eines Zeichens bei aktiviertem Input
+	 * ausgeführt wird
+	 * 
+	 * @param inputListener
+	 *            die Aktion
+	 */
 	public void setInputListener(InputListener inputListener) {
 		this.inputListener = inputListener;
 	}
 
+	/**
+	 * Löscht das Ergebnis des Inputs
+	 */
 	public void clearInput() {
 		inputString = "";
 	}
 
+	/**
+	 * Aktiviert Input, d.h. die Eingabe von Zeichen in einen Eingabe-String
+	 * 
+	 * @param enableInput
+	 *            true: Input wird aktiviert
+	 */
 	public void setEnableInput(boolean enableInput) {
 		this.enableInput = enableInput;
 	}
 
+	/**
+	 * Legt die maximale Anzahl Zeichen des Input-String fest
+	 * 
+	 * @param inputLaenge
+	 *            max. Länge des Input-Strings in Zeichen
+	 */
 	public void setInputLaenge(int inputLaenge) {
 		this.inputLaenge = inputLaenge;
 	}
 
-	private void manageInput(KeyEvent keyEvent) {
-		if (!enableInput) {
-			return;
-		}
-		if (keyEvent.getCode().equals(KeyCode.BACK_SPACE)) {
-			if (inputString.length() < 2) {
-				inputString = "";
-			} else {
-				inputString = inputString.substring(0, inputString.length() - 1);
-			}
-			inputListener.onInput(inputString);
-			return;
-		}
-		char c = keyEvent.getCharacter().charAt(0);
-		if (inputString.length() < inputLaenge && Character.isAlphabetic(c) || c == '.' || c == '-' || c == ' '
-				|| c == '_') {
-			inputString += c;
-			inputListener.onInput(inputString);
-		}
-	}
-
+	/**
+	 * Fügt einen Sprite hinzu, der auf dem Bildschirm angezeigt werden soll
+	 * 
+	 * @param sprite
+	 *            der Sprite
+	 */
 	public void addSprite(Sprite sprite) {
 		this.sprites.add(sprite);
 	}
 
+	/**
+	 * entfernt einen Sprite aus der Liste anzuzeigender Sprites
+	 * 
+	 * @param sprite
+	 *            der Sprite
+	 * @return false: Sprite existiert nicht in der Liste
+	 */
 	public boolean deleteSprite(Sprite sprite) {
 		if (!sprites.contains(sprite)) {
 			return false;
@@ -197,14 +286,30 @@ public class Screen {
 		return true;
 	}
 
+	/**
+	 * @return die Liste mit allen Sprites
+	 */
 	public List<Sprite> getSprites() {
 		return sprites;
 	}
 
+	/**
+	 * Fügt einen Text-Sprite hinzu, der auf dem Bildschirm angezeigt werden soll
+	 * 
+	 * @param text
+	 *            der Text-Sprite
+	 */
 	public void addText(TextSprite text) {
 		this.texts.add(text);
 	}
 
+	/**
+	 * entfernt einen Text-Sprite aus der Liste anzuzeigender Sprites
+	 * 
+	 * @param text
+	 *            der Text-Sprite
+	 * @return false: Text-Sprite existiert nicht in der Liste
+	 */
 	public boolean deleteText(TextSprite text) {
 		if (!texts.contains(text)) {
 			return false;
@@ -213,19 +318,41 @@ public class Screen {
 		return true;
 	}
 
+	/**
+	 * @return einen Liste mit allen Text-Sprites
+	 */
 	public List<TextSprite> getTexts() {
 		return texts;
 	}
 
+	/**
+	 * Legt das anzuzeigende gekachelte Spielfeld fest; ist es null, wird kein
+	 * Spielfeld sngezeigt
+	 * 
+	 * @param tileMap
+	 *            das Spielfeld
+	 */
 	public void setTileMap(TileMap tileMap) {
 		this.tileMap = tileMap;
 	}
 
+	/**
+	 * @return das aktuell angezeigte gekachelte Spielfeld
+	 */
 	public TileMap getTileMap() {
 		return tileMap;
 	}
 
-	public void refresh() {
+	/**
+	 * @return der Canvas, auf dem alle Inhalte angezeigt werden
+	 */
+	public Pane getPane() {
+		return pane;
+	}
+
+	// private methoden
+
+	private void refresh() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -254,8 +381,31 @@ public class Screen {
 		});
 	}
 
-	public Pane getPane() {
-		return pane;
+	private void onOutputKeyTyped(KeyEvent keyEvent) {
+		manageInput(keyEvent);
+		if (this.keyListener.containsKey(keyEvent.getCode())) {
+			this.keyListener.get(keyEvent.getCode()).onKey(keyEvent.getCode());
+		}
 	}
 
+	private void manageInput(KeyEvent keyEvent) {
+		if (!enableInput) {
+			return;
+		}
+		if (keyEvent.getCode().equals(KeyCode.BACK_SPACE)) {
+			if (inputString.length() < 2) {
+				inputString = "";
+			} else {
+				inputString = inputString.substring(0, inputString.length() - 1);
+			}
+			inputListener.onInput(inputString);
+			return;
+		}
+		char c = keyEvent.getCharacter().charAt(0);
+		if (inputString.length() < inputLaenge && Character.isAlphabetic(c) || c == '.' || c == '-' || c == ' '
+				|| c == '_') {
+			inputString += c;
+			inputListener.onInput(inputString);
+		}
+	}
 }
