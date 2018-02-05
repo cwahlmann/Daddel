@@ -6,8 +6,10 @@ import java.util.Map;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.model.MapPos;
 import de.dreierschach.daddel.model.Pos;
+import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.Transformation;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
  * ein gekacheltes Spielfeld - TODO: mehrere Ebenen
@@ -354,8 +356,12 @@ public class TileMap extends Sprite {
 		return new Pos(((float) x) * tileSize, ((float) y) * tileSize);
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#onCollision(de.dreierschach.daddel.gfx.sprite.Sprite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.Sprite#onCollision(de.dreierschach.daddel.
+	 * gfx.sprite.Sprite)
 	 */
 	@Override
 	public TileMap onCollision(Sprite other) {
@@ -400,12 +406,44 @@ public class TileMap extends Sprite {
 				}
 			}
 		}
+		if (debug()) {
+			Pos halfTileSize = new Pos(tileSize / 2, tileSize / 2);
+			for (int x = x0; x <= x1; x++) {
+				Pos p0 = pos(x, y0).add(pos()).add(halfTileSize);
+				Pos p1 = pos(x, y1).add(pos()).add(halfTileSize);
+				line(g, p0, p1);
+			}
+			for (int y = y0; y <= y1; y++) {
+				Pos p0 = pos(x0, y).add(pos()).add(halfTileSize);
+				Pos p1 = pos(x1, y).add(pos()).add(halfTileSize);
+				line(g, p0, p1);
+			}
+		}
 	}
 
+	private void line(GraphicsContext g, Pos p0, Pos p1) {
+		Scr scr0 = transformation().t(p0);
+		Scr scr1 = transformation().t(p1);
+		g.setFill(Color.gray(0.5));
+		g.fillRect(scr0.x(), scr0.y(), scr1.x()-scr0.x()+1, scr1.y()-scr0.y()+1);
+	}
 	// overwrite methods for correct return type
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#relativePos(de.dreierschach.daddel.model.Pos)
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#debug(boolean)
+	 */
+	@Override
+	public Sprite debug(boolean debug) {
+		super.debug(debug);
+		return this;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.Sprite#relativePos(de.dreierschach.daddel.
+	 * model.Pos)
 	 */
 	@Override
 	public TileMap relativePos(Pos pos) {
@@ -413,7 +451,9 @@ public class TileMap extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#rotation(double)
 	 */
 	@Override
@@ -422,7 +462,9 @@ public class TileMap extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#rotate(double)
 	 */
 	@Override
@@ -431,7 +473,9 @@ public class TileMap extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#direction(double)
 	 */
 	@Override
@@ -440,7 +484,9 @@ public class TileMap extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#r(float)
 	 */
 	@Override
@@ -449,7 +495,9 @@ public class TileMap extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#type(int)
 	 */
 	@Override
@@ -458,8 +506,12 @@ public class TileMap extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#move(de.dreierschach.daddel.model.Pos)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.Sprite#move(de.dreierschach.daddel.model.
+	 * Pos)
 	 */
 	@Override
 	public TileMap move(Pos direction) {
@@ -467,7 +519,9 @@ public class TileMap extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#move(float)
 	 */
 	@Override

@@ -360,15 +360,18 @@ public class Screen {
 				g.setFill(background);
 				g.fillRect(0, 0, output.getWidth(), output.getHeight());
 				if (tileMap != null) {
+					tileMap.debug(isDebug());
 					tileMap.draw(g);
 				}
 				sprites.forEach(sprite -> {
 					g.save();
+					sprite.debug(isDebug());
 					sprite.drawSprite(g);
 					g.restore();
 				});
 				texts.forEach(text -> {
 					g.save();
+					text.debug(isDebug());
 					text.draw(g);
 					g.restore();
 				});
@@ -381,7 +384,7 @@ public class Screen {
 		});
 	}
 
-	private void onOutputKeyTyped(KeyEvent keyEvent) {
+	public void onOutputKeyTyped(KeyEvent keyEvent) {
 		manageInput(keyEvent);
 		if (this.keyListener.containsKey(keyEvent.getCode())) {
 			this.keyListener.get(keyEvent.getCode()).onKey(keyEvent.getCode());

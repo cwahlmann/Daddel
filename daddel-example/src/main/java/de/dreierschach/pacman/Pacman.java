@@ -167,11 +167,6 @@ public class Pacman extends Daddel {
 		key(KeyCode.DOWN, (keyCode) -> packmanGo(Dir.DOWN));
 		key(KeyCode.RIGHT, (keyCode) -> packmanGo(Dir.RIGHT));
 		key(KeyCode.SPACE, (keyCode) -> packmanGo(Dir.STOP));
-		key(KeyCode.F3, (keyCode) -> debug(!debug()));
-
-		// debug
-
-		debug(true);
 	}
 
 	// -------------- map initialisieren --
@@ -339,5 +334,4 @@ public class Pacman extends Daddel {
 	public static void main(String[] args) {
 		launch(args);
 	}
-
 }

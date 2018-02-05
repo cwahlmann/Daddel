@@ -415,4 +415,13 @@ public class Particle extends ImageSprite {
 		super.onCollision(other);
 		return this;
 	}
+	
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#debug(boolean)
+	 */
+	@Override
+	public Particle debug(boolean debug) {
+		super.debug(debug);
+		return this;
+	}
 }

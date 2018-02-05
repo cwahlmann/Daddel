@@ -44,6 +44,7 @@ public abstract class Sprite {
 	private double direction = 0;
 	private Transformation transformation;
 	private Sprite parent = null;
+	private boolean debug = false;
 
 	/**
 	 * Sprite mit vorgegebenen Radius erzeigen
@@ -73,6 +74,25 @@ public abstract class Sprite {
 	 */
 	public Sprite(Transformation transformation, int type) {
 		this(transformation, type, 1);
+	}
+
+	/**
+	 * Legt fest, ob debug-Informationen angezeigt werden
+	 * 
+	 * @param debug
+	 *            true, wenn debug Informationen angezeigt werden sollen
+	 * @return this
+	 */
+	public Sprite debug(boolean debug) {
+		this.debug = debug;
+		return this;
+	}
+
+	/**
+	 * @return true, wenn debug Informationen angezeigt werden sollen
+	 */
+	public boolean debug() {
+		return debug;
 	}
 
 	/**

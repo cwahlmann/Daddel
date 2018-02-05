@@ -922,6 +922,7 @@ public abstract class Daddel extends Application {
 
 	private void clear() {
 		removeKeys();
+		key(KeyCode.F3, keyCode -> debug(!debug()));
 		killallSprites();
 		killallText();
 	}

@@ -11,6 +11,7 @@ import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 /**
  * ein Sprite in Form eines Bildes; kann animiert sein
@@ -62,6 +63,17 @@ public class ImageSprite extends Sprite {
 	}
 
 	// ------------------------ API-Methoden --
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#debug(boolean)
+	 */
+	public ImageSprite debug(boolean debug) {
+		super.debug(debug);
+		return this;
+	}
+
 	/**
 	 * @return die Anzahl der Bilder des Sprite
 	 */
@@ -139,18 +151,31 @@ public class ImageSprite extends Sprite {
 
 	// -------------- interne Methoden --
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#draw(javafx.scene.canvas.GraphicsContext)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#draw(javafx.scene.canvas.
+	 * GraphicsContext)
 	 */
 	@Override
 	public void draw(GraphicsContext g) {
 		Scr scr = transformation().t(pos());
 		g.setGlobalAlpha(this.alpha);
 		g.drawImage(image(), scr.x() - witdh / 2, scr.y() - height / 2);
+		if (debug()) {
+			g.setGlobalAlpha(1.0);
+			g.setStroke(Color.gray(0.5));
+			float d = transformation().zoom(r()) * 2;
+			g.strokeOval(scr.x() - d / 2, scr.y() - d / 2, d, d);
+		}
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#onCollision(de.dreierschach.daddel.gfx.sprite.Sprite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.Sprite#onCollision(de.dreierschach.daddel.
+	 * gfx.sprite.Sprite)
 	 */
 	@Override
 	public ImageSprite onCollision(Sprite other) {
@@ -160,8 +185,12 @@ public class ImageSprite extends Sprite {
 
 	// -------------- override methods to return correct type --
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#relativePos(de.dreierschach.daddel.model.Pos)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.Sprite#relativePos(de.dreierschach.daddel.
+	 * model.Pos)
 	 */
 	@Override
 	public ImageSprite relativePos(Pos pos) {
@@ -169,7 +198,9 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#rotation(double)
 	 */
 	@Override
@@ -178,7 +209,9 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#rotate(double)
 	 */
 	@Override
@@ -187,7 +220,9 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#direction(double)
 	 */
 	@Override
@@ -196,7 +231,9 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#r(float)
 	 */
 	@Override
@@ -205,7 +242,9 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#type(int)
 	 */
 	@Override
@@ -214,8 +253,12 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#gameLoop(de.dreierschach.daddel.gfx.sprite.SpriteGameLoop[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.Sprite#gameLoop(de.dreierschach.daddel.gfx.
+	 * sprite.SpriteGameLoop[])
 	 */
 	@Override
 	public ImageSprite gameLoop(SpriteGameLoop... gameLoops) {
@@ -223,8 +266,12 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#parent(de.dreierschach.daddel.gfx.sprite.Sprite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.Sprite#parent(de.dreierschach.daddel.gfx.
+	 * sprite.Sprite)
 	 */
 	@Override
 	public ImageSprite parent(Sprite parent) {
@@ -232,8 +279,12 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#move(de.dreierschach.daddel.model.Pos)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.Sprite#move(de.dreierschach.daddel.model.
+	 * Pos)
 	 */
 	@Override
 	public ImageSprite move(Pos direction) {
@@ -241,7 +292,9 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#move(float)
 	 */
 	@Override

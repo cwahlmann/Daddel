@@ -243,7 +243,6 @@ public class SpaceInvader extends Daddel {
 		key(KeyCode.DOWN, (keyCode) -> stop());
 		key(KeyCode.SPACE, (keyCode) -> raketeLaserAbfeuern());
 		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
-		key(KeyCode.F3, (keyCode) -> debug(!debug()));
 	}
 
 	// ---------- Spielschleife --
@@ -346,7 +345,7 @@ public class SpaceInvader extends Daddel {
 	public void erzeugeRakete(Pos pos) {
 		raketeSchutzschirm = raketeSchutzschirmDauer;
 		raketeSprite = sprite(TYP_SPIELER, 4f, GFX_ROCKET, GFX_ROCKET_SCHIRM).relativePos(pos)
-				.gameLoop(raketeAnimieren);
+				.gameLoop(raketeAnimieren).r(1f);
 		raketeRichtung = 0;
 	}
 
