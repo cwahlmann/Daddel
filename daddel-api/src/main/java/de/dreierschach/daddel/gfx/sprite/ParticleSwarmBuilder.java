@@ -107,10 +107,10 @@ public class ParticleSwarmBuilder {
 
 			Particle particle = new Particle(transformation, typ, random(sizeRange, sizeSteps), random(lifeSpanRange),
 					images).speedAnimation(random(speedAnimationRange));
-			particle.relativePos(random(initialPosRange)).speed(speedStart, speedEnd)
+			particle.pos(random(initialPosRange)).speed(speedStart, speedEnd)
 					.direction(directionStart, directionEnd).rotation(rotationStart, rotationEnd)
 					.alpha(alphaStart, alphaEnd).endOfLifeStrategy(endOfLifeStrategy)
-					.outsideRasterStrategy(outsideGridStrategy).collisionListener(collisionListener).parent(parent)
+					.outsideRasterStrategy(outsideGridStrategy).collision(collisionListener).parent(parent)
 					.onDeath(particleDiesListener);
 			swarm.getParticles().add(particle);
 		}

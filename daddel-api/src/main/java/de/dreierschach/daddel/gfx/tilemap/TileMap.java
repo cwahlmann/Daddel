@@ -341,7 +341,7 @@ public class TileMap extends Sprite {
 	public void gameLoop(long delta) {
 		tiles.values().forEach(tile -> tile.gameLoop(delta));
 		if (hasFocus()) {
-			relativePos(new Pos(-focus.relativePos().x(), -focus.relativePos().y()));
+			pos(new Pos(-focus.pos().x(), -focus.pos().y()));
 		}
 	}
 
@@ -388,15 +388,15 @@ public class TileMap extends Sprite {
 	public void draw(GraphicsContext g) {
 		double dx = transformation.getRasterRightBottom().x() - transformation.getRasterLeftUpper().x();
 		double dy = transformation.getRasterRightBottom().y() - transformation.getRasterLeftUpper().y();
-		int x0 = -1 + (int) (-pos().x() - dx * 0.5f / tileSize);
-		int y0 = -1 + (int) (-pos().y() - dy * 0.5f / tileSize);
+		int x0 = -1 + (int) (-effektivePos().x() - dx * 0.5f / tileSize);
+		int y0 = -1 + (int) (-effektivePos().y() - dy * 0.5f / tileSize);
 		int x1 = 2 + x0 + (int) (dx / tileSize);
 		int y1 = 2 + y0 + (int) (dy / tileSize);
 
 		for (int x = x0; x <= x1; x++) {
 			for (int y = y0; y <= y1; y++) {
 				Pos prel = pos(x, y);
-				Pos p = new Pos(prel.x() + pos().x(), prel.y() + pos().y());
+				Pos p = new Pos(prel.x() + effektivePos().x(), prel.y() + effektivePos().y());
 				for (int d = 0; d < size.z(); d++) {
 					int id = id(new MapPos(x, y, d));
 					Tile tile = tile(id);
@@ -409,13 +409,13 @@ public class TileMap extends Sprite {
 		if (debug()) {
 			Pos halfTileSize = new Pos(tileSize / 2, tileSize / 2);
 			for (int x = x0; x <= x1; x++) {
-				Pos p0 = pos(x, y0).add(pos()).add(halfTileSize);
-				Pos p1 = pos(x, y1).add(pos()).add(halfTileSize);
+				Pos p0 = pos(x, y0).add(effektivePos()).add(halfTileSize);
+				Pos p1 = pos(x, y1).add(effektivePos()).add(halfTileSize);
 				line(g, p0, p1);
 			}
 			for (int y = y0; y <= y1; y++) {
-				Pos p0 = pos(x0, y).add(pos()).add(halfTileSize);
-				Pos p1 = pos(x1, y).add(pos()).add(halfTileSize);
+				Pos p0 = pos(x0, y).add(effektivePos()).add(halfTileSize);
+				Pos p1 = pos(x1, y).add(effektivePos()).add(halfTileSize);
 				line(g, p0, p1);
 			}
 		}
@@ -446,8 +446,8 @@ public class TileMap extends Sprite {
 	 * model.Pos)
 	 */
 	@Override
-	public TileMap relativePos(Pos pos) {
-		super.relativePos(pos);
+	public TileMap pos(Pos pos) {
+		super.pos(pos);
 		return this;
 	}
 

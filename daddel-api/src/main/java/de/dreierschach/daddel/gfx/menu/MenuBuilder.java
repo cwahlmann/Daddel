@@ -70,14 +70,14 @@ public class MenuBuilder {
 	public MenuBuilder item(String text, KeyListener action) {
 		if (menu.size() == 0) {
 			TextSprite textSprite = new TextSprite(transformation, text).align(align, valign).color(colorOn)
-					.family(familyOn).size(sizeOn).weight(fontWeightOn).type(-1).relativePos(pos);
+					.family(familyOn).size(sizeOn).weight(fontWeightOn).type(-1).pos(pos);
 			menu.addItem(textSprite, action);
 			screen.addSprite(textSprite);
 			return this;
 		}
 		TextSprite textSprite = new TextSprite(transformation, text).align(align, valign).color(colorOff)
 				.family(familyOff).size(sizeOff).weight(fontWeightOff).type(-1)
-				.relativePos(new Pos(pos.x(), pos.y() + lineHeight * (float) (menu.size())));
+				.pos(new Pos(pos.x(), pos.y() + lineHeight * (float) (menu.size())));
 		menu.addItem(textSprite, action);
 		screen.addSprite(textSprite);
 		return this;

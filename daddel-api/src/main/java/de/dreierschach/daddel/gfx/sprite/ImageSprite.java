@@ -144,7 +144,7 @@ public class ImageSprite extends Sprite {
 	 *            die Aktion bei Kollisionen
 	 * @return this
 	 */
-	public ImageSprite collisionListener(CollisionListener collisionListener) {
+	public ImageSprite collision(CollisionListener collisionListener) {
 		this.collisionListener = collisionListener;
 		return this;
 	}
@@ -159,7 +159,7 @@ public class ImageSprite extends Sprite {
 	 */
 	@Override
 	public void draw(GraphicsContext g) {
-		Scr scr = transformation().t(pos());
+		Scr scr = transformation().t(effektivePos());
 		g.setGlobalAlpha(this.alpha);
 		g.drawImage(image(), scr.x() - witdh / 2, scr.y() - height / 2);
 		if (debug()) {
@@ -193,8 +193,8 @@ public class ImageSprite extends Sprite {
 	 * model.Pos)
 	 */
 	@Override
-	public ImageSprite relativePos(Pos pos) {
-		super.relativePos(pos);
+	public ImageSprite pos(Pos pos) {
+		super.pos(pos);
 		return this;
 	}
 

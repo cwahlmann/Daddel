@@ -5,7 +5,7 @@ import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import javafx.scene.input.KeyCode;
 
 // Das Spiel erweitert die Spiele-API Daddel
-public class TutorialRakete extends Daddel {
+public class Tutorial01Rakete extends Daddel {
 
 	// Sprites können einen Typ haben, z.B. einen für Spieler und einen für Gegner
 	private final static int TYP_SPIELER = 1;

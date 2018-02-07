@@ -151,11 +151,11 @@ public class Entity extends ImageSprite {
 					Pos dest = tileMap.pos(destMapPos.x(), destMapPos.y());
 					float d = ((float) (total - moveStartTime)) / (float) moveTimeDelta;
 					Pos p = new Pos(d * (dest.x() - start.x()) + start.x(), d * (dest.y() - start.y()) + start.y());
-					me.relativePos(p);
+					me.pos(p);
 				}
 			}
 			if (!moving) {
-				me.relativePos(tileMap.pos(mapPos.x(), mapPos.y()));
+				me.pos(tileMap.pos(mapPos.x(), mapPos.y()));
 			}
 		}, animation);
 		this.tileMap = tileMap;
@@ -430,8 +430,8 @@ public class Entity extends ImageSprite {
 	 * daddel.model.Pos)
 	 */
 	@Override
-	public Entity relativePos(Pos pos) {
-		super.relativePos(pos);
+	public Entity pos(Pos pos) {
+		super.pos(pos);
 		return this;
 	}
 
@@ -478,8 +478,8 @@ public class Entity extends ImageSprite {
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#collisionListener(de.dreierschach.daddel.listener.CollisionListener)
 	 */
 	@Override
-	public Entity collisionListener(CollisionListener collisionListener) {
-		super.collisionListener(collisionListener);
+	public Entity collision(CollisionListener collisionListener) {
+		super.collision(collisionListener);
 		return this;
 	}
 

@@ -225,8 +225,8 @@ public class TextParticle extends TextSprite {
 		move(deltaZeit * speed / 1000);
 		Pos min = transformation().getRasterLeftUpper();
 		Pos max = transformation().getRasterRightBottom();
-		if (this.pos().x() < min.x() || this.pos().x() > max.x() || this.pos().y() < min.y()
-				|| this.pos().y() > max.y()) {
+		if (this.effektivePos().x() < min.x() || this.effektivePos().x() > max.x() || this.effektivePos().y() < min.y()
+				|| this.effektivePos().y() > max.y()) {
 			switch (outsideGridStrategy) {
 			case kill:
 				kill();
@@ -236,16 +236,16 @@ public class TextParticle extends TextSprite {
 				// TODO
 				break;
 			case reappear:
-				if (this.pos().x() < min.x()) {
-					this.relativePos(new Pos(pos().x() - min.x() + max.x(), pos().y()));
-				} else if (this.pos().x() > max.x()) {
-					this.relativePos(new Pos(pos().x() - max.x() + min.x(), pos().y()));
+				if (this.effektivePos().x() < min.x()) {
+					this.pos(new Pos(effektivePos().x() - min.x() + max.x(), effektivePos().y()));
+				} else if (this.effektivePos().x() > max.x()) {
+					this.pos(new Pos(effektivePos().x() - max.x() + min.x(), effektivePos().y()));
 				}
 
-				if (this.pos().y() < min.y()) {
-					this.relativePos(new Pos(pos().x(), pos().y() - min.y() + max.y()));
-				} else if (this.pos().y() > max.y()) {
-					this.relativePos(new Pos(pos().x(), pos().y() - max.y() + min.y()));
+				if (this.effektivePos().y() < min.y()) {
+					this.pos(new Pos(effektivePos().x(), effektivePos().y() - min.y() + max.y()));
+				} else if (this.effektivePos().y() > max.y()) {
+					this.pos(new Pos(effektivePos().x(), effektivePos().y() - max.y() + min.y()));
 				}
 				break;
 			case restart:
@@ -262,8 +262,8 @@ public class TextParticle extends TextSprite {
 	 * @see de.dreierschach.daddel.gfx.text.TextSprite#relativePos(de.dreierschach.daddel.model.Pos)
 	 */
 	@Override
-	public TextParticle relativePos(Pos pos) {
-		super.relativePos(pos);
+	public TextParticle pos(Pos pos) {
+		super.pos(pos);
 		return this;
 	}
 

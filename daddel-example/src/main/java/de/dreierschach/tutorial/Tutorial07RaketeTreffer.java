@@ -1,20 +1,24 @@
 package de.dreierschach.tutorial;
 
-import java.util.Random;
-
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
+import de.dreierschach.daddel.gfx.sprite.Particle;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
+import de.dreierschach.daddel.listener.ParticleDiesListener;
+import de.dreierschach.daddel.model.EndOfLifeStrategy;
+import de.dreierschach.daddel.model.OutsideGridStrategy;
 import de.dreierschach.daddel.model.Pos;
-import de.dreierschach.daddel.model.SpriteGameLoop;
 import javafx.scene.input.KeyCode;
 
 //Das Spiel erweitert die Spiele-API Daddel
-public class TutorialEnimies extends Daddel {
+public class Tutorial07RaketeTreffer extends Daddel {
 
 	// Sprites können einen Typ haben, z.B. einen für Spieler und einen für Gegner
 	private final static int TYP_SPIELER = 1;
 	private final static int TYP_GEGNER = 2;
+	private final static int TYP_LASER = 3;
+	private final static int TYP_EXPLOSION = 4;
+	private final static int TYP_STERN = 5;
 
 	// Die Größe der Rakete wird in Spielraster-Punkten angegeben
 	private final static float RAKETE_GROESSE = 2f;
@@ -50,18 +54,36 @@ public class TutorialEnimies extends Daddel {
 
 	// Hier wird ein Level gestartet
 	private void startLevel() {
-		// erzeuge die Rakete
-		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, GFX_ROCKET, GFX_ROCKET_SCHIRM);
+		erzeugeRakete();
+		erzeugeGegner();
+		definiereSteuerung();
+	}
 
-		// erzeuge das 4 Ufos
-		for (int i = 0; i < 4; i++) {
+	private void erzeugeRakete() {
+		// erzeuge die Rakete
+		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, GFX_ROCKET, GFX_ROCKET_SCHIRM) //
+				.collision((me, other) -> raketeGetroffen()) //
+				// berechne einen kleineren Radius für die Kollisionskontrolle
+				// (statt die Hälfte nur ein Viertel der Größe des Ufos)
+				.r(RAKETE_GROESSE / 4f);
+	}
+
+	private void erzeugeGegner() {
+		// erzeuge Ufos
+		for (int i = 0; i < 3 + level(); i++) {
 			// zufällige Position
-			Pos pos = new Pos((float) Math.random() * 20f - 10f, (float) Math.random() * 10f - 5f);
+			Pos pos = new Pos((float) Math.random() * 20f - 10f, (float) Math.random() * 5f - 5f);
 			sprite(TYP_GEGNER, GEGNER_GROESSE, GFX_UFO_1) //
-					.relativePos(pos) //
-					.gameLoop((ufo, totaltime, deltatime) -> bewegeUfo(ufo, deltatime));
+					.pos(pos) //
+					.gameLoop((ufo, totaltime, deltatime) -> bewegeUfo(ufo, deltatime)) //
+					// berechne einen kleineren Radius für die Kollisionskontrolle
+					// (statt die Hälfte nur ein Drittel der Größe des Ufos)
+					.r(GEGNER_GROESSE / 3f);
 		}
 
+	}
+
+	private void definiereSteuerung() {
 		// Je nach Taste wird eine andere Richtung eingeschlagen
 		key(KeyCode.LEFT, keyCode -> raketeRichtung = Richtung.links);
 		key(KeyCode.RIGHT, keyCode -> raketeRichtung = Richtung.rechts);
@@ -69,8 +91,21 @@ public class TutorialEnimies extends Daddel {
 		key(KeyCode.DOWN, keyCode -> raketeRichtung = Richtung.runter);
 		key(KeyCode.CONTROL, keyCode -> raketeRichtung = Richtung.stop);
 
+		// die Leertaste feuert einen Laser ab
+		key(KeyCode.SPACE, keyCode -> laserAbfeuern());
+
 		// Wenn die Taste ESC gedrückt wird, wird das Programm beendet
 		key(KeyCode.ESCAPE, keyCode -> exit());
+	}
+
+	// Wenn die Rakete gegen ein Ufo fliegt, explodiert sie, bevor das Spiel endet
+	public void raketeGetroffen() {
+		rakete.kill();
+		particle(TYP_EXPLOSION, 500, 2f, GFX_EXPLOSION) //
+				.pos(rakete.pos()) //
+				.speedAnimation(8f) //
+				// wenn der Partikel ( = die Explosion) stirbt, beende das Spiel
+				.onDeath(particle -> exit());
 	}
 
 	// Dies ist die sogenannte Spielschleife. Sie wird während eines rund 50 mal pro
@@ -86,13 +121,13 @@ public class TutorialEnimies extends Daddel {
 
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
 	private void bewegeRakete(float strecke) {
-		Pos neuePosition = rakete.relativePos().add(getPosRichtung(raketeRichtung, strecke));
-		if (neuePosition.x() < -9 || neuePosition.x() > 9 || neuePosition.y() < -4 || neuePosition.y() > 4) {
+		Pos neuePosition = rakete.pos().add(getPosRichtung(raketeRichtung, strecke));
+		if (!onGrid(neuePosition, rakete.r())) {
 			// Wenn die Rakete aus dem Bildschirm fliegen würde, wird sie gestoppt
 			raketeRichtung = Richtung.stop;
 		} else {
 			// Ansonsten wird die Position verändert
-			rakete.relativePos(neuePosition);
+			rakete.pos(neuePosition);
 		}
 	}
 
@@ -119,7 +154,7 @@ public class TutorialEnimies extends Daddel {
 		float strecke = strecke(deltatime, GEGNER_GESCHWINDIGKEIT);
 
 		// berechne die neue Position
-		Pos neuePosition = ufo.relativePos().add(new Pos(0, strecke));
+		Pos neuePosition = ufo.pos().add(new Pos(0, strecke));
 
 		// wenn das Ufo unten ankommt, wird es an den oberen Bildschirmrand gesetzt. Die
 		// X-Position ist zufällig.
@@ -127,9 +162,44 @@ public class TutorialEnimies extends Daddel {
 			neuePosition = new Pos((float) Math.random() * 20f - 10f, -6);
 		}
 		// setze neue Position
-		ufo.relativePos(neuePosition);
+		ufo.pos(neuePosition);
 
 	}
+
+	// Diese Methode wird bei Drücken der Leertaste aufgerufen. Sie erzeugt einen
+	// neuen Laserstrahl, der Ufos abschiesst.
+	private void laserAbfeuern() {
+		// Ein Partikel wird automatisch gesteuert und hat eine begrenzte Lebensdauer.
+		// Dieser hier bewegt sich bis zum oberen Bildschirmrand und reagiert auf eine
+		// Kollision mit einem Ufo.
+		// Die Lebensdauer beträgt 1000 Millisekungen = 1 Sekunde. Die Größe ist ein
+		// halber (0.5) Rasterpunkt.
+		particle(TYP_LASER, 1000, 0.5f, GFX_LASER) //
+				// Die Startposition ist ein Rasterpunkt über der Rakete.
+				.pos(rakete.pos().add(new Pos(0, -1))) //
+				// der Laser soll nach oben fliegen (rechts = 0 Grad, unten = 90 Grad, links =
+				// 180 Grad)
+				.direction(-90) //
+				// Die Geschwindigkeit ist 12 Rasterpunkte pro Sekunde
+				.speed(12f)
+				// Wenn der Laser das Raster verlässt (am oberen Bildschirmrand), wird er
+				// entfernt
+				.outsideRasterStrategy(OutsideGridStrategy.kill)
+				// Das Ende der Lebensdauer wird ignoriert
+				.endOfLifeStrategy(EndOfLifeStrategy.ignore)
+				// Wenn er auf ein Ufo (TYP_GEGNER) trifft, werden der Laser (me) und das Ufo
+				// (other) entfernt. Inklusive einer kleinen Explosion :-)
+				.collision((me, other) -> {
+					if (other.type() == TYP_GEGNER) {
+						me.kill();
+						other.kill();
+						particle(TYP_EXPLOSION, 500, 2f, GFX_EXPLOSION) //
+								.pos(other.pos()) //
+								.speedAnimation(8f);
+					}
+				});
+	}
+
 	// ===================== Standart-Main-Methode, um das Programm zu starten
 
 	// Diese Methode muss vorhanden sein, damit das Spiel überhaupt gestartet werden
