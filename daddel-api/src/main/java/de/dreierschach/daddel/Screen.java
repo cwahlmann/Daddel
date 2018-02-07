@@ -12,7 +12,9 @@ import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.listener.InputListener;
 import de.dreierschach.daddel.listener.KeyListener;
 import de.dreierschach.daddel.model.GameLoop;
+import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
+import de.dreierschach.daddel.model.Transformation;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.beans.property.LongProperty;
@@ -52,6 +54,7 @@ public class Screen {
 	private List<TextSprite> texts = new ArrayList<>();
 	private TileMap tileMap = null;
 	private Color foreground, background;
+	private Transformation transformation;
 	private GameLoop gameLoop = (gesamtZeit, deltaZeit) -> {
 	};
 
@@ -71,7 +74,7 @@ public class Screen {
 			if (debug) {
 				// double fps = 1000d / ((double)delta / 1000000d);
 				double fps = 1000000000d / ((double) delta);
-				debugInfo.text(String.format("fps: %.1f\n", fps));
+				debugInfo.text(String.format("fps: %.1f", fps));
 			}
 			gameLoop.run(nano / 1000000, delta / 1000000);
 			elapsedTime.set(nano);
@@ -94,10 +97,10 @@ public class Screen {
 	 *             wird geworfen, wenn die Resource "screen.fxml" nicht geladen
 	 *             werden kann
 	 */
-	public Screen(int screenWidth, int screenHeight, Font font, Color foreground, Color background) throws IOException {
+	public Screen(int screenWidth, int screenHeight, Font font, Color background, Color foreground) throws IOException {
 
-		this.foreground = foreground;
 		this.background = background;
+		this.foreground = foreground;
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("screen.fxml"));
 		loader.setController(this);
@@ -119,6 +122,18 @@ public class Screen {
 
 		// output.setClip(new Rectangle(0, 0, screenWidth, screenHeight));
 		timer.start();
+	}
+
+	public void setTransformation(Transformation transformation) {
+		this.transformation = transformation;
+	}
+
+	public Color getForeground() {
+		return foreground;
+	}
+
+	public Color getBackground() {
+		return background;
 	}
 
 	/**
@@ -362,6 +377,10 @@ public class Screen {
 				if (tileMap != null) {
 					tileMap.debug(isDebug());
 					tileMap.draw(g);
+				} else {
+					if (isDebug()) {
+						drawGrid(g);
+					}
 				}
 				sprites.forEach(sprite -> {
 					g.save();
@@ -382,6 +401,23 @@ public class Screen {
 				}
 			}
 		});
+	}
+
+	private void drawGrid(GraphicsContext g) {
+		g.setFill(Color.gray(0.5));
+		int x0 = (int) transformation.getRasterLeftUpper().x();
+		int x1 = (int) transformation.getRasterRightBottom().x();
+		int y0 = (int) transformation.getRasterLeftUpper().y();
+		int y1 = (int) transformation.getRasterRightBottom().y();
+		for (int x = x0; x <= x1; x++) {
+			for (int y = y0; y <= y1; y++) {
+				Scr scr = transformation.t(new Pos((float) x, (float) y));
+				Scr scr0 = transformation.t(new Pos((float) x0, (float) y0));
+				Scr scr1 = transformation.t(new Pos((float) x1, (float) y1));
+				g.fillRect(scr.x(), scr0.y(), 1, scr1.y() - scr0.y());
+				g.fillRect(scr0.x(), scr.y(), scr1.x() - scr0.x(), 1);
+			}
+		}
 	}
 
 	public void onOutputKeyTyped(KeyEvent keyEvent) {

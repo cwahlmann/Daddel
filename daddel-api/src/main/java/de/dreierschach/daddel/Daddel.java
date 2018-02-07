@@ -151,8 +151,6 @@ public abstract class Daddel extends Application {
 
 	private int witdh = 1920;
 	private int height = 1080;
-	private Color background = Color.BLACK;
-	private Color foreground = Color.WHITE;
 	private Screen screen;
 	private Stage stage;
 	private Transformation transformation;
@@ -181,6 +179,14 @@ public abstract class Daddel extends Application {
 	 * Spielvariablen initialisiert, und die einzelnen Spielphasen definiert.
 	 */
 	public abstract void initGame();
+
+	public Color background() {
+		return Color.BLACK;
+	};
+
+	public Color foreground() {
+		return Color.WHITE;
+	};
 
 	/**
 	 * @author Christian Interface, um die einzelnen Spielphasen zu definieren
@@ -808,15 +814,69 @@ public abstract class Daddel extends Application {
 	 *            die obere Ausdehnung des Spielrasters
 	 * @param y1
 	 *            die untere Ausdehnung des Spielrasters
+	 * @return this
 	 */
-	public void grid(float x0, float x1, float y0, float y1) {
+	public Daddel grid(float x0, float x1, float y0, float y1) {
 		Pos pos0 = new Pos(x0, y0);
 		Pos pos1 = new Pos(x1, y1);
 		this.transformation.setRaster(pos0, pos1);
 		Scr scr0 = this.transformation.t(pos0);
 		Scr scr1 = this.transformation.t(pos1);
 		getScreen().setClipping(scr0, scr1);
-		getScreen().getDebugInfo().relativePos(transformation.getRasterLeftUpper());
+		getScreen().getDebugInfo().pos(transformation.getRasterLeftUpper());
+		return this;
+	}
+
+	/**
+	 * @return Linke Grenze des Rasters in Spielraster-Punkten
+	 */
+	public float gridLeft() {
+		return transformation.getRasterLeftUpper().x();
+	}
+
+	/**
+	 * @return Obere Grenze des Rasters in Spielraster-Punkten
+	 */
+	public float gridTop() {
+		return transformation.getRasterLeftUpper().y();
+	}
+
+	/**
+	 * @return Rechte Grenze des Rasters in Spielraster-Punkten
+	 */
+	public float gridRight() {
+		return transformation.getRasterRightBottom().x();
+	}
+
+	/**
+	 * @return Untere Grenze des Rasters in Spielraster-Punkten
+	 */
+	public float gridBottom() {
+		return transformation.getRasterRightBottom().y();
+	}
+
+	/**
+	 * Prüft, ob die angegebene Position im Spielraster liegt.
+	 * 
+	 * @param pos
+	 *            die Position
+	 * @return true: die Position liegt im Spielraster
+	 */
+	public boolean onGrid(Pos pos) {
+		return pos.x() >= gridLeft() && pos.x() <= gridRight() && pos.y() >= gridTop() && pos.y() <= gridBottom();
+	}
+
+	/**
+	 * Prüft, ob die angegebene Position im Spielraster liegt. Dabei wird der in
+	 * padding angegebene Rand vom Spielraster abgezogen.
+	 * 
+	 * @param pos
+	 *            die Position
+	 * @return true: die Position liegt im Spielraster
+	 */
+	public boolean onGrid(Pos pos, float padding) {
+		return pos.x() - padding >= gridLeft() && pos.x() + padding <= gridRight() && pos.y() - padding >= gridTop()
+				&& pos.y() + padding <= gridBottom();
 	}
 
 	// ------------------------ utility methods --
@@ -1016,9 +1076,10 @@ public abstract class Daddel extends Application {
 		stage.setFullScreen(fullscreen);
 
 		this.transformation = new Transformation(this.witdh, this.height);
-		screen = new Screen(witdh, height, new Font(12), foreground, background);
+		screen = new Screen(witdh, height, new Font(12), background(), foreground());
 		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.5f).color(Color.WHITE)
-				.relativePos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
+				.pos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
+		screen.setTransformation(transformation);
 		Scene scene = new Scene(screen.getPane(), witdh, height);
 		if (fullscreen) {
 			scene.setCursor(Cursor.NONE);

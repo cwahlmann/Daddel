@@ -40,7 +40,7 @@ public class Tile extends ImageSprite {
 	 *            Position in Spielraster-Punkten
 	 */
 	public void draw(GraphicsContext g, Pos pos) {
-		this.relativePos(pos);
+		this.pos(pos);
 		super.draw(g);
 	}
 
@@ -131,8 +131,8 @@ public class Tile extends ImageSprite {
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#collisionListener(de.dreierschach.daddel.listener.CollisionListener)
 	 */
 	@Override
-	public Tile collisionListener(CollisionListener collisionListener) {
-		super.collisionListener(collisionListener);
+	public Tile collision(CollisionListener collisionListener) {
+		super.collision(collisionListener);
 		return this;
 	}
 

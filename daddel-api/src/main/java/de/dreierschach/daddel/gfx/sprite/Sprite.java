@@ -99,14 +99,14 @@ public abstract class Sprite {
 	 * @return aktuelle Position in Spielraster-Punkten, ggf. relativ zum
 	 *         Eltern-Sprite
 	 */
-	public Pos pos() {
-		return !hasParent() ? pos : new Pos(parent.pos().x() + pos.x(), parent.pos().y() + pos.y());
+	public Pos effektivePos() {
+		return !hasParent() ? pos : new Pos(parent.effektivePos().x() + pos.x(), parent.effektivePos().y() + pos.y());
 	}
 
 	/**
 	 * @return die relative Position in Spielraster-Punkten
 	 */
-	public Pos relativePos() {
+	public Pos pos() {
 		return pos;
 	}
 
@@ -117,7 +117,7 @@ public abstract class Sprite {
 	 *            die neue relative Position
 	 * @return this
 	 */
-	public Sprite relativePos(Pos pos) {
+	public Sprite pos(Pos pos) {
 		this.pos = pos;
 		return this;
 	}
@@ -223,8 +223,8 @@ public abstract class Sprite {
 		if (!other.alive()) {
 			return false;
 		}
-		float dx = other.pos().x() - this.pos().x();
-		float dy = other.pos().y() - this.pos().y();
+		float dx = other.effektivePos().x() - this.effektivePos().x();
+		float dy = other.effektivePos().y() - this.effektivePos().y();
 		float dd = dx * dx + dy * dy;
 		float dr = other.r + this.r;
 		float ddr = dr * dr;
@@ -325,7 +325,7 @@ public abstract class Sprite {
 	}
 
 	public void drawSprite(GraphicsContext g) {
-		rotate(g, rotation, transformation.t(pos()));
+		rotate(g, rotation, transformation.t(effektivePos()));
 		draw(g);
 	}
 

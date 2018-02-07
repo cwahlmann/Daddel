@@ -237,8 +237,8 @@ public class Particle extends ImageSprite {
 		move(deltaZeit * speed / 1000);
 		Pos min = transformation().getRasterLeftUpper();
 		Pos max = transformation().getRasterRightBottom();
-		if (this.pos().x() < min.x() || this.pos().x() > max.x() || this.pos().y() < min.y()
-				|| this.pos().y() > max.y()) {
+		if (this.effektivePos().x() < min.x() || this.effektivePos().x() > max.x() || this.effektivePos().y() < min.y()
+				|| this.effektivePos().y() > max.y()) {
 			switch (outsideGridStrategy) {
 			case kill:
 				kill();
@@ -248,20 +248,20 @@ public class Particle extends ImageSprite {
 				// TODO
 				break;
 			case reappear:
-				if (this.pos().x() < min.x()) {
-					super.relativePos(new Pos(pos().x() - min.x() + max.x(), pos().y()));
-				} else if (this.pos().x() > max.x()) {
-					super.relativePos(new Pos(pos().x() - max.x() + min.x(), pos().y()));
+				if (this.effektivePos().x() < min.x()) {
+					super.pos(new Pos(effektivePos().x() - min.x() + max.x(), effektivePos().y()));
+				} else if (this.effektivePos().x() > max.x()) {
+					super.pos(new Pos(effektivePos().x() - max.x() + min.x(), effektivePos().y()));
 				}
 
-				if (this.pos().y() < min.y()) {
-					super.relativePos(new Pos(pos().x(), pos().y() - min.y() + max.y()));
-				} else if (this.pos().y() > max.y()) {
-					super.relativePos(new Pos(pos().x(), pos().y() - max.y() + min.y()));
+				if (this.effektivePos().y() < min.y()) {
+					super.pos(new Pos(effektivePos().x(), effektivePos().y() - min.y() + max.y()));
+				} else if (this.effektivePos().y() > max.y()) {
+					super.pos(new Pos(effektivePos().x(), effektivePos().y() - max.y() + min.y()));
 				}
 				break;
 			case restart:
-				super.relativePos(initialPos);
+				super.pos(initialPos);
 				setTicks(0);
 				break;
 			case ignore:
@@ -280,9 +280,9 @@ public class Particle extends ImageSprite {
 	 * daddel.model.Pos)
 	 */
 	@Override
-	public Particle relativePos(Pos pos) {
+	public Particle pos(Pos pos) {
 		this.initialPos = pos;
-		super.relativePos(pos);
+		super.pos(pos);
 		return this;
 	}
 
@@ -398,8 +398,8 @@ public class Particle extends ImageSprite {
 	 * dreierschach.daddel.listener.CollisionListener)
 	 */
 	@Override
-	public Particle collisionListener(CollisionListener collisionListener) {
-		super.collisionListener(collisionListener);
+	public Particle collision(CollisionListener collisionListener) {
+		super.collision(collisionListener);
 		return this;
 	}
 
