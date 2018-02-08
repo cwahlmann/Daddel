@@ -2,27 +2,28 @@ package de.dreierschach.tutorial;
 
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
-import de.dreierschach.daddel.gfx.sprite.Particle;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
-import de.dreierschach.daddel.listener.ParticleDiesListener;
 import de.dreierschach.daddel.model.EndOfLifeStrategy;
 import de.dreierschach.daddel.model.OutsideGridStrategy;
 import de.dreierschach.daddel.model.Pos;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 
 //Das Spiel erweitert die Spiele-API Daddel
-public class Tutorial07RaketeTreffer extends Daddel {
+public class Tutorial06RaketeTreffer extends Daddel {
 
 	// Sprites können einen Typ haben, z.B. einen für Spieler und einen für Gegner
 	private final static int TYP_SPIELER = 1;
 	private final static int TYP_GEGNER = 2;
 	private final static int TYP_LASER = 3;
 	private final static int TYP_EXPLOSION = 4;
-	private final static int TYP_STERN = 5;
 
 	// Die Größe der Rakete wird in Spielraster-Punkten angegeben
 	private final static float RAKETE_GROESSE = 2f;
 	private final static float GEGNER_GROESSE = 2f;
+
+	// Startposition der Rakete
+	private final static Pos RAKETE_STARTPOS = new Pos(0, 3.5f);
 
 	// Die Geschwindigkeit der Rakete in Rasterpunkten pro Sekunde
 	private final static float RAKETE_GESCHWINDIGKEIT = 5f;
@@ -47,6 +48,9 @@ public class Tutorial07RaketeTreffer extends Daddel {
 		// Kästchen sind quadratisch.
 		grid(-10, 10, -5, 5);
 
+		// Bestimme die Hintergrundfarbe
+		background(Color.rgb(0, 0, 32));
+
 		// Für jede Phase des Spiels kann eine Methode festgelegt werden. Hier reicht
 		// die Phase Level, also das Spielen eines Levels.
 		toLevel(() -> startLevel());
@@ -62,7 +66,19 @@ public class Tutorial07RaketeTreffer extends Daddel {
 	private void erzeugeRakete() {
 		// erzeuge die Rakete
 		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, GFX_ROCKET, GFX_ROCKET_SCHIRM) //
-				.collision((me, other) -> raketeGetroffen()) //
+				.pos(RAKETE_STARTPOS) //
+				// In der Spielschleife der Rakete wird diese bewegt
+				.gameLoop((me, totaltime, deltatime) -> {
+					// Die Strecke kann mit der vordefinierten Methode strecke() aus delta-Zeit und
+					// Geschwindigkeit errechnet werden
+					float strecke = strecke(deltatime, RAKETE_GESCHWINDIGKEIT);
+					bewegeRakete(strecke);
+				}) //
+				.collision((me, other) -> {
+					if (other.type() == TYP_GEGNER) {
+						raketeGetroffen();
+					}
+				}) //
 				// berechne einen kleineren Radius für die Kollisionskontrolle
 				// (statt die Hälfte nur ein Viertel der Größe des Ufos)
 				.r(RAKETE_GROESSE / 4f);
@@ -80,7 +96,6 @@ public class Tutorial07RaketeTreffer extends Daddel {
 					// (statt die Hälfte nur ein Drittel der Größe des Ufos)
 					.r(GEGNER_GROESSE / 3f);
 		}
-
 	}
 
 	private void definiereSteuerung() {
@@ -109,14 +124,10 @@ public class Tutorial07RaketeTreffer extends Daddel {
 	}
 
 	// Dies ist die sogenannte Spielschleife. Sie wird während eines rund 50 mal pro
-	// Sekunde während eines Levels ausgeführt @Override
+	// Sekunde während eines Levels ausgeführt
+	@Override
 	public void gameLoop(long gesamtZeit, long deltaZeit) {
-		// In der Spielschleife wird die Rakete bewegt
-
-		// Die Strecke kann mit der vordefinierten Methode stercke() aus delta-Zeit und
-		// Geschwindigkeit errechnet werden
-		float strecke = strecke(deltaZeit, RAKETE_GESCHWINDIGKEIT);
-		bewegeRakete(strecke);
+		// Nichts zu tun
 	}
 
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
