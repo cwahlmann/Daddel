@@ -181,11 +181,21 @@ public abstract class Daddel extends Application {
 	public abstract void initGame();
 
 	public Color background() {
-		return Color.BLACK;
+		return screen.getBackground();
 	};
 
 	public Color foreground() {
-		return Color.WHITE;
+		return screen.getForeground();
+	};
+
+	public Daddel background(Color background) {
+		screen.setBackground(background);
+		return this;
+	};
+
+	public Daddel foreground(Color foreground) {
+		screen.setForeground(foreground);
+		return this;
 	};
 
 	/**
@@ -1076,7 +1086,7 @@ public abstract class Daddel extends Application {
 		stage.setFullScreen(fullscreen);
 
 		this.transformation = new Transformation(this.witdh, this.height);
-		screen = new Screen(witdh, height, new Font(12), background(), foreground());
+		screen = new Screen(witdh, height, new Font(12));
 		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.5f).color(Color.WHITE)
 				.pos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
 		screen.setTransformation(transformation);

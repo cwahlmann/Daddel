@@ -53,7 +53,8 @@ public class Screen {
 	private List<Sprite> sprites = new ArrayList<>();
 	private List<TextSprite> texts = new ArrayList<>();
 	private TileMap tileMap = null;
-	private Color foreground, background;
+	private Color foreground = Color.WHITE;
+	private Color background = Color.BLACK;
 	private Transformation transformation;
 	private GameLoop gameLoop = (gesamtZeit, deltaZeit) -> {
 	};
@@ -97,10 +98,7 @@ public class Screen {
 	 *             wird geworfen, wenn die Resource "screen.fxml" nicht geladen
 	 *             werden kann
 	 */
-	public Screen(int screenWidth, int screenHeight, Font font, Color background, Color foreground) throws IOException {
-
-		this.background = background;
-		this.foreground = foreground;
+	public Screen(int screenWidth, int screenHeight, Font font) throws IOException {
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("screen.fxml"));
 		loader.setController(this);
@@ -109,10 +107,6 @@ public class Screen {
 		output.setHeight(screenHeight);
 		output.setOnKeyTyped(keyEvent -> onOutputKeyTyped(keyEvent));
 		output.setFocusTraversable(true);
-		output.setStyle(//
-				"-fx-background-color: " + getRGB(background) + "; " //
-						+ "-fx-color: " + getRGB(foreground) + "; " //
-		);
 		GraphicsContext g = output.getGraphicsContext2D();
 		g.setFont(font);
 		g.setTextAlign(TextAlignment.CENTER);
@@ -134,6 +128,19 @@ public class Screen {
 
 	public Color getBackground() {
 		return background;
+	}
+
+	public void setForeground(Color foreground) {
+		this.foreground = foreground;
+		output.setStyle(//
+				"-fx-color: " + getRGB(foreground) + "; " //
+		);
+	}
+
+	public void setBackground(Color background) {
+		this.background = background;
+		output.setStyle(//
+				"-fx-background-color: " + getRGB(background) + "; ");
 	}
 
 	/**
