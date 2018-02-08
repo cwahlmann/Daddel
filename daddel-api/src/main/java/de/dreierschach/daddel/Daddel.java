@@ -905,6 +905,68 @@ public abstract class Daddel extends Application {
 		return (float) delta / (float) 1000 * speed;
 	}
 
+	/**
+	 * Errechnet eine Position, die sich abhängig von der verstrichenen Zeit auf
+	 * einer Kreisbahn (bzw. elliptischen Bahn) bewegt
+	 * 
+	 * @param delta
+	 *            die verstrichene Zeit in ms
+	 * @param wavelength
+	 *            die Länge der Welle in ms
+	 * @param min
+	 *            die linke obere Ecke des Rechtecks, das die Größe des Kreises (der
+	 *            Ellipse) bestimmt
+	 * @param max
+	 *            die rechte untere Ecke des Rechtecks, das die Größe des Kreises
+	 *            (der Ellipse) bestimmt
+	 * @return die errechnete Position
+	 */
+	public Pos kreis(long delta, long wavelength, Pos min, Pos max) {
+		return new Pos( //
+				cosinuswelle(delta, wavelength, min.x(), max.x()), //
+				sinuswelle(delta, wavelength, min.y(), max.y()));
+	}
+
+	/**
+	 * Errechnet einen Wert, der sich abhängig von der verstrichenen Zeit
+	 * wellenförmig auf und ab bewegt
+	 * 
+	 * @param delta
+	 *            die verstrichene Zeit in ms
+	 * @param wavelength
+	 *            die Länge der Welle in ms
+	 * @param min
+	 *            der untere Wert der Welle
+	 * @param max
+	 *            der obere Wert der Welle
+	 * @return der errechnete Wert
+	 */
+	public float sinuswelle(long delta, long wavelength, float min, float max) {
+		double w = ((double) delta) / (float) wavelength * 2 * Math.PI;
+		float r = (max - min) / 2;
+		return (float) (Math.sin(w) * r + r + min);
+	}
+
+	/**
+	 * Errechnet einen Wert, der sich abhängig von der verstrichenen Zeit
+	 * wellenförmig auf und ab bewegt
+	 * 
+	 * @param delta
+	 *            die verstrichene Zeit in ms
+	 * @param wavelength
+	 *            die Länge der Welle in ms
+	 * @param min
+	 *            der untere Wert der Welle
+	 * @param max
+	 *            der obere Wert der Welle
+	 * @return der errechnete Wert
+	 */
+	public float cosinuswelle(long delta, long wavelength, float min, float max) {
+		double w = ((double) delta) / (double) wavelength * 2 * Math.PI;
+		float r = (max - min) / 2;
+		return (float) (Math.cos(w) * r + r + min);
+	}
+
 	// ------------------------ level methods --
 
 	/**

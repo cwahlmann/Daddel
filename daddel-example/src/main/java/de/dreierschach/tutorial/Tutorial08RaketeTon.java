@@ -25,7 +25,7 @@ public class Tutorial08RaketeTon extends Daddel {
 
 	// Startposition der Rakete
 	private final static Pos RAKETE_STARTPOS = new Pos(0, 3.5f);
-	
+
 	// Die Geschwindigkeit der Rakete in Rasterpunkten pro Sekunde
 	private final static float RAKETE_GESCHWINDIGKEIT = 5f;
 	private final static float GEGNER_GESCHWINDIGKEIT = 3f;
@@ -81,8 +81,8 @@ public class Tutorial08RaketeTon extends Daddel {
 						raketeGetroffen();
 					}
 				}) //
-				// berechne einen kleineren Radius für die Kollisionskontrolle
-				// (statt die Hälfte nur ein Viertel der Größe des Ufos)
+					// berechne einen kleineren Radius für die Kollisionskontrolle
+					// (statt die Hälfte nur ein Viertel der Größe des Ufos)
 				.r(RAKETE_GROESSE / 4f);
 	}
 
@@ -151,7 +151,12 @@ public class Tutorial08RaketeTon extends Daddel {
 	// Sekunde während eines Levels ausgeführt
 	@Override
 	public void gameLoop(long gesamtZeit, long deltaZeit) {
-		// Nichts zu tun
+		// Wechsle die Hintergrundfarbe abhängig von der verstrichenen Zeit
+		// cos(Zeit, Wellenlänge in Umdrehungen/Sekunde, Wert-von, Wert-bis) 
+		int r = (int)cosinuswelle(gesamtZeit, 3000, 0f, 10f);
+		int g = (int)sinuswelle(gesamtZeit, 20000, 0f, 10f);
+		int b = (int)sinuswelle(gesamtZeit, 2000, 0f, 16f);
+		background(Color.rgb(r, g, b));
 	}
 
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
