@@ -1,6 +1,6 @@
 = Daddel - eine JavaFX-basierte 2D-Spieleengine
 
-== "Aller Anfang ist schwer" oder "Jedem Anfang wohnt ein Zauber inne"
+== Am Anfang ist der Berg immer höher als man nachher denkt...
 
 Mit den eigenen Händen kreativ aus dem Nichts etwas neues, schönes zu schaffen, das macht für viele (und auch mich) den Reiz des Programmierens aus.
 Diese Freude (den eigenen) Kindern zu vermitteln, ist nicht ganz so leicht. Es gibt reihenweise Ansätze und Modelle: Turtle-Grafics, Maus-im-Labyrinth-Umgebungen, Mincraft-API, Scratch, Lego-Robotics etc.
