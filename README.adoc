@@ -10,12 +10,14 @@ Auf der Suche nach der besten Einsteigersprache landen viele bei Python, da dies
 Nun hat mein jüngerer Sohn entschieden, dass Java die Sprache seiner Wahl ist. Java: komplexe Syntax mit vielen Klammern, dem "alles-ist-eine-Klasse"-Paradigma und der ungezählten Vielfalt an Frameworks in allen Bereichen.
 
 Um motiviert mit Java in die Programmierung einsteigen zu können, braucht es meiner Meinung nach folgendes:
+
 * natürlich ein Grundverständnis der Standart-Sprachkonstrukte (diese werden am besten nebenher mitgelernt)
 * mit zunächst einer einzigen Klasse interessante Aufgaben lösen können
 * schnell und einfach ein vorzeigbares Ergebnis produzieren können
 * nicht in der Gestaltungsfreiheit eingeschränkt zu sein
 
 Daddel (ja, das kommt von "daddeln") stellt eine API zur Verfügung, die diese Wünsche einlösen möchte:
+
 * Bereitstellung von aufeinander aufbauenden Beispielen
 * eine Builder- und Runner-API, die einen funktionalen Ansatz unterstützt, aber nicht darauf beschränkt ist
 * Konvention über Konfiguration - mit minimalem Code lassen sich anschauliche Ergebnisse erzielen
