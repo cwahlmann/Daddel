@@ -25,6 +25,7 @@ Daddel (ja, das kommt von "daddeln") stellt eine API zur Verfügung, die diese W
 == Losdaddeln
 
 image::screenshots/Losdaddeln.jpg[]
+image::http://asciidoctor.org/images/octocat.jpg[GitHub mascot]
 
 .Losdaddeln.java
 [source,java]
