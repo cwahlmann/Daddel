@@ -2,8 +2,7 @@ package de.dreierschach.daddel.gfx.sprite;
 
 import de.dreierschach.daddel.listener.CollisionListener;
 import de.dreierschach.daddel.listener.ParticleDiesListener;
-import de.dreierschach.daddel.model.EndOfLifeStrategy;
-import de.dreierschach.daddel.model.OutsideGridStrategy;
+import de.dreierschach.daddel.model.ParticleStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
@@ -29,8 +28,8 @@ public class Particle extends ImageSprite {
 	private float speedStart = 0f;
 	private float speedEnd = 0f;
 	private float speedAnimation = 10f; // bilder/s
-	private OutsideGridStrategy outsideGridStrategy = OutsideGridStrategy.kill;
-	private EndOfLifeStrategy endOfLifeStrategy = EndOfLifeStrategy.die;
+	private ParticleStrategy outsideGridStrategy = ParticleStrategy.kill;
+	private ParticleStrategy endOfLifeStrategy = ParticleStrategy.kill;
 	private ParticleDiesListener particleDiesListener = particle -> {
 	};
 
@@ -53,6 +52,17 @@ public class Particle extends ImageSprite {
 		this.rotationStart = rotation();
 		this.rotationEnd = rotation();
 		this.gameLoop(particleGameLoop);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#rotation(double)
+	 */
+	@Override
+	public Particle rotation(double rotation) {
+		this.rotation(rotation, rotation);
+		return this;
 	}
 
 	/**
@@ -178,8 +188,8 @@ public class Particle extends ImageSprite {
 	 *            erscheinen (reappear), Partikel neu starten (restart)
 	 * @return this
 	 */
-	public Particle outsideRasterStrategy(OutsideGridStrategy outsideRasterStrategy) {
-		this.outsideGridStrategy = outsideRasterStrategy;
+	public Particle outsideGrid(ParticleStrategy outsideGridStrategy) {
+		this.outsideGridStrategy = outsideGridStrategy;
 		return this;
 	}
 
@@ -192,7 +202,7 @@ public class Particle extends ImageSprite {
 	 *            (restart)
 	 * @return this
 	 */
-	public Particle endOfLifeStrategy(EndOfLifeStrategy endOfLifeStrategy) {
+	public Particle endOfLife(ParticleStrategy endOfLifeStrategy) {
 		this.endOfLifeStrategy = endOfLifeStrategy;
 		return this;
 	}
@@ -216,12 +226,14 @@ public class Particle extends ImageSprite {
 			switch (endOfLifeStrategy) {
 			case stop:
 				return;
-			case die:
+			case kill:
 				this.kill();
 				particleDiesListener.onDeath(this);
 				return;
+			case reappear:
 			case restart:
 				setTicks(getTicks() - lifespan);
+				pos(initialPos);
 			case bounce:
 				// TODO
 				break;
@@ -240,6 +252,7 @@ public class Particle extends ImageSprite {
 		if (this.effektivePos().x() < min.x() || this.effektivePos().x() > max.x() || this.effektivePos().y() < min.y()
 				|| this.effektivePos().y() > max.y()) {
 			switch (outsideGridStrategy) {
+			case stop:
 			case kill:
 				kill();
 				particleDiesListener.onDeath(this);
@@ -272,6 +285,15 @@ public class Particle extends ImageSprite {
 
 	// ---------------- override methods to return correct type --
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#pos(float, float)
+	 */
+	@Override
+	public Particle pos(float x, float y) {
+		super.pos(x, y);
+		return this;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -283,17 +305,6 @@ public class Particle extends ImageSprite {
 	public Particle pos(Pos pos) {
 		this.initialPos = pos;
 		super.pos(pos);
-		return this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#rotation(double)
-	 */
-	@Override
-	public Particle rotation(double rotation) {
-		super.rotation(rotation);
 		return this;
 	}
 
@@ -415,8 +426,10 @@ public class Particle extends ImageSprite {
 		super.onCollision(other);
 		return this;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#debug(boolean)
 	 */
 	@Override

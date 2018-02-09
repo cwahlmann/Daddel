@@ -113,6 +113,20 @@ public abstract class Sprite {
 	/**
 	 * Setzt die relative Position in Spielraster-Punkten
 	 * 
+	 * @param x
+	 *            die X-Koordinate
+	 * @param y
+	 *            die X-Koordinate
+	 * @return this
+	 */
+	public Sprite pos(float x, float y) {
+		this.pos(new Pos(x, y));
+		return this;
+	}
+
+	/**
+	 * Setzt die relative Position in Spielraster-Punkten
+	 * 
 	 * @param pos
 	 *            die neue relative Position
 	 * @return this

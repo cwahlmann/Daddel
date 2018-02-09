@@ -84,6 +84,20 @@ public class MenuBuilder {
 	}
 
 	/**
+	 * Setzt die relative Position in Spielraster-Punkten
+	 * 
+	 * @param x
+	 *            die X-Koordinate
+	 * @param y
+	 *            die X-Koordinate
+	 * @return this
+	 */
+	public MenuBuilder pos(float x, float y) {
+		this.pos(new Pos(x, y));
+		return this;
+	}
+
+	/**
 	 * Legt die Position des Menus in Spielraster-Punkten fest
 	 * 
 	 * @param pos

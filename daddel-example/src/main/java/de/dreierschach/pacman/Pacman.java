@@ -8,9 +8,7 @@ import de.dreierschach.daddel.gfx.tilemap.Entity.Dir;
 import de.dreierschach.daddel.gfx.tilemap.MoveFinishedListener;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.model.MapPos;
-import de.dreierschach.daddel.model.Pos;
 import javafx.scene.input.KeyCode;
-import javafx.scene.paint.Color;
 
 public class Pacman extends Daddel {
 
@@ -189,7 +187,7 @@ public class Pacman extends Daddel {
 				.tile(ID_GROSSE_PILLE, TYPE_PILLE_GROSS, GFX_PAC_PILLE_GROSS) //
 				.tile(ID_DEATEYES_D, TYPE_WALL, GFX_PAC_DEADEYES_D, GFX_PAC_DEADEYES_R, GFX_PAC_DEADEYES_U,
 						GFX_PAC_DEADEYES_L)
-				.pos(new Pos(0, 0)) //
+				.pos(0, 0) //
 				.defaultTile(ID_DEATEYES_D)//
 				.initMap(LEVEL[level() - 1]);
 

@@ -3,22 +3,26 @@ package de.dreierschach.tutorial;
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
-import de.dreierschach.daddel.model.EndOfLifeStrategy;
-import de.dreierschach.daddel.model.OutsideGridStrategy;
 import de.dreierschach.daddel.model.Pos;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 
 //Das Spiel erweitert die Spiele-API Daddel
-public class Tutorial06RaketeLaser extends Daddel {
+public class Tutorial07RaketeSterne extends Daddel {
 
 	// Sprites können einen Typ haben, z.B. einen für Spieler und einen für Gegner
 	private final static int TYP_SPIELER = 1;
 	private final static int TYP_GEGNER = 2;
 	private final static int TYP_LASER = 3;
+	private final static int TYP_EXPLOSION = 4;
+	private final static int TYP_STERN = 5;
 
 	// Die Größe der Rakete wird in Spielraster-Punkten angegeben
 	private final static float RAKETE_GROESSE = 2f;
 	private final static float GEGNER_GROESSE = 2f;
+
+	// Startposition der Rakete
+	private final static Pos RAKETE_STARTPOS = new Pos(0, 3.5f);
 
 	// Die Geschwindigkeit der Rakete in Rasterpunkten pro Sekunde
 	private final static float RAKETE_GESCHWINDIGKEIT = 5f;
@@ -43,6 +47,9 @@ public class Tutorial06RaketeLaser extends Daddel {
 		// Kästchen sind quadratisch.
 		grid(-10, 10, -5, 5);
 
+		// Bestimme die Hintergrundfarbe
+		background(Color.rgb(0, 0, 32));
+
 		// Für jede Phase des Spiels kann eine Methode festgelegt werden. Hier reicht
 		// die Phase Level, also das Spielen eines Levels.
 		toLevel(() -> startLevel());
@@ -50,17 +57,38 @@ public class Tutorial06RaketeLaser extends Daddel {
 
 	// Hier wird ein Level gestartet
 	private void startLevel() {
+		erzeugeRakete();
+		erzeugeGegner();
+		erzeugeSterne();
+		definiereSteuerung();
+	}
+
+	private void erzeugeRakete() {
 		// erzeuge die Rakete
 		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, GFX_ROCKET, GFX_ROCKET_SCHIRM) //
-				.collision((me, other) -> exit()) //
-				// berechne einen kleineren Radius für die Kollisionskontrolle
-				// (statt die Hälfte nur ein Viertel der Größe des Ufos)
+				.pos(RAKETE_STARTPOS) //
+				// In der Spielschleife der Rakete wird diese bewegt
+				.gameLoop((me, totaltime, deltatime) -> {
+					// Die Strecke kann mit der vordefinierten Methode strecke() aus delta-Zeit und
+					// Geschwindigkeit errechnet werden
+					float strecke = strecke(deltatime, RAKETE_GESCHWINDIGKEIT);
+					bewegeRakete(strecke);
+				}) //
+				.collision((me, other) -> {
+					if (other.type() == TYP_GEGNER) {
+						raketeGetroffen();
+					}
+				}) //
+					// berechne einen kleineren Radius für die Kollisionskontrolle
+					// (statt die Hälfte nur ein Viertel der Größe des Ufos)
 				.r(RAKETE_GROESSE / 4f);
+	}
 
-		// erzeuge das 4 Ufos
-		for (int i = 0; i < 4; i++) {
+	private void erzeugeGegner() {
+		// erzeuge Ufos
+		for (int i = 0; i < 3 + level(); i++) {
 			// zufällige Position
-			Pos pos = new Pos((float) Math.random() * 20f - 10f, (float) Math.random() * 10f - 5f);
+			Pos pos = new Pos((float) Math.random() * 20f - 10f, (float) Math.random() * 5f - 5f);
 			sprite(TYP_GEGNER, GEGNER_GROESSE, GFX_UFO_1) //
 					.pos(pos) //
 					.gameLoop((ufo, totaltime, deltatime) -> bewegeUfo(ufo, deltatime)) //
@@ -68,7 +96,29 @@ public class Tutorial06RaketeLaser extends Daddel {
 					// (statt die Hälfte nur ein Drittel der Größe des Ufos)
 					.r(GEGNER_GROESSE / 3f);
 		}
+	}
 
+	public void erzeugeSterne() {
+		// Ein PartikleSwarmBuilder erzeugt einen Schwarm von Partikeln. Hier sind es
+		// 200.
+		particleSwarmBuilder(200, TYP_STERN, GFX_STERN) //
+				// durch eine Range kann ein Bereich angegeben werden, in dem die Partikel
+				// zufällig verteilt werden. Zunächst die Position:
+				.initialPosRange(new Pos(-10, -5), new Pos(10, 5)) //
+				// Dann die Größe
+				.sizeRange(0.01f, 0.1f, 4) //
+				// die Richtung ist immer nach oben
+				.direction(90) //
+				// die Geschwindigkeit variiert
+				.speedRange(1f, 5f) //
+				// wandert ein Stern oberen Bildschirmrand hinaus, erscheint er gegenüber
+				// (unten) wieder.
+				.outsideGrid(PARTICLE_REAPPEAR)//
+				// Jetzt wird der Partikelschwarm erzeugt und angezeigt
+				.create();
+	}
+
+	private void definiereSteuerung() {
 		// Je nach Taste wird eine andere Richtung eingeschlagen
 		key(KeyCode.LEFT, keyCode -> raketeRichtung = Richtung.links);
 		key(KeyCode.RIGHT, keyCode -> raketeRichtung = Richtung.rechts);
@@ -83,15 +133,14 @@ public class Tutorial06RaketeLaser extends Daddel {
 		key(KeyCode.ESCAPE, keyCode -> exit());
 	}
 
-	// Dies ist die sogenannte Spielschleife. Sie wird während eines rund 50 mal pro
-	// Sekunde während eines Levels ausgeführt @Override
-	public void gameLoop(long gesamtZeit, long deltaZeit) {
-		// In der Spielschleife wird die Rakete bewegt
-
-		// Die Strecke kann mit der vordefinierten Methode stercke() aus delta-Zeit und
-		// Geschwindigkeit errechnet werden
-		float strecke = strecke(deltaZeit, RAKETE_GESCHWINDIGKEIT);
-		bewegeRakete(strecke);
+	// Wenn die Rakete gegen ein Ufo fliegt, explodiert sie, bevor das Spiel endet
+	public void raketeGetroffen() {
+		rakete.kill();
+		particle(TYP_EXPLOSION, 500, 2f, GFX_EXPLOSION) //
+				.pos(rakete.pos()) //
+				.speedAnimation(8f) //
+				// wenn der Partikel ( = die Explosion) stirbt, beende das Spiel
+				.onDeath(particle -> exit());
 	}
 
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
@@ -147,9 +196,9 @@ public class Tutorial06RaketeLaser extends Daddel {
 		// Ein Partikel wird automatisch gesteuert und hat eine begrenzte Lebensdauer.
 		// Dieser hier bewegt sich bis zum oberen Bildschirmrand und reagiert auf eine
 		// Kollision mit einem Ufo.
-		// Die Lebensdauer beträgt 1000 Millisekungen = 1 Sekunde. Die Größe ist ein
+		// Die Lebensdauer beträgt 0 Millisekunden (= unendlich). Die Größe ist ein
 		// halber (0.5) Rasterpunkt.
-		particle(TYP_LASER, 1000, 0.5f, GFX_LASER) //
+		particle(TYP_LASER, 0, 0.5f, GFX_LASER) //
 				// Die Startposition ist ein Rasterpunkt über der Rakete.
 				.pos(rakete.pos().add(new Pos(0, -1))) //
 				// der Laser soll nach oben fliegen (rechts = 0 Grad, unten = 90 Grad, links =
@@ -159,9 +208,18 @@ public class Tutorial06RaketeLaser extends Daddel {
 				.speed(12f)
 				// Wenn der Laser das Raster verlässt (am oberen Bildschirmrand), wird er
 				// entfernt
-				.outsideRasterStrategy(OutsideGridStrategy.kill)
-				// Das Ende der Lebensdauer wird ignoriert
-				.endOfLifeStrategy(EndOfLifeStrategy.ignore);
+				.outsideGrid(PARTICLE_KILL)
+				// Wenn er auf ein Ufo (TYP_GEGNER) trifft, werden der Laser (me) und das Ufo
+				// (other) entfernt. Inklusive einer kleinen Explosion :-)
+				.collision((me, other) -> {
+					if (other.type() == TYP_GEGNER) {
+						me.kill();
+						other.kill();
+						particle(TYP_EXPLOSION, 500, 2f, GFX_EXPLOSION) //
+								.pos(other.pos()) //
+								.speedAnimation(8f);
+					}
+				});
 	}
 
 	// ===================== Standart-Main-Methode, um das Programm zu starten

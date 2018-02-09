@@ -352,7 +352,7 @@ public class TileMap extends Sprite {
 	 *            die Y-Koordinate der Spielfeld-Position
 	 * @return die Position der Kachel in Spielraster-Punkten
 	 */
-	public Pos pos(int x, int y) {
+	public Pos toPos(int x, int y) {
 		return new Pos(((float) x) * tileSize, ((float) y) * tileSize);
 	}
 
@@ -395,7 +395,7 @@ public class TileMap extends Sprite {
 
 		for (int x = x0; x <= x1; x++) {
 			for (int y = y0; y <= y1; y++) {
-				Pos prel = pos(x, y);
+				Pos prel = toPos(x, y);
 				Pos p = new Pos(prel.x() + effektivePos().x(), prel.y() + effektivePos().y());
 				for (int d = 0; d < size.z(); d++) {
 					int id = id(new MapPos(x, y, d));
@@ -409,13 +409,13 @@ public class TileMap extends Sprite {
 		if (debug()) {
 			Pos halfTileSize = new Pos(tileSize / 2, tileSize / 2);
 			for (int x = x0; x <= x1; x++) {
-				Pos p0 = pos(x, y0).add(effektivePos()).add(halfTileSize);
-				Pos p1 = pos(x, y1).add(effektivePos()).add(halfTileSize);
+				Pos p0 = toPos(x, y0).add(effektivePos()).add(halfTileSize);
+				Pos p1 = toPos(x, y1).add(effektivePos()).add(halfTileSize);
 				line(g, p0, p1);
 			}
 			for (int y = y0; y <= y1; y++) {
-				Pos p0 = pos(x0, y).add(effektivePos()).add(halfTileSize);
-				Pos p1 = pos(x1, y).add(effektivePos()).add(halfTileSize);
+				Pos p0 = toPos(x0, y).add(effektivePos()).add(halfTileSize);
+				Pos p1 = toPos(x1, y).add(effektivePos()).add(halfTileSize);
 				line(g, p0, p1);
 			}
 		}
@@ -435,6 +435,12 @@ public class TileMap extends Sprite {
 	@Override
 	public Sprite debug(boolean debug) {
 		super.debug(debug);
+		return this;
+	}
+	
+	@Override
+	public TileMap pos(float x, float y) {
+		super.pos(x, y);
 		return this;
 	}
 	

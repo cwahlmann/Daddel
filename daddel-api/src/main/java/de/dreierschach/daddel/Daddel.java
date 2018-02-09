@@ -23,6 +23,7 @@ import de.dreierschach.daddel.gfx.tilemap.Entity;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.listener.InputListener;
 import de.dreierschach.daddel.listener.KeyListener;
+import de.dreierschach.daddel.model.ParticleStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
@@ -170,6 +171,27 @@ public abstract class Daddel extends Application {
 	public final static String INI_HEIGHT = "height";
 	public final static String INI_FULLSCREEN = "fullscreen";
 
+	// strategy constants
+	
+	public final static ParticleStrategy PARTICLE_BOUNCE = ParticleStrategy.bounce;
+	public final static ParticleStrategy PARTICLE_IGNORE = ParticleStrategy.ignore;
+	public final static ParticleStrategy PARTICLE_KILL = ParticleStrategy.kill;
+	public final static ParticleStrategy PARTICLE_RESTART = ParticleStrategy.restart;
+	public final static ParticleStrategy PARTICLE_REAPPEAR = ParticleStrategy.reappear;
+	public final static ParticleStrategy PARTICLE_STOP = ParticleStrategy.stop;
+	
+	// text align constants
+	
+	public final static TextAlignment ALIGN_LEFT = TextAlignment.LEFT;
+	public final static TextAlignment ALIGN_RIGHT = TextAlignment.RIGHT;
+	public final static TextAlignment ALIGN_JUSTIFY = TextAlignment.JUSTIFY;
+	public final static TextAlignment ALIGN_CENTER = TextAlignment.CENTER;
+	
+	public final static VPos VALIGN_TOP = VPos.TOP;
+	public final static VPos VALIGN_BOTTOM = VPos.BOTTOM;
+	public final static VPos VALIGN_CENTER = VPos.CENTER;
+	public final static VPos VALIGN_BASELINE = VPos.BASELINE;
+
 	// ======================== API methods ==
 
 	// ------------------------ game phase methods ==
@@ -181,11 +203,21 @@ public abstract class Daddel extends Application {
 	public abstract void initGame();
 
 	public Color background() {
-		return Color.BLACK;
+		return screen.getBackground();
 	};
 
 	public Color foreground() {
-		return Color.WHITE;
+		return screen.getForeground();
+	};
+
+	public Daddel background(Color background) {
+		screen.setBackground(background);
+		return this;
+	};
+
+	public Daddel foreground(Color foreground) {
+		screen.setForeground(foreground);
+		return this;
 	};
 
 	/**
@@ -895,6 +927,68 @@ public abstract class Daddel extends Application {
 		return (float) delta / (float) 1000 * speed;
 	}
 
+	/**
+	 * Errechnet eine Position, die sich abhängig von der verstrichenen Zeit auf
+	 * einer Kreisbahn (bzw. elliptischen Bahn) bewegt
+	 * 
+	 * @param delta
+	 *            die verstrichene Zeit in ms
+	 * @param wavelength
+	 *            die Länge der Welle in ms
+	 * @param min
+	 *            die linke obere Ecke des Rechtecks, das die Größe des Kreises (der
+	 *            Ellipse) bestimmt
+	 * @param max
+	 *            die rechte untere Ecke des Rechtecks, das die Größe des Kreises
+	 *            (der Ellipse) bestimmt
+	 * @return die errechnete Position
+	 */
+	public Pos kreis(long delta, long wavelength, Pos min, Pos max) {
+		return new Pos( //
+				cosinuswelle(delta, wavelength, min.x(), max.x()), //
+				sinuswelle(delta, wavelength, min.y(), max.y()));
+	}
+
+	/**
+	 * Errechnet einen Wert, der sich abhängig von der verstrichenen Zeit
+	 * wellenförmig auf und ab bewegt
+	 * 
+	 * @param delta
+	 *            die verstrichene Zeit in ms
+	 * @param wavelength
+	 *            die Länge der Welle in ms
+	 * @param min
+	 *            der untere Wert der Welle
+	 * @param max
+	 *            der obere Wert der Welle
+	 * @return der errechnete Wert
+	 */
+	public float sinuswelle(long delta, long wavelength, float min, float max) {
+		double w = ((double) delta) / (float) wavelength * 2 * Math.PI;
+		float r = (max - min) / 2;
+		return (float) (Math.sin(w) * r + r + min);
+	}
+
+	/**
+	 * Errechnet einen Wert, der sich abhängig von der verstrichenen Zeit
+	 * wellenförmig auf und ab bewegt
+	 * 
+	 * @param delta
+	 *            die verstrichene Zeit in ms
+	 * @param wavelength
+	 *            die Länge der Welle in ms
+	 * @param min
+	 *            der untere Wert der Welle
+	 * @param max
+	 *            der obere Wert der Welle
+	 * @return der errechnete Wert
+	 */
+	public float cosinuswelle(long delta, long wavelength, float min, float max) {
+		double w = ((double) delta) / (double) wavelength * 2 * Math.PI;
+		float r = (max - min) / 2;
+		return (float) (Math.cos(w) * r + r + min);
+	}
+
 	// ------------------------ level methods --
 
 	/**
@@ -922,20 +1016,20 @@ public abstract class Daddel extends Application {
 		toLevelIntro();
 	}
 
-	// ------------------------ gameloop methods --
-
-	// abstract methods
+	// ------------------------ gameloop method --
 
 	/**
-	 * Diese Methode muss für ein Spiel implementiert werden. Sie stellt die
-	 * Spielschleife dar und wird pro Frame einmal aufgerufen.
+	 * Diese Methode stellt die Spielschleife dar und wird pro Frame einmal
+	 * aufgerufen.
 	 * 
 	 * @param gesamtZeit
 	 *            Gesamte bisher verstrichene Zeit in ms
 	 * @param deltaZeit
 	 *            Seit dem letzten Frame verstrichene Zeit in ms
 	 */
-	public abstract void gameLoop(long gesamtZeit, long deltaZeit);
+	public void gameLoop(long gesamtZeit, long deltaZeit) {
+		// nichts zu tun
+	}
 
 	// ------------------------ private methods --
 
@@ -1076,7 +1170,7 @@ public abstract class Daddel extends Application {
 		stage.setFullScreen(fullscreen);
 
 		this.transformation = new Transformation(this.witdh, this.height);
-		screen = new Screen(witdh, height, new Font(12), background(), foreground());
+		screen = new Screen(witdh, height, new Font(12));
 		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.5f).color(Color.WHITE)
 				.pos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
 		screen.setTransformation(transformation);
