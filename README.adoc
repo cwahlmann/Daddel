@@ -24,6 +24,8 @@ Daddel (ja, das kommt von "daddeln") stellt eine API zur Verfügung, die diese W
 
 == Losdaddeln
 
+image::screenshots/Losdaddeln.jpg[}
+
 .Losdaddeln.java
 [source,java]
 ----
