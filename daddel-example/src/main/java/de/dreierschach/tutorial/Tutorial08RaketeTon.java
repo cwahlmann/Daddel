@@ -3,8 +3,6 @@ package de.dreierschach.tutorial;
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
-import de.dreierschach.daddel.model.EndOfLifeStrategy;
-import de.dreierschach.daddel.model.OutsideGridStrategy;
 import de.dreierschach.daddel.model.Pos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -57,6 +55,18 @@ public class Tutorial08RaketeTon extends Daddel {
 		toLevel(() -> startLevel());
 	}
 
+	// Dies ist die sogenannte Spielschleife. Sie wird während eines rund 50 mal pro
+	// Sekunde während eines Levels ausgeführt
+	@Override
+	public void gameLoop(long gesamtZeit, long deltaZeit) {
+		// Wechsle die Hintergrundfarbe abhängig von der verstrichenen Zeit
+		// cos(Zeit, Länge der Wellen in ms, Wert-von, Wert-bis) 
+		int r = (int)cosinuswelle(gesamtZeit, 3000, 0f, 16f);
+		int g = (int)sinuswelle(gesamtZeit, 20000, 0f, 16f);
+		int b = (int)sinuswelle(gesamtZeit, 2000, 0f, 24f);
+		background(Color.rgb(r, g, b));
+	}
+
 	// Hier wird ein Level gestartet
 	private void startLevel() {
 		erzeugeRakete();
@@ -98,7 +108,6 @@ public class Tutorial08RaketeTon extends Daddel {
 					// (statt die Hälfte nur ein Drittel der Größe des Ufos)
 					.r(GEGNER_GROESSE / 3f);
 		}
-
 	}
 
 	public void erzeugeSterne() {
@@ -116,7 +125,7 @@ public class Tutorial08RaketeTon extends Daddel {
 				.speedRange(1f, 5f) //
 				// wandert ein Stern oberen Bildschirmrand hinaus, erscheint er gegenüber
 				// (unten) wieder.
-				.outsideGridStrategy(OutsideGridStrategy.reappear)//
+				.outsideGrid(PARTICLE_REAPPEAR)//
 				// Jetzt wird der Partikelschwarm erzeugt und angezeigt
 				.create();
 	}
@@ -145,18 +154,6 @@ public class Tutorial08RaketeTon extends Daddel {
 				.speedAnimation(8f) //
 				// wenn der Partikel ( = die Explosion) stirbt, beende das Spiel
 				.onDeath(particle -> exit());
-	}
-
-	// Dies ist die sogenannte Spielschleife. Sie wird während eines rund 50 mal pro
-	// Sekunde während eines Levels ausgeführt
-	@Override
-	public void gameLoop(long gesamtZeit, long deltaZeit) {
-		// Wechsle die Hintergrundfarbe abhängig von der verstrichenen Zeit
-		// cos(Zeit, Wellenlänge in Umdrehungen/Sekunde, Wert-von, Wert-bis) 
-		int r = (int)cosinuswelle(gesamtZeit, 3000, 0f, 10f);
-		int g = (int)sinuswelle(gesamtZeit, 20000, 0f, 10f);
-		int b = (int)sinuswelle(gesamtZeit, 2000, 0f, 16f);
-		background(Color.rgb(r, g, b));
 	}
 
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
@@ -213,9 +210,9 @@ public class Tutorial08RaketeTon extends Daddel {
 		// Ein Partikel wird automatisch gesteuert und hat eine begrenzte Lebensdauer.
 		// Dieser hier bewegt sich bis zum oberen Bildschirmrand und reagiert auf eine
 		// Kollision mit einem Ufo.
-		// Die Lebensdauer beträgt 1000 Millisekungen = 1 Sekunde. Die Größe ist ein
+		// Die Lebensdauer beträgt 0 Millisekunden (= unendlich). Die Größe ist ein
 		// halber (0.5) Rasterpunkt.
-		particle(TYP_LASER, 1000, 0.5f, GFX_LASER) //
+		particle(TYP_LASER, 0, 0.5f, GFX_LASER) //
 				// Die Startposition ist ein Rasterpunkt über der Rakete.
 				.pos(rakete.pos().add(new Pos(0, -1))) //
 				// der Laser soll nach oben fliegen (rechts = 0 Grad, unten = 90 Grad, links =
@@ -225,9 +222,7 @@ public class Tutorial08RaketeTon extends Daddel {
 				.speed(12f)
 				// Wenn der Laser das Raster verlässt (am oberen Bildschirmrand), wird er
 				// entfernt
-				.outsideRasterStrategy(OutsideGridStrategy.kill)
-				// Das Ende der Lebensdauer wird ignoriert
-				.endOfLifeStrategy(EndOfLifeStrategy.ignore)
+				.outsideGrid(PARTICLE_KILL)
 				// Wenn er auf ein Ufo (TYP_GEGNER) trifft, werden der Laser (me) und das Ufo
 				// (other) entfernt. Inklusive einer kleinen Explosion :-)
 				.collision((me, other) -> {

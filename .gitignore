@@ -9,6 +9,7 @@ bin
 .project
 .classpath
 .gradle
+config
 
 # Compiled class file
 *.class

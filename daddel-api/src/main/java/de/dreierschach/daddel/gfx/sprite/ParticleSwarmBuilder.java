@@ -5,8 +5,7 @@ import java.util.Random;
 import de.dreierschach.daddel.listener.CollisionListener;
 import de.dreierschach.daddel.listener.CreateSwarmHandler;
 import de.dreierschach.daddel.listener.ParticleDiesListener;
-import de.dreierschach.daddel.model.EndOfLifeStrategy;
-import de.dreierschach.daddel.model.OutsideGridStrategy;
+import de.dreierschach.daddel.model.ParticleStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Transformation;
 
@@ -44,8 +43,8 @@ public class ParticleSwarmBuilder {
 	//
 
 	private int count;
-	private OutsideGridStrategy outsideGridStrategy;
-	private EndOfLifeStrategy endOfLifeStrategy;
+	private ParticleStrategy outsideGridStrategy;
+	private ParticleStrategy endOfLifeStrategy;
 	private Transformation transformation;
 	private int typ;
 	private String[] images;
@@ -109,8 +108,8 @@ public class ParticleSwarmBuilder {
 					images).speedAnimation(random(speedAnimationRange));
 			particle.pos(random(initialPosRange)).speed(speedStart, speedEnd)
 					.direction(directionStart, directionEnd).rotation(rotationStart, rotationEnd)
-					.alpha(alphaStart, alphaEnd).endOfLifeStrategy(endOfLifeStrategy)
-					.outsideRasterStrategy(outsideGridStrategy).collision(collisionListener).parent(parent)
+					.alpha(alphaStart, alphaEnd).endOfLife(endOfLifeStrategy)
+					.outsideGrid(outsideGridStrategy).collision(collisionListener).parent(parent)
 					.onDeath(particleDiesListener);
 			swarm.getParticles().add(particle);
 		}
@@ -600,7 +599,7 @@ public class ParticleSwarmBuilder {
 	 *            erscheinen (reappear), Partikel neu starten (restart)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder outsideGridStrategy(OutsideGridStrategy outsideGridStrategy) {
+	public ParticleSwarmBuilder outsideGrid(ParticleStrategy outsideGridStrategy) {
 		this.outsideGridStrategy = outsideGridStrategy;
 		return this;
 	}
@@ -614,7 +613,7 @@ public class ParticleSwarmBuilder {
 	 *            (restart)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder endOfLifeStrategy(EndOfLifeStrategy endOfLifeStrategy) {
+	public ParticleSwarmBuilder endOfLife(ParticleStrategy endOfLifeStrategy) {
 		this.endOfLifeStrategy = endOfLifeStrategy;
 		return this;
 	}

@@ -98,13 +98,6 @@ public class Tutorial03RaketeGegner extends Daddel {
 		key(KeyCode.ESCAPE, keyCode -> exit());
 	}
 
-	// Dies ist die sogenannte Spielschleife. Sie wird während eines rund 50 mal pro
-	// Sekunde während eines Levels ausgeführt
-	@Override
-	public void gameLoop(long gesamtZeit, long deltaZeit) {
-		// Nichts zu tun
-	}
-
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
 	private void bewegeRakete(float strecke) {
 		Pos neuePosition = rakete.pos().add(getPosRichtung(raketeRichtung, strecke));

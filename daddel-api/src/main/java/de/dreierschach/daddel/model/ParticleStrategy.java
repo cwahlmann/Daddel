@@ -7,15 +7,19 @@ package de.dreierschach.daddel.model;
  * @author Christian
  *
  */
-public enum EndOfLifeStrategy {
+public enum ParticleStrategy {
 	/**
 	 * lasst ihn sterben
 	 */
-	die, 
+	kill, 
 	/**
 	 * neu starten
 	 */
-	restart, 
+	restart,
+	/**
+	 * auf der anderen Seite wieder erscheinen
+	 */	
+	reappear,
 	/**
 	 * einfrieren
 	 */

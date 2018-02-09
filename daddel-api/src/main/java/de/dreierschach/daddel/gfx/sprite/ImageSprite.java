@@ -185,6 +185,15 @@ public class ImageSprite extends Sprite {
 
 	// -------------- override methods to return correct type --
 
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#pos(float, float)
+	 */
+	@Override
+	public ImageSprite pos(float x, float y) {
+		super.pos(x, y);
+		return this;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 

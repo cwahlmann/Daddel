@@ -147,15 +147,15 @@ public class Entity extends ImageSprite {
 					mapPos(destMapPos);
 					moveFinishedListener.onDestinationReached(this, tileMap);
 				} else {
-					Pos start = tileMap.pos(mapPos.x(), mapPos.y());
-					Pos dest = tileMap.pos(destMapPos.x(), destMapPos.y());
+					Pos start = tileMap.toPos(mapPos.x(), mapPos.y());
+					Pos dest = tileMap.toPos(destMapPos.x(), destMapPos.y());
 					float d = ((float) (total - moveStartTime)) / (float) moveTimeDelta;
 					Pos p = new Pos(d * (dest.x() - start.x()) + start.x(), d * (dest.y() - start.y()) + start.y());
 					me.pos(p);
 				}
 			}
 			if (!moving) {
-				me.pos(tileMap.pos(mapPos.x(), mapPos.y()));
+				me.pos(tileMap.toPos(mapPos.x(), mapPos.y()));
 			}
 		}, animation);
 		this.tileMap = tileMap;

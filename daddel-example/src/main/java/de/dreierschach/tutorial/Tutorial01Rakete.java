@@ -53,13 +53,6 @@ public class Tutorial01Rakete extends Daddel {
 		key(KeyCode.ESCAPE, keyCode -> exit());
 	}
 
-	// Dies ist die sogenannte Spielschleife. Sie wird während eines rund 50 mal pro
-	// Sekunde während eines Levels ausgeführt
-	@Override
-	public void gameLoop(long gesamtZeit, long deltaZeit) {
-		// Nichts zu tun
-	}
-
 	// ===================== Standart-Main-Methode, um das Programm zu starten
 
 	// Diese Methode muss vorhanden sein, damit das Spiel überhaupt gestartet werden

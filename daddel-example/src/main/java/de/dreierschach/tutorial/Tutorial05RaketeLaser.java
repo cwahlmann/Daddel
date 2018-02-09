@@ -3,8 +3,6 @@ package de.dreierschach.tutorial;
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
-import de.dreierschach.daddel.model.EndOfLifeStrategy;
-import de.dreierschach.daddel.model.OutsideGridStrategy;
 import de.dreierschach.daddel.model.Pos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -108,13 +106,6 @@ public class Tutorial05RaketeLaser extends Daddel {
 		key(KeyCode.ESCAPE, keyCode -> exit());
 	}
 
-	// Dies ist die sogenannte Spielschleife. Sie wird während eines rund 50 mal pro
-	// Sekunde während eines Levels ausgeführt
-	@Override
-	public void gameLoop(long gesamtZeit, long deltaZeit) {
-		// Nichts zu tun
-	}
-
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
 	private void bewegeRakete(float strecke) {
 		Pos neuePosition = rakete.pos().add(getPosRichtung(raketeRichtung, strecke));
@@ -168,9 +159,9 @@ public class Tutorial05RaketeLaser extends Daddel {
 		// Ein Partikel wird automatisch gesteuert und hat eine begrenzte Lebensdauer.
 		// Dieser hier bewegt sich bis zum oberen Bildschirmrand und reagiert auf eine
 		// Kollision mit einem Ufo.
-		// Die Lebensdauer beträgt 1000 Millisekungen = 1 Sekunde. Die Größe ist ein
+		// Die Lebensdauer beträgt 0 Millisekunden (= unendlich). Die Größe ist ein
 		// halber (0.5) Rasterpunkt.
-		particle(TYP_LASER, 1000, 0.5f, GFX_LASER) //
+		particle(TYP_LASER, 0, 0.5f, GFX_LASER) //
 				// Die Startposition ist ein Rasterpunkt über der Rakete.
 				.pos(rakete.pos().add(new Pos(0, -1))) //
 				// der Laser soll nach oben fliegen (rechts = 0 Grad, unten = 90 Grad, links =
@@ -180,9 +171,7 @@ public class Tutorial05RaketeLaser extends Daddel {
 				.speed(12f)
 				// Wenn der Laser das Raster verlässt (am oberen Bildschirmrand), wird er
 				// entfernt
-				.outsideRasterStrategy(OutsideGridStrategy.kill)
-				// Das Ende der Lebensdauer wird ignoriert
-				.endOfLifeStrategy(EndOfLifeStrategy.ignore);
+				.outsideGrid(PARTICLE_KILL);
 	}
 
 	// ===================== Standart-Main-Methode, um das Programm zu starten

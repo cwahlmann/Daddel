@@ -124,7 +124,7 @@ public class TextSprite extends Sprite {
 		FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(g.getFont());
 		String[] lines = text.split("\n");
 		double textWidth = 0;
-		for (String line: lines) {
+		for (String line : lines) {
 			double w = fm.computeStringWidth(line);
 			if (w > textWidth) {
 				textWidth = w;
@@ -140,6 +140,16 @@ public class TextSprite extends Sprite {
 	}
 
 	// overwrite methods for correct return type
+
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#pos(float, float)
+	 */
+	@Override
+	public TextSprite pos(float x, float y) {
+		// TODO Auto-generated method stub
+		super.pos(x, y);
+		return this;
+	}
 
 	@Override
 	public TextSprite pos(Pos pos) {

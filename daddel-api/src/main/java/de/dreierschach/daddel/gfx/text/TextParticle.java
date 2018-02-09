@@ -2,8 +2,7 @@ package de.dreierschach.daddel.gfx.text;
 
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.listener.TextParticleDiesListener;
-import de.dreierschach.daddel.model.EndOfLifeStrategy;
-import de.dreierschach.daddel.model.OutsideGridStrategy;
+import de.dreierschach.daddel.model.ParticleStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
@@ -22,6 +21,7 @@ import javafx.scene.text.TextAlignment;
 public class TextParticle extends TextSprite {
 
 	private long lifespan = 1000L;
+	private Pos initialPos = new Pos(0,0);
 	private double rotationStart = 0f;
 	private double rotationEnd = 0f;
 	private double directionStart = 0f;
@@ -31,8 +31,8 @@ public class TextParticle extends TextSprite {
 	private float speedEnd = 0f;
 	private float sizeStart = 2f;
 	private float sizeEnd = 2f;
-	private OutsideGridStrategy outsideGridStrategy = OutsideGridStrategy.kill;
-	private EndOfLifeStrategy endOfLifeStrategy = EndOfLifeStrategy.die;
+	private ParticleStrategy outsideGridStrategy = ParticleStrategy.kill;
+	private ParticleStrategy endOfLifeStrategy = ParticleStrategy.kill;
 	private TextParticleDiesListener textParticleDiesListener = particle -> {
 	};
 
@@ -166,7 +166,7 @@ public class TextParticle extends TextSprite {
 	 *            erscheinen (reappear), Partikel neu starten (restart)
 	 * @return this
 	 */
-	public TextParticle outsideRasterStrategy(OutsideGridStrategy outsideRasterStrategy) {
+	public TextParticle outsideRasterStrategy(ParticleStrategy outsideRasterStrategy) {
 		this.outsideGridStrategy = outsideRasterStrategy;
 		return this;
 	}
@@ -180,7 +180,7 @@ public class TextParticle extends TextSprite {
 	 *            (restart)
 	 * @return this
 	 */
-	public TextParticle endOfLifeStrategy(EndOfLifeStrategy endOfLifeStrategy) {
+	public TextParticle endOfLifeStrategy(ParticleStrategy endOfLifeStrategy) {
 		this.endOfLifeStrategy = endOfLifeStrategy;
 		return this;
 	}
@@ -204,12 +204,14 @@ public class TextParticle extends TextSprite {
 			switch (endOfLifeStrategy) {
 			case stop:
 				return;
-			case die:
+			case kill:
 				this.kill();
 				textParticleDiesListener.onDeath(this);
 				return;
+			case reappear:
 			case restart:
 				setTicks(getTicks() - lifespan);
+				pos(initialPos);
 				break;
 			case bounce:
 				// TODO
@@ -228,6 +230,7 @@ public class TextParticle extends TextSprite {
 		if (this.effektivePos().x() < min.x() || this.effektivePos().x() > max.x() || this.effektivePos().y() < min.y()
 				|| this.effektivePos().y() > max.y()) {
 			switch (outsideGridStrategy) {
+			case stop:
 			case kill:
 				kill();
 				textParticleDiesListener.onDeath(this);
@@ -250,6 +253,7 @@ public class TextParticle extends TextSprite {
 				break;
 			case restart:
 				setTicks(0);
+				pos(initialPos);
 			case ignore:
 			}
 		}
@@ -257,13 +261,23 @@ public class TextParticle extends TextSprite {
 	};
 
 	// overwrite methods for correct return type
-
+	
+	/* (non-Javadoc)
+	 * @see de.dreierschach.daddel.gfx.text.TextSprite#pos(float, float)
+	 */
+	@Override
+	public TextParticle pos(float x, float y) {
+		super.pos(x, y);
+		return this;
+	}
+	
 	/* (non-Javadoc)
 	 * @see de.dreierschach.daddel.gfx.text.TextSprite#relativePos(de.dreierschach.daddel.model.Pos)
 	 */
 	@Override
 	public TextParticle pos(Pos pos) {
 		super.pos(pos);
+		this.initialPos = pos;
 		return this;
 	}
 

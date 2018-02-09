@@ -10,15 +10,11 @@ import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.text.TextSprite;
 import de.dreierschach.daddel.listener.CollisionListener;
-import de.dreierschach.daddel.model.EndOfLifeStrategy;
-import de.dreierschach.daddel.model.OutsideGridStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
-import javafx.geometry.VPos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
 
 public class SpaceInvader extends Daddel {
 
@@ -87,19 +83,19 @@ public class SpaceInvader extends Daddel {
 		grid(-16, 16, -10, 10);
 		erzeugeFrontalScrollendeSterne();
 
-		textParticle("SPACE", 4000, "sans-serif", 3f, Color.YELLOW).pos(new Pos(0, -3.5f))
-				.weight(FontWeight.BLACK).size(30f, 7f).endOfLifeStrategy(EndOfLifeStrategy.stop);
+		textParticle("SPACE", 4000, "sans-serif", 3f, Color.YELLOW).pos(0, -3.5f).weight(FontWeight.BLACK).size(30f, 7f)
+				.endOfLifeStrategy(PARTICLE_STOP);
 
-		textParticle("I N V A D E R", 4000, "sans-serif", 1.5f, Color.RED).pos(new Pos(0, 2f))
-				.weight(FontWeight.BOLD).size(0.01f, 1.5f).endOfLifeStrategy(EndOfLifeStrategy.stop);
+		textParticle("I N V A D E R", 4000, "sans-serif", 1.5f, Color.RED).pos(0, 2f).weight(FontWeight.BOLD)
+				.size(0.01f, 1.5f).endOfLifeStrategy(PARTICLE_STOP);
 
-		particle(TYP_FEIND, 10000, 3, GFX_UFO_1).rotation(0, 360).pos(new Pos(-7f, 2f))
-				.endOfLifeStrategy(EndOfLifeStrategy.restart).alpha(0.5f, 1f);
+		particle(TYP_FEIND, 10000, 3, GFX_UFO_1).rotation(0, 360).pos(-7f, 2f).endOfLife(PARTICLE_RESTART).alpha(0.5f,
+				1f);
 
-		particle(TYP_FEIND, 15000, 3, GFX_UFO_2).rotation(360, 0).pos(new Pos(7f, 2f))
-				.endOfLifeStrategy(EndOfLifeStrategy.restart).alpha(1f, 0.5f);
+		particle(TYP_FEIND, 15000, 3, GFX_UFO_2).rotation(360, 0).pos(7f, 2f).endOfLife(PARTICLE_RESTART).alpha(1f,
+				0.5f);
 
-		particle(TYP_SPIELER, 0, 3, GFX_ROCKET).pos(new Pos(0, -0.2f));
+		particle(TYP_SPIELER, 0, 3, GFX_ROCKET).pos(0, -0.2f);
 
 		key(KeyCode.ENTER, (keyCode) -> toIntro());
 		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
@@ -117,13 +113,13 @@ public class SpaceInvader extends Daddel {
 		initLevel();
 		grid(-16, 16, -10, 10);
 		erzeugeHochscrollendeSterne();
-		text("SPACE", "sans-serif", 3f, Color.YELLOW).pos(new Pos(0, -7)).weight(FontWeight.BLACK);
-		text("INVADER", "sans-serif", 1.7f, Color.RED).pos(new Pos(0, -4.5f)).weight(FontWeight.BLACK);
+		text("SPACE", "sans-serif", 3f, Color.YELLOW).pos(0, -7).weight(FontWeight.BLACK);
+		text("INVADER", "sans-serif", 1.7f, Color.RED).pos(0, -4.5f).weight(FontWeight.BLACK);
 
-		menu().pos(new Pos(0, 0)).color(Color.GREEN, Color.WHITE).weight(FontWeight.BLACK, FontWeight.BLACK)
-				.size(1.5f, 1.5f).lineHeight(2).family("sans-serif", "sans-serif")
-				.item("new game", (keyCode) -> toLevelIntro()).item("highscore", (keyCode) -> toHighscore())
-				.item("setup", (keyCode) -> toSetup()).item("title", (keyCode) -> toTitle()).item("exit", (keyCode) -> toCredits()).create();
+		menu().pos(0, 0).color(Color.GREEN, Color.WHITE).weight(FontWeight.BLACK, FontWeight.BLACK).size(1.5f, 1.5f)
+				.lineHeight(2).family("sans-serif", "sans-serif").item("new game", (keyCode) -> toLevelIntro())
+				.item("highscore", (keyCode) -> toHighscore()).item("setup", (keyCode) -> toSetup())
+				.item("title", (keyCode) -> toTitle()).item("exit", (keyCode) -> toCredits()).create();
 		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
 	}
 
@@ -138,11 +134,11 @@ public class SpaceInvader extends Daddel {
 	public void highscore() {
 		grid(-16, 16, -10, 10);
 		erzeugeHochscrollendeSterne();
-		text("HIGHSCORE", "sans-serif", 2f, Color.YELLOW).pos(new Pos(0, -8)).weight(FontWeight.BLACK);
+		text("HIGHSCORE", "sans-serif", 2f, Color.YELLOW).pos(0, -8).weight(FontWeight.BLACK);
 		for (int i = 0; i < highscoreListe.size(); i++) {
 			HighscoreEintrag eintrag = highscoreListe.get(i);
 			text(String.format("%2d. %20s %10d", i + 1, eintrag.name, eintrag.score), "monospaced", 1f, Color.WHITE)
-					.pos(new Pos(0, 1.4f * i - 4.5f)).weight(FontWeight.BLACK);
+					.pos(0, 1.4f * i - 4.5f).weight(FontWeight.BLACK);
 		}
 
 		key(KeyCode.ENTER, (keyCode) -> toMenu());
@@ -152,7 +148,6 @@ public class SpaceInvader extends Daddel {
 	// ---------- Gewonnen-Bildschirm --
 
 	// public void gewonnen() {
-	// // TODO Auto-generated method stub
 	// }
 
 	// ---------- Verloren-Bildschirm --
@@ -162,18 +157,16 @@ public class SpaceInvader extends Daddel {
 
 		erzeugeHochscrollendeSterne();
 
-		TextSprite gameoverText = text("GAME OVER", "sans-serif", 3f, Color.RED).pos(new Pos(0, 0))
-				.weight(FontWeight.BLACK);
+		text("GAME OVER", "sans-serif", 3f, Color.RED).pos(0, 0).weight(FontWeight.BLACK);
 
 		if (istNeuerHighscore()) {
 			HighscoreEintrag eintrag = new HighscoreEintrag("", punkte);
-			text("You got a new highscore!!", "sans-serif", 1f, Color.YELLOW).pos(new Pos(0, 3))
-					.weight(FontWeight.BLACK);
-			text("enter your name: ", "monospaced", 1f, Color.YELLOW).pos(new Pos(0, 7))
-					.weight(FontWeight.BLACK).align(TextAlignment.RIGHT, VPos.CENTER);
+			text("You got a new highscore!!", "sans-serif", 1f, Color.YELLOW).pos(0, 3).weight(FontWeight.BLACK);
+			text("enter your name: ", "monospaced", 1f, Color.YELLOW).pos(0, 7).weight(FontWeight.BLACK)
+					.align(ALIGN_RIGHT, VALIGN_CENTER);
 
-			TextSprite inputText = text("", "monospaced", 1f, Color.WHITE).pos(new Pos(0, 7))
-					.weight(FontWeight.BLACK).align(TextAlignment.LEFT, VPos.CENTER);
+			TextSprite inputText = text("", "monospaced", 1f, Color.WHITE).pos(0, 7).weight(FontWeight.BLACK)
+					.align(ALIGN_LEFT, VALIGN_CENTER);
 
 			input(20, input -> {
 				inputText.text(input.toUpperCase());
@@ -186,7 +179,7 @@ public class SpaceInvader extends Daddel {
 				toHighscore();
 			});
 		} else {
-			text("press <ENTER> to continue", "sans-serif", 1f, Color.YELLOW).pos(new Pos(0, 3))
+			text("press <ENTER> to continue", "sans-serif", 1f, Color.YELLOW).pos(0, 3)
 					.weight(FontWeight.BLACK);
 			key(KeyCode.ENTER, (keyCode) -> toHighscore());
 		}
@@ -195,8 +188,6 @@ public class SpaceInvader extends Daddel {
 	// ---------- Abspann-Bildschirm --
 
 	// public void abspann() {
-	// exit();
-	// // TODO Auto-generated method stub
 	// }
 
 	// ---------- Level-Intro-Bildschirm --
@@ -205,11 +196,10 @@ public class SpaceInvader extends Daddel {
 		grid(-16, 16, -10, 10);
 		erzeugeHochscrollendeSterne();
 
-		text(String.format("LEVEL %02d", level()), "sans-serif", 1.5f, Color.YELLOW).pos(new Pos(0, -1))
+		text(String.format("LEVEL %02d", level()), "sans-serif", 1.5f, Color.YELLOW).pos(0, -1)
 				.weight(FontWeight.BLACK);
 
-		text("press <ENTER> when ready", "sans-serif", 0.6f, Color.WHITE).pos(new Pos(0, 1))
-				.weight(FontWeight.BLACK);
+		text("press <ENTER> when ready", "sans-serif", 0.6f, Color.WHITE).pos(0, 1).weight(FontWeight.BLACK);
 
 		key(KeyCode.ENTER, (keyCode) -> toLevel());
 		key(KeyCode.ESCAPE, (keyCode) -> exit());
@@ -225,15 +215,15 @@ public class SpaceInvader extends Daddel {
 		// Sprites erzeugen
 
 		erzeugeHochscrollendeSterne();
-		erzeugeRakete(new Pos(0f, 7.5f));
+		erzeugeRakete(0f, 7.5f);
 		erzeugeFeinde();
 
-		punkteAnzeige = text("SCORE:     ", "sans-serif", 1.0f, Color.YELLOW).pos(new Pos(-16f, 9.5f))
-				.align(TextAlignment.LEFT, VPos.CENTER).weight(FontWeight.BLACK);
+		punkteAnzeige = text("SCORE:     ", "sans-serif", 1.0f, Color.YELLOW).pos(-16f, 9.5f)
+				.align(ALIGN_LEFT, VALIGN_CENTER).weight(FontWeight.BLACK);
 		punkteAnzeigen();
 
-		lebenAnzeige = text("LEBEN: ", "sans-serif", 1.0f, Color.YELLOW).pos(new Pos(16f, 9.5f))
-				.align(TextAlignment.RIGHT, VPos.CENTER).weight(FontWeight.BLACK);
+		lebenAnzeige = text("LEBEN: ", "sans-serif", 1.0f, Color.YELLOW).pos(16f, 9.5f)
+				.align(ALIGN_RIGHT, VALIGN_CENTER).weight(FontWeight.BLACK);
 		lebenAnzeigen();
 
 		// Auf Tasten reagieren
@@ -261,7 +251,7 @@ public class SpaceInvader extends Daddel {
 			if (neueRaketeVerzoegerung > 0) {
 				neueRaketeVerzoegerung -= deltaZeit;
 			} else {
-				erzeugeRakete(raketeSprite.effektivePos());
+				erzeugeRakete(raketeSprite.pos().x(), raketeSprite.pos().y());
 			}
 		}
 
@@ -327,8 +317,7 @@ public class SpaceInvader extends Daddel {
 
 	public void erzeugeHochscrollendeSterne() {
 		particleSwarmBuilder(200, TYP_STERN, GFX_STERN).initialPosRange(new Pos(-16, -10), new Pos(16, 10))
-				.sizeRange(0.01f, 0.2f, 4).direction(90).speedRange(1f, 5f)
-				.outsideGridStrategy(OutsideGridStrategy.reappear).create();
+				.sizeRange(0.01f, 0.2f, 4).direction(90).speedRange(1f, 5f).outsideGrid(PARTICLE_REAPPEAR).create();
 	}
 
 	// ------------- frontal-scrollende Sterne erzeugen --
@@ -336,16 +325,15 @@ public class SpaceInvader extends Daddel {
 	public void erzeugeFrontalScrollendeSterne() {
 		particleSwarmBuilder(400, TYP_STERN, GFX_STERN).initialPosRange(new Pos(0, 0), new Pos(0, 0))
 				.sizeRange(0.02f, 0.4f, 4).directionRange(0, 359).speedStartRange(0.1f, 5f).speedEndRange(5f, 10f)
-				.alphaStart(0f).alphaEnd(1f).lifeSpan(5000).endOfLifeStrategy(EndOfLifeStrategy.ignore)
-				.outsideGridStrategy(OutsideGridStrategy.restart).create();
+				.alphaStart(0f).alphaEnd(1f).lifeSpan(5000).endOfLife(PARTICLE_IGNORE).outsideGrid(PARTICLE_RESTART)
+				.create();
 	}
 
 	// ------------- Rakete erzeugen --
 
-	public void erzeugeRakete(Pos pos) {
+	public void erzeugeRakete(float x, float y) {
 		raketeSchutzschirm = raketeSchutzschirmDauer;
-		raketeSprite = sprite(TYP_SPIELER, 4f, GFX_ROCKET, GFX_ROCKET_SCHIRM).pos(pos)
-				.gameLoop(raketeAnimieren).r(1f);
+		raketeSprite = sprite(TYP_SPIELER, 4f, GFX_ROCKET, GFX_ROCKET_SCHIRM).pos(x, y).gameLoop(raketeAnimieren).r(1f);
 		raketeRichtung = 0;
 	}
 
@@ -361,7 +349,7 @@ public class SpaceInvader extends Daddel {
 			stop();
 			s = 0;
 		}
-		raketeSprite.pos(new Pos(raketeSprite.effektivePos().x() + s, raketeSprite.effektivePos().y()))
+		raketeSprite.pos(raketeSprite.effektivePos().x() + s, raketeSprite.effektivePos().y())
 				.actualImage(raketeSchutzschirm > 0 ? 1 : 0);
 	};
 
@@ -388,13 +376,14 @@ public class SpaceInvader extends Daddel {
 
 				// Gegner erzeugen und animieren
 
-				sprite(TYP_FEIND, 2.5f, enimy).pos(new Pos(((float) i) * 3f, ((float) j) * 3f))
+				sprite(TYP_FEIND, 2.5f, enimy).pos(((float) i) * 3f, ((float) j) * 3f)
 						.gameLoop((spr, ticks, deltatime) -> {
 							spr.rotate(-rotation);
 							spr.direction(-spr.rotation());
 							spr.move((float) (rotation / 20));
 							if (Math.random() < 0.004) {
-								gegnerischenLaserAbfeuern(new Pos(spr.effektivePos().x(), spr.effektivePos().y() + 1.5f));
+								gegnerischenLaserAbfeuern(
+										spr.pos().add(new Pos(0, 1.5f)));
 							}
 						});
 				anzahlFeinde++;
@@ -423,24 +412,21 @@ public class SpaceInvader extends Daddel {
 			return;
 		}
 		raketeLaserVerbleibendeWartezeit = raketeLaserVerzoegerung;
-		erzeugeRaketeLaser(new Pos(raketeSprite.effektivePos().x() - 0.8f, raketeSprite.effektivePos().y() - 1.5f));
-		erzeugeRaketeLaser(new Pos(raketeSprite.effektivePos().x() + 0.8f, raketeSprite.effektivePos().y() - 1.5f));
+		erzeugeRaketeLaser(raketeSprite.pos().add(new Pos(- 0.8f, - 1.5f)));
+		erzeugeRaketeLaser(raketeSprite.pos().add(new Pos(+ 0.8f, - 1.5f)));
 	}
 
 	public void erzeugeRaketeLaser(Pos pos) {
-		particle(TYP_LASER, 0, 1.5f, GFX_LASER).pos(pos).collision(raketeTrefferBehandeln)
-				.direction(-90).outsideRasterStrategy(OutsideGridStrategy.kill)
-				.speed(raketeLaserGeschwindigkeit, raketeLaserGeschwindigkeit);
+		particle(TYP_LASER, 0, 1.5f, GFX_LASER).pos(pos).collision(raketeTrefferBehandeln).direction(-90)
+				.outsideGrid(PARTICLE_KILL).speed(raketeLaserGeschwindigkeit, raketeLaserGeschwindigkeit);
 		sound(AUDIO_ROCKET_LASER);
 	}
 
 	// ------------- gegnerischen Laser abfeuern --
 
 	public void gegnerischenLaserAbfeuern(Pos pos) {
-		particle(TYP_GEGNERISCHER_LASER, 0, 1.5f, GFX_LASER_GEGNER).pos(pos)
-				.collision(gegnerischeTrefferBehandeln).direction(90)
-				.outsideRasterStrategy(OutsideGridStrategy.kill)
-				.speed(gegnerLaserGeschwindigkeit, gegnerLaserGeschwindigkeit);
+		particle(TYP_GEGNERISCHER_LASER, 0, 1.5f, GFX_LASER_GEGNER).pos(pos).collision(gegnerischeTrefferBehandeln)
+				.direction(90).outsideGrid(PARTICLE_KILL).speed(gegnerLaserGeschwindigkeit, gegnerLaserGeschwindigkeit);
 		sound(AUDIO_UFO_LASER, 0.2);
 	}
 

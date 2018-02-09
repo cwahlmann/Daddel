@@ -23,6 +23,7 @@ import de.dreierschach.daddel.gfx.tilemap.Entity;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.listener.InputListener;
 import de.dreierschach.daddel.listener.KeyListener;
+import de.dreierschach.daddel.model.ParticleStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
@@ -169,6 +170,27 @@ public abstract class Daddel extends Application {
 	public final static String INI_WIDTH = "width";
 	public final static String INI_HEIGHT = "height";
 	public final static String INI_FULLSCREEN = "fullscreen";
+
+	// strategy constants
+	
+	public final static ParticleStrategy PARTICLE_BOUNCE = ParticleStrategy.bounce;
+	public final static ParticleStrategy PARTICLE_IGNORE = ParticleStrategy.ignore;
+	public final static ParticleStrategy PARTICLE_KILL = ParticleStrategy.kill;
+	public final static ParticleStrategy PARTICLE_RESTART = ParticleStrategy.restart;
+	public final static ParticleStrategy PARTICLE_REAPPEAR = ParticleStrategy.reappear;
+	public final static ParticleStrategy PARTICLE_STOP = ParticleStrategy.stop;
+	
+	// text align constants
+	
+	public final static TextAlignment ALIGN_LEFT = TextAlignment.LEFT;
+	public final static TextAlignment ALIGN_RIGHT = TextAlignment.RIGHT;
+	public final static TextAlignment ALIGN_JUSTIFY = TextAlignment.JUSTIFY;
+	public final static TextAlignment ALIGN_CENTER = TextAlignment.CENTER;
+	
+	public final static VPos VALIGN_TOP = VPos.TOP;
+	public final static VPos VALIGN_BOTTOM = VPos.BOTTOM;
+	public final static VPos VALIGN_CENTER = VPos.CENTER;
+	public final static VPos VALIGN_BASELINE = VPos.BASELINE;
 
 	// ======================== API methods ==
 
@@ -994,20 +1016,20 @@ public abstract class Daddel extends Application {
 		toLevelIntro();
 	}
 
-	// ------------------------ gameloop methods --
-
-	// abstract methods
+	// ------------------------ gameloop method --
 
 	/**
-	 * Diese Methode muss für ein Spiel implementiert werden. Sie stellt die
-	 * Spielschleife dar und wird pro Frame einmal aufgerufen.
+	 * Diese Methode stellt die Spielschleife dar und wird pro Frame einmal
+	 * aufgerufen.
 	 * 
 	 * @param gesamtZeit
 	 *            Gesamte bisher verstrichene Zeit in ms
 	 * @param deltaZeit
 	 *            Seit dem letzten Frame verstrichene Zeit in ms
 	 */
-	public abstract void gameLoop(long gesamtZeit, long deltaZeit);
+	public void gameLoop(long gesamtZeit, long deltaZeit) {
+		// nichts zu tun
+	}
 
 	// ------------------------ private methods --
 
