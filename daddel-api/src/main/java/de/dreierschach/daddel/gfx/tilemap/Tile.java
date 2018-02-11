@@ -27,7 +27,7 @@ public class Tile extends ImageSprite {
 	 * @param imagefiles
 	 *            die Bilder der Kachel
 	 */
-	public Tile(Transformation transformation, int type, float maxSize, String... imagefiles) {
+	public Tile(Transformation transformation, int type, double maxSize, String... imagefiles) {
 		super(transformation, type, maxSize, imagefiles);
 	}
 
@@ -65,10 +65,10 @@ public class Tile extends ImageSprite {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#r(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#r(double)
 	 */
 	@Override
-	public Tile r(float r) {
+	public Tile r(double r) {
 		super.r(r);
 		return this;
 	}
@@ -110,10 +110,10 @@ public class Tile extends ImageSprite {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(double)
 	 */
 	@Override
-	public Tile move(float distance) {
+	public Tile move(double distance) {
 		super.move(distance);
 		return this;
 	}

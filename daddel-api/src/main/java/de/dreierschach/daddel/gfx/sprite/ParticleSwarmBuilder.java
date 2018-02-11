@@ -25,20 +25,20 @@ public class ParticleSwarmBuilder {
 	// values for random particle generation
 
 	private Pos[] initialPosRange = { new Pos(0, 0), new Pos(0, 0) };
-	private float[] speedAnimationRange = { 0, 0 };
+	private double[] speedAnimationRange = { 0, 0 };
 	private long[] lifeSpanRange = { 0L, 0L };
-	private float[] sizeRange = { 0, 0 };
+	private double[] sizeRange = { 0, 0 };
 	private int sizeSteps = 5;
 
-	private float[] directionStartRange = { 0, 0 };
-	private float[] rotationStartRange = { 0, 0 };
-	private float[] speedStartRange = { 0, 0 };
-	private float[] alphaStartRange = { 1, 1 };
+	private double[] directionStartRange = { 0, 0 };
+	private double[] rotationStartRange = { 0, 0 };
+	private double[] speedStartRange = { 0, 0 };
+	private double[] alphaStartRange = { 1, 1 };
 
-	private float[] directionEndRange = null;
-	private float[] rotationEndRange = null;
-	private float[] speedEndRange = null;
-	private float[] alphaEndRange = null;
+	private double[] directionEndRange = null;
+	private double[] rotationEndRange = null;
+	private double[] speedEndRange = null;
+	private double[] alphaEndRange = null;
 
 	//
 
@@ -92,17 +92,17 @@ public class ParticleSwarmBuilder {
 		ParticleSwarm swarm = new ParticleSwarm();
 		for (int i = 0; i < count; i++) {
 
-			float speedStart = random(speedStartRange);
-			float speedEnd = speedEndRange != null ? random(speedEndRange) : speedStart;
+			double speedStart = random(speedStartRange);
+			double speedEnd = speedEndRange != null ? random(speedEndRange) : speedStart;
 
-			float directionStart = random(directionStartRange);
-			float directionEnd = directionEndRange != null ? random(directionEndRange) : directionStart;
+			double directionStart = random(directionStartRange);
+			double directionEnd = directionEndRange != null ? random(directionEndRange) : directionStart;
 
-			float rotationStart = random(rotationStartRange);
-			float rotationEnd = rotationEndRange != null ? random(rotationEndRange) : rotationStart;
+			double rotationStart = random(rotationStartRange);
+			double rotationEnd = rotationEndRange != null ? random(rotationEndRange) : rotationStart;
 
-			float alphaStart = random(alphaStartRange);
-			float alphaEnd = alphaEndRange != null ? random(alphaEndRange) : alphaStart;
+			double alphaStart = random(alphaStartRange);
+			double alphaEnd = alphaEndRange != null ? random(alphaEndRange) : alphaStart;
 
 			Particle particle = new Particle(transformation, typ, random(sizeRange, sizeSteps), random(lifeSpanRange),
 					images).speedAnimation(random(speedAnimationRange));
@@ -159,7 +159,7 @@ public class ParticleSwarmBuilder {
 	 *            Geschwindigkeit in Spielraster-Punkten / s
 	 * @return this
 	 */
-	public ParticleSwarmBuilder speedAnimation(float value) {
+	public ParticleSwarmBuilder speedAnimation(double value) {
 		return speedAnimationRange(value, value);
 	}
 
@@ -173,7 +173,7 @@ public class ParticleSwarmBuilder {
 	 *            maximale Animationsgeschwindigkeit in Bilder / s
 	 * @return this
 	 */
-	public ParticleSwarmBuilder speedAnimationRange(float start, float end) {
+	public ParticleSwarmBuilder speedAnimationRange(double start, double end) {
 		this.speedAnimationRange[0] = start;
 		this.speedAnimationRange[1] = end;
 		return this;
@@ -217,7 +217,7 @@ public class ParticleSwarmBuilder {
 	 *            Undurchsichtigkeit (0 ... 1.0)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder alpha(float alpha) {
+	public ParticleSwarmBuilder alpha(double alpha) {
 		alphaRange(alpha, alpha);
 		return this;
 	}
@@ -232,7 +232,7 @@ public class ParticleSwarmBuilder {
 	 *            maximale Undurchsichtigkeit (0 ... 1.0)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder alphaRange(float start, float end) {
+	public ParticleSwarmBuilder alphaRange(double start, double end) {
 		this.alphaStartRange[0] = start;
 		this.alphaStartRange[1] = end;
 		this.alphaEndRange = null;
@@ -246,7 +246,7 @@ public class ParticleSwarmBuilder {
 	 *            Undurchsichtigkeit (0 ... 1.0)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder alphaStart(float value) {
+	public ParticleSwarmBuilder alphaStart(double value) {
 		alphaStartRange(value, value);
 		return this;
 	}
@@ -261,7 +261,7 @@ public class ParticleSwarmBuilder {
 	 *            maximale Undurchsichtigkeit (0 ... 1.0)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder alphaStartRange(float start, float end) {
+	public ParticleSwarmBuilder alphaStartRange(double start, double end) {
 		this.alphaStartRange[0] = start;
 		this.alphaStartRange[1] = end;
 		return this;
@@ -274,7 +274,7 @@ public class ParticleSwarmBuilder {
 	 *            Undurchsichtigkeit (0 ... 1.0)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder alphaEnd(float value) {
+	public ParticleSwarmBuilder alphaEnd(double value) {
 		alphaEndRange(value, value);
 		return this;
 	}
@@ -289,8 +289,8 @@ public class ParticleSwarmBuilder {
 	 *            maximale Undurchsichtigkeit (0 ... 1.0)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder alphaEndRange(float start, float end) {
-		this.alphaEndRange = new float[] { start, end };
+	public ParticleSwarmBuilder alphaEndRange(double start, double end) {
+		this.alphaEndRange = new double[] { start, end };
 		return this;
 	}
 
@@ -303,7 +303,7 @@ public class ParticleSwarmBuilder {
 	 *            Größe in Spielraster-Punkten
 	 * @return this
 	 */
-	public ParticleSwarmBuilder size(float value) {
+	public ParticleSwarmBuilder size(double value) {
 		return sizeRange(value, value, 1);
 	}
 
@@ -319,7 +319,7 @@ public class ParticleSwarmBuilder {
 	 *            Anzahl verschiedener zugelassener Bildgrößen
 	 * @return this
 	 */
-	public ParticleSwarmBuilder sizeRange(float start, float end, int sizeSteps) {
+	public ParticleSwarmBuilder sizeRange(double start, double end, int sizeSteps) {
 		this.sizeRange[0] = start;
 		this.sizeRange[1] = end;
 		this.sizeSteps = sizeSteps;
@@ -335,7 +335,7 @@ public class ParticleSwarmBuilder {
 	 *            Bewegungsrichtung (0 .. 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder direction(float value) {
+	public ParticleSwarmBuilder direction(double value) {
 		return directionRange(value, value);
 	}
 
@@ -349,7 +349,7 @@ public class ParticleSwarmBuilder {
 	 *            maximale Bewegungsrichtung (0 .. 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder directionRange(float start, float end) {
+	public ParticleSwarmBuilder directionRange(double start, double end) {
 		this.directionStartRange[0] = start;
 		this.directionStartRange[1] = end;
 		this.directionEndRange = null;
@@ -363,7 +363,7 @@ public class ParticleSwarmBuilder {
 	 *            Bewegungsrichtung (0 .. 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder directionStart(float value) {
+	public ParticleSwarmBuilder directionStart(double value) {
 		return directionStartRange(value, value);
 	}
 
@@ -377,7 +377,7 @@ public class ParticleSwarmBuilder {
 	 *            maximale Bewegungsrichtung (0 .. 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder directionStartRange(float start, float end) {
+	public ParticleSwarmBuilder directionStartRange(double start, double end) {
 		this.directionStartRange[0] = start;
 		this.directionStartRange[1] = end;
 		return this;
@@ -390,7 +390,7 @@ public class ParticleSwarmBuilder {
 	 *            Bewegungsrichtung (0 .. 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder directionEnd(float value) {
+	public ParticleSwarmBuilder directionEnd(double value) {
 		return directionEndRange(value, value);
 	}
 
@@ -404,8 +404,8 @@ public class ParticleSwarmBuilder {
 	 *            maximale Bewegungsrichtung (0 .. 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder directionEndRange(float start, float end) {
-		this.directionEndRange = new float[] { start, end };
+	public ParticleSwarmBuilder directionEndRange(double start, double end) {
+		this.directionEndRange = new double[] { start, end };
 		return this;
 	}
 
@@ -418,7 +418,7 @@ public class ParticleSwarmBuilder {
 	 *            Rotation (0 .. 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder rotation(float value) {
+	public ParticleSwarmBuilder rotation(double value) {
 		return rotationRange(value, value);
 	}
 
@@ -432,7 +432,7 @@ public class ParticleSwarmBuilder {
 	 *            maximale Rotation (0 ... 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder rotationRange(float start, float end) {
+	public ParticleSwarmBuilder rotationRange(double start, double end) {
 		this.rotationStartRange[0] = start;
 		this.rotationStartRange[1] = end;
 		this.rotationEndRange = null;
@@ -446,7 +446,7 @@ public class ParticleSwarmBuilder {
 	 *            Rotation (0 ... 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder rotationStart(float value) {
+	public ParticleSwarmBuilder rotationStart(double value) {
 		return rotationStartRange(value, value);
 	}
 
@@ -460,7 +460,7 @@ public class ParticleSwarmBuilder {
 	 *            maximale Rotation (0 ... 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder rotationStartRange(float start, float end) {
+	public ParticleSwarmBuilder rotationStartRange(double start, double end) {
 		this.rotationStartRange[0] = start;
 		this.rotationStartRange[1] = end;
 		return this;
@@ -473,7 +473,7 @@ public class ParticleSwarmBuilder {
 	 *            Rotation (0 ... 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder rotationEnd(float value) {
+	public ParticleSwarmBuilder rotationEnd(double value) {
 		return rotationEndRange(value, value);
 	}
 
@@ -487,8 +487,8 @@ public class ParticleSwarmBuilder {
 	 *            maximale Rotation (0 ... 360)
 	 * @return this
 	 */
-	public ParticleSwarmBuilder rotationEndRange(float start, float end) {
-		this.rotationEndRange = new float[] { start, end };
+	public ParticleSwarmBuilder rotationEndRange(double start, double end) {
+		this.rotationEndRange = new double[] { start, end };
 		return this;
 	}
 
@@ -501,7 +501,7 @@ public class ParticleSwarmBuilder {
 	 *            Geschwindigkeit in Spielraster-Punkten / s
 	 * @return this
 	 */
-	public ParticleSwarmBuilder speed(float value) {
+	public ParticleSwarmBuilder speed(double value) {
 		return speedRange(value, value);
 	}
 
@@ -515,7 +515,7 @@ public class ParticleSwarmBuilder {
 	 *            maximale Geschwindigkeit in Spielraster-Punkten / s
 	 * @return this
 	 */
-	public ParticleSwarmBuilder speedRange(float start, float end) {
+	public ParticleSwarmBuilder speedRange(double start, double end) {
 		this.speedStartRange[0] = start;
 		this.speedStartRange[1] = end;
 		this.speedEndRange = null;
@@ -529,7 +529,7 @@ public class ParticleSwarmBuilder {
 	 *            Geschwindigkeit in Spielraster-Punkten / s
 	 * @return this
 	 */
-	public ParticleSwarmBuilder speedStart(float value) {
+	public ParticleSwarmBuilder speedStart(double value) {
 		return speedStartRange(value, value);
 	}
 
@@ -543,7 +543,7 @@ public class ParticleSwarmBuilder {
 	 *            maximale Geschwindigkeit in Spielraster-Punkten / s
 	 * @return this
 	 */
-	public ParticleSwarmBuilder speedStartRange(float start, float end) {
+	public ParticleSwarmBuilder speedStartRange(double start, double end) {
 		this.speedStartRange[0] = start;
 		this.speedStartRange[1] = end;
 		return this;
@@ -556,7 +556,7 @@ public class ParticleSwarmBuilder {
 	 *            Geschwindigkeit in Spielraster-Punkten / s
 	 * @return this
 	 */
-	public ParticleSwarmBuilder speedEnd(float value) {
+	public ParticleSwarmBuilder speedEnd(double value) {
 		return speedEndRange(value, value);
 	}
 
@@ -570,8 +570,8 @@ public class ParticleSwarmBuilder {
 	 *            maximale Geschwindigkeit in Spielraster-Punkten / s
 	 * @return this
 	 */
-	public ParticleSwarmBuilder speedEndRange(float start, float end) {
-		this.speedEndRange = new float[] { start, end };
+	public ParticleSwarmBuilder speedEndRange(double start, double end) {
+		this.speedEndRange = new double[] { start, end };
 		return this;
 	}
 
@@ -695,12 +695,12 @@ public class ParticleSwarmBuilder {
 
 	private static Random random = new Random();
 
-	private float random(float[] range) {
-		return (float) (random.nextDouble() * (range[1] - range[0])) + range[0];
+	private double random(double[] range) {
+		return (double) (random.nextDouble() * (range[1] - range[0])) + range[0];
 	}
 
-	private float random(float[] range, int steps) {
-		return (float) (random.nextInt(steps)) / (float) (steps - 1) * (range[1] - range[0]) + range[0];
+	private double random(double[] range, int steps) {
+		return (double) (random.nextInt(steps)) / (double) (steps - 1) * (range[1] - range[0]) + range[0];
 	}
 
 	private long random(long[] range) {
@@ -708,7 +708,7 @@ public class ParticleSwarmBuilder {
 	}
 
 	private Pos random(Pos[] range) {
-		return new Pos(random(new float[] { range[0].x(), range[1].x() }),
-				random(new float[] { range[0].y(), range[1].y() }));
+		return new Pos(random(new double[] { range[0].x(), range[1].x() }),
+				random(new double[] { range[0].y(), range[1].y() }));
 	}
 }

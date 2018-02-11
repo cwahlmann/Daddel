@@ -106,7 +106,7 @@ public class Entity extends ImageSprite {
 	private MapPos destMapPos = new MapPos(0, 0, 0);
 	private long moveTimeDelta = 0;
 	private long moveStartTime = 0;
-	private float moveSpeed = 1f;
+	private double moveSpeed = 1f;
 	private boolean startMove = false;
 	private boolean neatlessMove = false;
 	private boolean moving = false;
@@ -126,7 +126,7 @@ public class Entity extends ImageSprite {
 	 * @param imagefiles
 	 *            die Bilder der Entity
 	 */
-	public Entity(Transformation transformation, TileMap tileMap, int type, float maxSize, String... imagefiles) {
+	public Entity(Transformation transformation, TileMap tileMap, int type, double maxSize, String... imagefiles) {
 		super(transformation, type, maxSize, imagefiles);
 		this.animation = new Animation();
 		gameLoop((me, total, deltatime) -> {
@@ -149,7 +149,7 @@ public class Entity extends ImageSprite {
 				} else {
 					Pos start = tileMap.toPos(mapPos.x(), mapPos.y());
 					Pos dest = tileMap.toPos(destMapPos.x(), destMapPos.y());
-					float d = ((float) (total - moveStartTime)) / (float) moveTimeDelta;
+					double d = ((double) (total - moveStartTime)) / (double) moveTimeDelta;
 					Pos p = new Pos(d * (dest.x() - start.x()) + start.x(), d * (dest.y() - start.y()) + start.y());
 					me.pos(p);
 				}
@@ -351,7 +351,7 @@ public class Entity extends ImageSprite {
 	/**
 	 * @return die Bewegungsgeschwindigkeit in Spielraster-Punkten / s
 	 */
-	public float moveSpeed() {
+	public double moveSpeed() {
 		return moveSpeed;
 	}
 
@@ -362,7 +362,7 @@ public class Entity extends ImageSprite {
 	 *            die Bewegungsgeschwindigkeit in Spielraster-Punkten / s
 	 * @return this
 	 */
-	public Entity moveSpeed(float moveSpeed) {
+	public Entity moveSpeed(double moveSpeed) {
 		this.moveSpeed = moveSpeed;
 		return this;
 	}
@@ -466,10 +466,10 @@ public class Entity extends ImageSprite {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#alpha(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#alpha(double)
 	 */
 	@Override
-	public Entity alpha(float alpha) {
+	public Entity alpha(double alpha) {
 		super.alpha(alpha);
 		return this;
 	}
@@ -511,10 +511,10 @@ public class Entity extends ImageSprite {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#r(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#r(double)
 	 */
 	@Override
-	public Entity r(float r) {
+	public Entity r(double r) {
 		super.r(r);
 		return this;
 	}
@@ -556,10 +556,10 @@ public class Entity extends ImageSprite {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(double)
 	 */
 	@Override
-	public Entity move(float distance) {
+	public Entity move(double distance) {
 		super.move(distance);
 		return this;
 	}

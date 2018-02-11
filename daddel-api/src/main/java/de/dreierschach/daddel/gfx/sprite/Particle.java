@@ -1,5 +1,6 @@
 package de.dreierschach.daddel.gfx.sprite;
 
+import de.dreierschach.daddel.Screen.Debug;
 import de.dreierschach.daddel.listener.CollisionListener;
 import de.dreierschach.daddel.listener.ParticleDiesListener;
 import de.dreierschach.daddel.model.ParticleStrategy;
@@ -22,12 +23,12 @@ public class Particle extends ImageSprite {
 	private double rotationEnd = 0f;
 	private double directionStart = 0f;
 	private double directionEnd = 0f;
-	private float alphaStart = 1f;
-	private float alphaEnd = 1f;
-	private float speed = 0f;
-	private float speedStart = 0f;
-	private float speedEnd = 0f;
-	private float speedAnimation = 10f; // bilder/s
+	private double alphaStart = 1f;
+	private double alphaEnd = 1f;
+	private double speed = 0f;
+	private double speedStart = 0f;
+	private double speedEnd = 0f;
+	private double speedAnimation = 10f; // bilder/s
 	private ParticleStrategy outsideGridStrategy = ParticleStrategy.kill;
 	private ParticleStrategy endOfLifeStrategy = ParticleStrategy.kill;
 	private ParticleDiesListener particleDiesListener = particle -> {
@@ -46,7 +47,7 @@ public class Particle extends ImageSprite {
 	 * @param bilder
 	 *            Die Pfade der Bilder des Sprites
 	 */
-	public Particle(Transformation transformation, int typ, float groesse, long lifespan, String... bilder) {
+	public Particle(Transformation transformation, int typ, double groesse, long lifespan, String... bilder) {
 		super(transformation, typ, groesse, bilder);
 		this.lifespan = lifespan;
 		this.rotationStart = rotation();
@@ -116,7 +117,7 @@ public class Particle extends ImageSprite {
 	 *            Undurchsichtigkeit am Ende der Lebensdauer (0 .. 1.0)
 	 * @return this
 	 */
-	public Particle alpha(float alphaStart, float alphaEnd) {
+	public Particle alpha(double alphaStart, double alphaEnd) {
 		this.alphaStart = alphaStart;
 		this.alphaEnd = alphaEnd;
 		super.alpha(alphaStart);
@@ -126,10 +127,10 @@ public class Particle extends ImageSprite {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#alpha(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#alpha(double)
 	 */
 	@Override
-	public Particle alpha(float alpha) {
+	public Particle alpha(double alpha) {
 		this.alphaStart = alpha;
 		this.alphaEnd = alpha;
 		super.alpha(alpha);
@@ -145,7 +146,7 @@ public class Particle extends ImageSprite {
 	 *            Endgeschwindigkeit in Spielraster-Punkten / s (0 ...)
 	 * @return this
 	 */
-	public Particle speed(float speedStart, float speedEnd) {
+	public Particle speed(double speedStart, double speedEnd) {
 		this.speedStart = speedStart;
 		this.speedEnd = speedEnd;
 		this.speed = speedStart;
@@ -159,7 +160,7 @@ public class Particle extends ImageSprite {
 	 *            Geschwindigkeit in Spielraster-Punkten / s (0 ...)
 	 * @return this
 	 */
-	public Particle speed(float speed) {
+	public Particle speed(double speed) {
 		this.speedStart = speed;
 		this.speedEnd = speed;
 		this.speed = speed;
@@ -173,7 +174,7 @@ public class Particle extends ImageSprite {
 	 *            Geschwindigkeit in Bildern / s
 	 * @return this
 	 */
-	public Particle speedAnimation(float speedAnimation) {
+	public Particle speedAnimation(double speedAnimation) {
 		this.speedAnimation = speedAnimation;
 		return this;
 	}
@@ -240,13 +241,13 @@ public class Particle extends ImageSprite {
 			case ignore:
 			}
 		}
-		double factor = lifespan == 0 ? 0 : (double) (gesamtZeit) / (double) (lifespan);
-		this.speed = (float) ((speedEnd - speedStart) * factor + speedStart);
+		double factor = lifespan == 0 ? 0 : ((double) gesamtZeit) / ((double) lifespan);
+		this.speed = (double) ((speedEnd - speedStart) * factor + speedStart);
 		super.rotation((rotationEnd - rotationStart) * factor + rotationStart);
 		super.direction((directionEnd - directionStart) * factor + directionStart);
-		super.alpha((alphaEnd - alphaStart) * (float) factor + alphaStart);
+		super.alpha((alphaEnd - alphaStart) * (double) factor + alphaStart);
 		actualImage(((int) (gesamtZeit * speedAnimation / 1000)) % imageCount());
-		move(deltaZeit * speed / 1000);
+		move(((double)deltaZeit) / 1000f * speed );
 		Pos min = transformation().getRasterLeftUpper();
 		Pos max = transformation().getRasterRightBottom();
 		if (this.effektivePos().x() < min.x() || this.effektivePos().x() > max.x() || this.effektivePos().y() < min.y()
@@ -286,10 +287,10 @@ public class Particle extends ImageSprite {
 	// ---------------- override methods to return correct type --
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#pos(float, float)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#pos(double, double)
 	 */
 	@Override
-	public Particle pos(float x, float y) {
+	public Particle pos(double x, double y) {
 		super.pos(x, y);
 		return this;
 	}
@@ -322,10 +323,10 @@ public class Particle extends ImageSprite {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#r(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#r(double)
 	 */
 	@Override
-	public Particle r(float r) {
+	public Particle r(double r) {
 		super.r(r);
 		return this;
 	}
@@ -383,10 +384,10 @@ public class Particle extends ImageSprite {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(double)
 	 */
 	@Override
-	public Particle move(float distance) {
+	public Particle move(double distance) {
 		super.move(distance);
 		return this;
 	}
@@ -433,7 +434,7 @@ public class Particle extends ImageSprite {
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#debug(boolean)
 	 */
 	@Override
-	public Particle debug(boolean debug) {
+	public Particle debug(Debug debug) {
 		super.debug(debug);
 		return this;
 	}

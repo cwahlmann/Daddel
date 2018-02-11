@@ -3,6 +3,7 @@ package de.dreierschach.daddel.gfx.tilemap;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.dreierschach.daddel.Screen.Debug;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.model.MapPos;
 import de.dreierschach.daddel.model.Pos;
@@ -24,7 +25,7 @@ public class TileMap extends Sprite {
 
 	private Map<Integer, Tile> tiles = new HashMap<>();
 	private MapPos size;
-	private float tileSize;
+	private double tileSize;
 	private int[][][] map;
 	private Transformation transformation;
 	private int defaultTile = NO_ID;
@@ -38,7 +39,7 @@ public class TileMap extends Sprite {
 	 * @param tileSize
 	 *            die maximale Breite und Höhe einer Kachel in Spielraster-Punkten
 	 */
-	public TileMap(Transformation transformation, float tileSize) {
+	public TileMap(Transformation transformation, double tileSize) {
 		super(transformation, -1);
 		this.tileSize = tileSize;
 		this.transformation = transformation;
@@ -353,7 +354,7 @@ public class TileMap extends Sprite {
 	 * @return die Position der Kachel in Spielraster-Punkten
 	 */
 	public Pos toPos(int x, int y) {
-		return new Pos(((float) x) * tileSize, ((float) y) * tileSize);
+		return new Pos(((double) x) * tileSize, ((double) y) * tileSize);
 	}
 
 	/*
@@ -393,6 +394,7 @@ public class TileMap extends Sprite {
 		int x1 = 2 + x0 + (int) (dx / tileSize);
 		int y1 = 2 + y0 + (int) (dy / tileSize);
 
+		if (!debug().wireframe())
 		for (int x = x0; x <= x1; x++) {
 			for (int y = y0; y <= y1; y++) {
 				Pos prel = toPos(x, y);
@@ -406,7 +408,7 @@ public class TileMap extends Sprite {
 				}
 			}
 		}
-		if (debug()) {
+		if (debug().info() || debug().wireframe()) {
 			Pos halfTileSize = new Pos(tileSize / 2, tileSize / 2);
 			for (int x = x0; x <= x1; x++) {
 				Pos p0 = toPos(x, y0).add(effektivePos()).add(halfTileSize);
@@ -433,13 +435,13 @@ public class TileMap extends Sprite {
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#debug(boolean)
 	 */
 	@Override
-	public Sprite debug(boolean debug) {
+	public Sprite debug(Debug debug) {
 		super.debug(debug);
 		return this;
 	}
 	
 	@Override
-	public TileMap pos(float x, float y) {
+	public TileMap pos(double x, double y) {
 		super.pos(x, y);
 		return this;
 	}
@@ -493,10 +495,10 @@ public class TileMap extends Sprite {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#r(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#r(double)
 	 */
 	@Override
-	public TileMap r(float r) {
+	public TileMap r(double r) {
 		super.r(r);
 		return this;
 	}
@@ -528,10 +530,10 @@ public class TileMap extends Sprite {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#move(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#move(double)
 	 */
 	@Override
-	public TileMap move(float distance) {
+	public TileMap move(double distance) {
 		super.move(distance);
 		return this;
 	}

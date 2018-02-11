@@ -79,7 +79,7 @@ public class Scr {
 	 *            der Faktor
 	 * @return das Ergebnis
 	 */
-	public Scr mul(float a) {
+	public Scr mul(double a) {
 		return new Scr((int) (this.x * a), (int) (this.y * a));
 	}
 
@@ -101,7 +101,7 @@ public class Scr {
 	 *            der Divisor
 	 * @return das Ergebnis
 	 */
-	public Scr div(float a) {
+	public Scr div(double a) {
 		return new Scr((int) (this.x / a), (int) (this.y / a));
 	}
 

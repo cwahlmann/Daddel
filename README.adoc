@@ -26,14 +26,15 @@ Daddel (ja, das kommt von "daddeln") stellt eine API zur Verfügung, die diese W
 
 == Losdaddeln
 
-Wie gehts los? Am besten mit einem einfachen himmelblauen Screen 
-mit einer Rakete und einem kleinen Pacman, der ein Banner hinter sich herzieht.
+Los gehts!
 
-So solls nachher aussehen:
+Für den Anfang erstellen wir eine Spielraster von der Größe 20 x 10. Der Hintergrund soll ein schönes Himmelblau sein und davor fliegt eine Rakete.
 
-image::screenshots/Losdaddeln.jpg[]
+Hier das geplante Spielraster - die Rakete ist durch einen einfachen Kreis dargestellt:
 
-Und hier ist das Programm:
+image::screenshots/Losdaddeln_Raster.jpg[]
+
+Das Programm dazu ist schnell erstellt.
 
 .Losdaddeln.java
 [source,java]
@@ -45,30 +46,78 @@ import de.dreierschach.daddel.gfx.sprite.Particle;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
-//Das Spiel erweitert die Spiele-API Daddel
 public class Losdaddeln extends Daddel {
 
-	// Hier wird das Programm initialisiert
-	
 	@Override
 	public void initGame() {
-		grid(-10, 10, -5, 5);
-		background(Color.rgb(0, 64, 255));
-		toLevel(() -> {
-			sprite(1, 4f, GFX_ROCKET);
-			Particle pacman = particle(1, 8000, 1.5f, GFX_PAC_PACMAN_L0, GFX_PAC_PACMAN_L1, GFX_PAC_PACMAN_L2,
-					GFX_PAC_PACMAN_L3).pos(-11, 3).rotation(180).speed(4f).endOfLife(PARTICLE_RESTART)
-							.outsideGrid(PARTICLE_IGNORE);
-			text(". . . los-daddeln", "sans-serif", 1, Color.WHITE).parent(pacman).pos(-1.5f, 0).align(ALIGN_RIGHT,
-					VALIGN_CENTER);
-			key(KeyCode.ESCAPE, keyCode -> exit());
+		grid(-10, 10, -5, 5); // <1>
+		background(Color.rgb(0, 64, 255)); // <2>
+		toLevel(() -> { // <3>
+			sprite(1, 4, GFX_ROCKET); // <4>
+			key(KeyCode.ESCAPE, keyCode -> exit()); // <5>
 		});
 	}
 
-	// Standart-Main-Methode, um das Programm zu starten
-
-	public static void main(String[] args) {
+	public static void main(String[] args) { // <6>
 		launch(args);
 	}
 }
 ----
+
+<1> Definiert das Spielraster (x0, x1, y0, y1)
+<2> Hintergrundfarbe des Spiels
+<3> Es gibt im Spiel verschiedene Phasen (z.B. Titel, Highscore etc.), für die jeweils ein Bildschirm aufgebaut werden muss. Hier wird als einzige Phase ein Level-Bildschirm aufgebaut.
+<4> Die Rakete ist ein Sprite, mit einem selbstdefinierten Typ 1, der Größe 4 (in Spielraster-Punkten) und einer bereits mitgelieferten Grafik
+<5> Ein Druck auf die Taste ESCAPE sorgt dafür, dass das Spiel sofort beendet wird
+<6> Diese Methode muss für jedes Spiel standartmäßig vorhanden sein, damit es überhaupt starten kann.
+
+Das wars schon. Nach Start des Programms erscheint die Rakete vor strahlend blauem Himmel.
+
+Übrigens: Durch drücken von F3 kannst du durch die einzelnen Debug-Modi durchschalten.
+
+image::screenshots/Losdaddeln.jpg[]
+
+Das ist noch ein wenig langweilig. Jetzt wollen wir etwas Action wagen. Wie wärs mit einem Pacman, der einen Banner hinter sich herzieht?
+
+image::screenshots/Losdaddeln2_Raster.jpg[]
+
+Dazu ergänzen wir das Programm um zwei Befehle. Einer für Pacman, einer für das Banner.
+
+.Losdaddeln2.java
+[source,java]
+----
+...
+		toLevel(() -> {
+			sprite(1, 4, GFX_ROCKET);
+
+			Particle pacman = // <1>
+				particle(1, 8000, 1.5, GFX_PAC_PACMAN_L0, GFX_PAC_PACMAN_L1, GFX_PAC_PACMAN_L2, GFX_PAC_PACMAN_L3) // <2>
+				.pos(-11, 3) // <3>
+				.rotation(180) // <4>
+				.speed(4) // <5>
+				.endOfLife(PARTICLE_RESTART) // <6>
+				.outsideGrid(PARTICLE_IGNORE); // <7>
+
+			text(". . . los-daddeln", "sans-serif", 1, Color.WHITE) // <8>
+				.parent(pacman).pos(-1.5, 0) // <9>
+				.align(ALIGN_RIGHT, VALIGN_CENTER); // <10>
+
+			key(KeyCode.ESCAPE, keyCode -> exit());
+		});
+...
+----
+
+<1> Pacman ist ein Partikel, d.i. ein Sprite, der automatisch animiert wird.
+<2> Der Typ ist wieder 1, die Lebensdauer beträgt 8000 ms (1 Sekunde) und die Größe ist 1.5 Spielraster-Punkte. Zu Pacman gehören vier Grafiken. Er soll ja fressen können ;-)
+<3> Die Start-Position des Pacman ist unterhalb der Rakete und links außerhalb des Bildschirms.
+<4> In den Grafiken schaut Pacman nach links, also muss das Bild um 180 Grad gedreht werden.
+<5> Die Geschindigkeit soll 4 Spielraster-Punkte pro Sekunde betragen. Bei 8 Sekunden Lebensdauer reicht das, um einmal über den ganzen Bildschirm zu laufen.
+<6> Wenn die Lebenszeit von Pacman abgelaufen ist, soll er wieder von vorne starten.
+<7> Pacman soll ganz aus dem Bildschirm laufen können, deshalb wird ein verlassen des Rasters ignoriert.
+<8> Das Banner hat u.a. die Größe 1 in Spielrasterpunten.
+<9> Und es soll hinter Pacman herfliegen. Deshalb ist es ein "Kind" von Pacman und liegt relativ gesehen 1.5 Spielrasterpunkte links davon.
+<10> Die Ausrichtung des Banners soll rechtsbündig sein.
+
+Und so sieht es jetzt aus:
+
+image::screenshots/Losdaddeln2_Raster.jpg[]

@@ -26,11 +26,11 @@ public class TextParticle extends TextSprite {
 	private double rotationEnd = 0f;
 	private double directionStart = 0f;
 	private double directionEnd = 0f;
-	private float speed = 0f;
-	private float speedStart = 0f;
-	private float speedEnd = 0f;
-	private float sizeStart = 2f;
-	private float sizeEnd = 2f;
+	private double speed = 0f;
+	private double speedStart = 0f;
+	private double speedEnd = 0f;
+	private double sizeStart = 2f;
+	private double sizeEnd = 2f;
 	private ParticleStrategy outsideGridStrategy = ParticleStrategy.kill;
 	private ParticleStrategy endOfLifeStrategy = ParticleStrategy.kill;
 	private TextParticleDiesListener textParticleDiesListener = particle -> {
@@ -111,7 +111,7 @@ public class TextParticle extends TextSprite {
 	 *            Endgeschwindigkeit in Spielraster-Punkten / s (0 ...)
 	 * @return this
 	 */
-	public TextParticle speed(float speedStart, float speedEnd) {
+	public TextParticle speed(double speedStart, double speedEnd) {
 		this.speedStart = speedStart;
 		this.speedEnd = speedEnd;
 		this.speed = speedStart;
@@ -125,7 +125,7 @@ public class TextParticle extends TextSprite {
 	 *            Geschwindigkeit in Spielraster-Punkten / s (0 ...)
 	 * @return this
 	 */
-	public TextParticle speed(float speed) {
+	public TextParticle speed(double speed) {
 		this.speedStart = speed;
 		this.speedEnd = speed;
 		this.speed = speed;
@@ -141,7 +141,7 @@ public class TextParticle extends TextSprite {
 	 *            Größe (Höhe) in Spielraster-Punkten / s (0 ...)
 	 * @return this
 	 */
-	public TextParticle size(float sizeStart, float sizeEnd) {
+	public TextParticle size(double sizeStart, double sizeEnd) {
 		this.sizeStart = sizeStart;
 		this.sizeEnd = sizeEnd;
 		return this;
@@ -152,7 +152,7 @@ public class TextParticle extends TextSprite {
 	 */
 	@Override
 	public TextParticle size(double size) {
-		size((float) size, (float) size);
+		size((double) size, (double) size);
 		return this;
 	}
 
@@ -220,7 +220,7 @@ public class TextParticle extends TextSprite {
 			}
 		}
 		double factor = lifespan == 0 ? 0 : (double) (gesamtZeit) / (double) (lifespan);
-		this.speed = (float) ((speedEnd - speedStart) * factor + speedStart);
+		this.speed = (double) ((speedEnd - speedStart) * factor + speedStart);
 		super.rotation((rotationEnd - rotationStart) * factor + rotationStart);
 		super.direction((directionEnd - directionStart) * factor + directionStart);
 		super.size((sizeEnd - sizeStart) * factor + sizeStart);
@@ -263,10 +263,10 @@ public class TextParticle extends TextSprite {
 	// overwrite methods for correct return type
 	
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.text.TextSprite#pos(float, float)
+	 * @see de.dreierschach.daddel.gfx.text.TextSprite#pos(double, double)
 	 */
 	@Override
-	public TextParticle pos(float x, float y) {
+	public TextParticle pos(double x, double y) {
 		super.pos(x, y);
 		return this;
 	}
@@ -291,10 +291,10 @@ public class TextParticle extends TextSprite {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.text.TextSprite#r(float)
+	 * @see de.dreierschach.daddel.gfx.text.TextSprite#r(double)
 	 */
 	@Override
-	public TextParticle r(float r) {
+	public TextParticle r(double r) {
 		super.r(r);
 		return this;
 	}
@@ -327,10 +327,10 @@ public class TextParticle extends TextSprite {
 	}
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.text.TextSprite#move(float)
+	 * @see de.dreierschach.daddel.gfx.text.TextSprite#move(double)
 	 */
 	@Override
-	public TextParticle move(float distance) {
+	public TextParticle move(double distance) {
 		super.move(distance);
 		return this;
 	}

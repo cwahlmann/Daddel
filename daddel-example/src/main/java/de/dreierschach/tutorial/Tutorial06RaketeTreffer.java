@@ -17,15 +17,15 @@ public class Tutorial06RaketeTreffer extends Daddel {
 	private final static int TYP_EXPLOSION = 4;
 
 	// Die Größe der Rakete wird in Spielraster-Punkten angegeben
-	private final static float RAKETE_GROESSE = 2f;
-	private final static float GEGNER_GROESSE = 2f;
+	private final static double RAKETE_GROESSE = 2f;
+	private final static double GEGNER_GROESSE = 2f;
 
 	// Startposition der Rakete
 	private final static Pos RAKETE_STARTPOS = new Pos(0, 3.5f);
 
 	// Die Geschwindigkeit der Rakete in Rasterpunkten pro Sekunde
-	private final static float RAKETE_GESCHWINDIGKEIT = 5f;
-	private final static float GEGNER_GESCHWINDIGKEIT = 3f;
+	private final static double RAKETE_GESCHWINDIGKEIT = 5f;
+	private final static double GEGNER_GESCHWINDIGKEIT = 3f;
 
 	// Ein Enum ist einfach eine Aufzählung. Diese Aufzählung beinhaltet die
 	// möglichen Richtungen der Rakete
@@ -69,7 +69,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 				.gameLoop((me, totaltime, deltatime) -> {
 					// Die Strecke kann mit der vordefinierten Methode strecke() aus delta-Zeit und
 					// Geschwindigkeit errechnet werden
-					float strecke = strecke(deltatime, RAKETE_GESCHWINDIGKEIT);
+					double strecke = strecke(deltatime, RAKETE_GESCHWINDIGKEIT);
 					bewegeRakete(strecke);
 				}) //
 				.collision((me, other) -> {
@@ -86,7 +86,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 		// erzeuge Ufos
 		for (int i = 0; i < 3 + level(); i++) {
 			// zufällige Position
-			Pos pos = new Pos((float) Math.random() * 20f - 10f, (float) Math.random() * 5f - 5f);
+			Pos pos = new Pos((double) Math.random() * 20f - 10f, (double) Math.random() * 5f - 5f);
 			sprite(TYP_GEGNER, GEGNER_GROESSE, GFX_UFO_1) //
 					.pos(pos) //
 					.gameLoop((ufo, totaltime, deltatime) -> bewegeUfo(ufo, deltatime)) //
@@ -122,7 +122,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 	}
 
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
-	private void bewegeRakete(float strecke) {
+	private void bewegeRakete(double strecke) {
 		Pos neuePosition = rakete.pos().add(getPosRichtung(raketeRichtung, strecke));
 		if (!onGrid(neuePosition, rakete.r())) {
 			// Wenn die Rakete aus dem Bildschirm fliegen würde, wird sie gestoppt
@@ -134,7 +134,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 	}
 
 	// Diese Methode gibt je nach Richtung die richtige Positions-Veränderung zurück
-	private Pos getPosRichtung(Richtung richtung, float strecke) {
+	private Pos getPosRichtung(Richtung richtung, double strecke) {
 		switch (raketeRichtung) {
 		case links:
 			return new Pos(-strecke, 0);
@@ -153,7 +153,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 	// Dies Methode wird von der Sprite-Spielschleife jedes Ufos aufgerufen
 	private void bewegeUfo(Sprite ufo, long deltatime) {
 		// berechne die Strecke aus Zeitspanne und Geschwindigkeit
-		float strecke = strecke(deltatime, GEGNER_GESCHWINDIGKEIT);
+		double strecke = strecke(deltatime, GEGNER_GESCHWINDIGKEIT);
 
 		// berechne die neue Position
 		Pos neuePosition = ufo.pos().add(new Pos(0, strecke));
@@ -161,7 +161,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 		// wenn das Ufo unten ankommt, wird es an den oberen Bildschirmrand gesetzt. Die
 		// X-Position ist zufällig.
 		if (neuePosition.y() > 6) {
-			neuePosition = new Pos((float) Math.random() * 20f - 10f, -6);
+			neuePosition = new Pos((double) Math.random() * 20f - 10f, -6);
 		}
 		// setze neue Position
 		ufo.pos(neuePosition);

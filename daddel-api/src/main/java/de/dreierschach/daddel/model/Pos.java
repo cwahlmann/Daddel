@@ -7,7 +7,7 @@ package de.dreierschach.daddel.model;
  *
  */
 public class Pos {
-	private float x, y;
+	private double x, y;
 
 	/**
 	 * @param x
@@ -15,7 +15,7 @@ public class Pos {
 	 * @param y
 	 *            Y-Koordinate
 	 */
-	public Pos(float x, float y) {
+	public Pos(double x, double y) {
 		this.x = x;
 		this.y = y;
 	}
@@ -23,14 +23,14 @@ public class Pos {
 	/**
 	 * @return die X-Koordinate
 	 */
-	public float x() {
+	public double x() {
 		return x;
 	}
 
 	/**
 	 * @return die Y-Koordinate
 	 */
-	public float y() {
+	public double y() {
 		return y;
 	}
 
@@ -63,7 +63,7 @@ public class Pos {
 	 *            der Faktor
 	 * @return das Ergebnis
 	 */
-	public Pos mul(float a) {
+	public Pos mul(double a) {
 		return new Pos(this.x * a, this.y * a);
 	}
 
@@ -85,7 +85,7 @@ public class Pos {
 	 *            der Divisor
 	 * @return das Ergebnis
 	 */
-	public Pos div(float a) {
+	public Pos div(double a) {
 		return new Pos(this.x / a, this.y / a);
 	}
 

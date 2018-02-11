@@ -61,10 +61,36 @@ public class Screen {
 
 	// debug
 
-	private boolean debug = false;
+	public enum Debug {
+		off(false, false), info(false, true), wireframe(true, false), wireframeInfo(true, true);
+		private boolean isWireframe, isInfo;
+
+		Debug(boolean isWireframe, boolean isInfo) {
+			this.isInfo = isInfo;
+			this.isWireframe = isWireframe;
+		}
+
+		public boolean wireframe() {
+			return isWireframe;
+		}
+
+		public boolean info() {
+			return isInfo;
+		}
+
+		public Debug next() {
+			return Debug.values()[(this.ordinal() + 1) % Debug.values().length];
+		}
+	}
+
+	private Debug debug = Debug.off;
 	private TextSprite debugInfo = null;
+	private double framerateMin = 9999.9;
+	private double framerateMax = 0;
 
 	final LongProperty elapsedTime = new SimpleLongProperty();
+	final LongProperty framesTotal = new SimpleLongProperty(0);
+	final LongProperty elapsedTimeTotal = new SimpleLongProperty(1);
 	final AnimationTimer timer = new AnimationTimer() {
 		@Override
 		public void handle(long nano) {
@@ -72,14 +98,25 @@ public class Screen {
 				elapsedTime.set(nano);
 			}
 			long delta = nano - elapsedTime.get();
-			if (debug) {
+			if (debug.info()) {
 				// double fps = 1000d / ((double)delta / 1000000d);
 				double fps = 1000000000d / ((double) delta);
-				debugInfo.text(String.format("fps: %.1f", fps));
+				if (fps < framerateMin) {
+					framerateMin = fps;
+				}
+				if (fps > framerateMax) {
+					framerateMax = fps;
+				}
+				double fpsAvg = 1000000000d * (double) framesTotal.get() / ((double) elapsedTimeTotal.get());
+
+				debugInfo.text(String.format("fps: %.1f (min: %.1f / max: %.1f / avg: %.1f)", fps, framerateMin,
+						framerateMax, fpsAvg)).color(foreground);
 			}
 			gameLoop.run(nano / 1000000, delta / 1000000);
 			elapsedTime.set(nano);
 			refresh();
+			framesTotal.set(framesTotal.get() + 1);
+			elapsedTimeTotal.set(elapsedTimeTotal.get() + delta);
 		}
 	};
 
@@ -149,14 +186,14 @@ public class Screen {
 	 * @param debug
 	 *            true: Debug-Informationen werden angezeigt (Standart: FPS)
 	 */
-	public void setDebug(boolean debug) {
+	public void setDebug(Debug debug) {
 		this.debug = debug;
 	}
 
 	/**
 	 * @return true, wenn die Debug-Anzeige aktiviert ist
 	 */
-	public boolean isDebug() {
+	public Debug getDebug() {
 		return debug;
 	}
 
@@ -382,26 +419,30 @@ public class Screen {
 				g.setFill(background);
 				g.fillRect(0, 0, output.getWidth(), output.getHeight());
 				if (tileMap != null) {
-					tileMap.debug(isDebug());
+					tileMap.debug(getDebug());
 					tileMap.draw(g);
 				} else {
-					if (isDebug()) {
+					if (debug.info()) {
 						drawGrid(g);
+					}
+					if (debug.wireframe()) {
+						drawGrid(g);
+						drawGridInfo(g);
 					}
 				}
 				sprites.forEach(sprite -> {
 					g.save();
-					sprite.debug(isDebug());
+					sprite.debug(getDebug());
 					sprite.drawSprite(g);
 					g.restore();
 				});
 				texts.forEach(text -> {
 					g.save();
-					text.debug(isDebug());
+					text.debug(getDebug());
 					text.draw(g);
 					g.restore();
 				});
-				if (debug) {
+				if (debug.info()) {
 					g.save();
 					debugInfo.draw(g);
 					g.restore();
@@ -418,13 +459,40 @@ public class Screen {
 		int y1 = (int) transformation.getRasterRightBottom().y();
 		for (int x = x0; x <= x1; x++) {
 			for (int y = y0; y <= y1; y++) {
-				Scr scr = transformation.t(new Pos((float) x, (float) y));
-				Scr scr0 = transformation.t(new Pos((float) x0, (float) y0));
-				Scr scr1 = transformation.t(new Pos((float) x1, (float) y1));
-				g.fillRect(scr.x(), scr0.y(), 1, scr1.y() - scr0.y());
-				g.fillRect(scr0.x(), scr.y(), scr1.x() - scr0.x(), 1);
+				Scr scr = transformation.t(new Pos((double) x, (double) y));
+				Scr scr0 = transformation.t(new Pos((double) x0, (double) y0));
+				Scr scr1 = transformation.t(new Pos((double) x1, (double) y1));
+				g.fillRect(scr.x(), scr0.y(), x == 0 ? 2 : 1, scr1.y() - scr0.y());
+				g.fillRect(scr0.x(), scr.y(), scr1.x() - scr0.x(), y == 0 ? 2 : 1);
 			}
 		}
+	}
+
+	private void drawGridInfo(GraphicsContext g) {
+		Scr scr0 = transformation.t(transformation.getRasterLeftUpper());
+		Scr scr1 = transformation.t(transformation.getRasterRightBottom());
+
+		g.setFont(Font.font(24));
+
+		g.setTextAlign(TextAlignment.LEFT);
+		
+		g.setTextBaseline(VPos.TOP);
+		g.fillText(String.format("(%.3f / %.3f)", transformation.getRasterLeftUpper().x(),
+				transformation.getRasterLeftUpper().y()), scr0.x(), scr0.y());
+		
+		g.setTextBaseline(VPos.BOTTOM);
+		g.fillText(String.format("(%.3f / %.3f)", transformation.getRasterLeftUpper().x(),
+				transformation.getRasterRightBottom().y()), scr0.x(), scr1.y());
+
+		g.setTextAlign(TextAlignment.RIGHT);
+		
+		g.setTextBaseline(VPos.TOP);
+		g.fillText(String.format("(%.3f / %.3f)", transformation.getRasterRightBottom().x(),
+				transformation.getRasterLeftUpper().y()), scr1.x(), scr0.y());
+		
+		g.setTextBaseline(VPos.BOTTOM);
+		g.fillText(String.format("(%.3f / %.3f)", transformation.getRasterRightBottom().x(),
+				transformation.getRasterRightBottom().y()), scr1.x(), scr1.y());
 	}
 
 	public void onOutputKeyTyped(KeyEvent keyEvent) {

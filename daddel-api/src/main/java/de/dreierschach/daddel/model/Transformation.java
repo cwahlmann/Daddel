@@ -8,7 +8,7 @@ package de.dreierschach.daddel.model;
  *
  */
 public class Transformation {
-	private float zoom;
+	private double zoom;
 	private Scr trans;
 	private Pos rasterLeftUpper, rasterRightBottom;
 	private int width, height;
@@ -68,7 +68,7 @@ public class Transformation {
 	/**
 	 * @return der aktuelle Zoomfaktor
 	 */
-	public float getZoom() {
+	public double getZoom() {
 		return zoom;
 	}
 
@@ -100,8 +100,8 @@ public class Transformation {
 	 */
 	public Pos t(Scr scr) {
 		return new Pos( //
-				((float) (scr.x() - trans.x())) / zoom + rasterLeftUpper.x(), //
-				((float) (scr.y() - trans.y())) / zoom + rasterLeftUpper.y() //
+				((double) (scr.x() - trans.x())) / zoom + rasterLeftUpper.x(), //
+				((double) (scr.y() - trans.y())) / zoom + rasterLeftUpper.y() //
 		);
 	}
 
@@ -124,8 +124,8 @@ public class Transformation {
 	 */
 	public Pos zoom(Scr scr) {
 		return new Pos( //
-				((float) scr.x()) / zoom, //
-				((float) scr.y()) / zoom);
+				((double) scr.x()) / zoom, //
+				((double) scr.y()) / zoom);
 	}
 
 	/**
@@ -144,8 +144,8 @@ public class Transformation {
 	 *            Integer-Koordinate
 	 * @return gezoomte Koordinate
 	 */
-	public float zoom(int i) {
-		return ((float) i) / zoom;
+	public double zoom(int i) {
+		return ((double) i) / zoom;
 	}
 
 	/**
@@ -153,17 +153,17 @@ public class Transformation {
 	 *            Float-Koordinate
 	 * @return gezoomte Koordinate
 	 */
-	public int zoom(float f) {
+	public int zoom(double f) {
 		return (int) (f * zoom);
 	}
 
 	// private Methoden
 
 	private final void init() {
-		float dx = Math.abs(rasterLeftUpper.x() - rasterRightBottom.x());
-		float dy = Math.abs(rasterLeftUpper.y() - rasterRightBottom.y());
-		float zoomx = (float) this.width / dx;
-		float zoomy = (float) this.height / dy;
+		double dx = Math.abs(rasterLeftUpper.x() - rasterRightBottom.x());
+		double dy = Math.abs(rasterLeftUpper.y() - rasterRightBottom.y());
+		double zoomx = (double) this.width / dx;
+		double zoomy = (double) this.height / dy;
 		this.zoom = zoomx < zoomy ? zoomx : zoomy;
 
 		int scrDx = (int) (dx * zoom);

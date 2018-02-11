@@ -21,8 +21,8 @@ public class Menu {
 	private int actualItem = 0;
 	private Color colorOff = Color.WHITE;
 	private Color colorOn = Color.GREEN;
-	private float sizeOn = 1;
-	private float sizeOff = 1;
+	private double sizeOn = 1;
+	private double sizeOff = 1;
 	private FontWeight fontWeightOn = FontWeight.BOLD;
 	private FontWeight fontWeightOff = FontWeight.BOLD;
 	private String familyOn = "sans-serif";
@@ -87,7 +87,7 @@ public class Menu {
 	 *            Größe des inaktiven (Höhe) Menupunkts in Spielraster-Punkten
 	 * @return this
 	 */
-	public Menu size(float sizeOn, float sizeOff) {
+	public Menu size(double sizeOn, double sizeOff) {
 		this.sizeOn = sizeOn;
 		this.sizeOff = sizeOff;
 		return this;

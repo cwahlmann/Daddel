@@ -3,15 +3,19 @@ package de.dreierschach.daddel.gfx.sprite;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.dreierschach.daddel.Screen.Debug;
 import de.dreierschach.daddel.gfx.ImageLib;
 import de.dreierschach.daddel.listener.CollisionListener;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 /**
  * ein Sprite in Form eines Bildes; kann animiert sein
@@ -28,7 +32,7 @@ public class ImageSprite extends Sprite {
 	private int actualImage;
 	private CollisionListener collisionListener = (me, other) -> {
 	};
-	private float alpha = 1f;
+	private double alpha = 1f;
 
 	/**
 	 * Constructor
@@ -43,7 +47,7 @@ public class ImageSprite extends Sprite {
 	 * @param imagefiles
 	 *            Die Pfade der Bilder des Sprites
 	 */
-	public ImageSprite(Transformation transformation, int type, float maxSize, String... imagefiles) {
+	public ImageSprite(Transformation transformation, int type, double maxSize, String... imagefiles) {
 		super(transformation, type);
 		Scr maxSizeScr = transformation().zoom(new Pos(maxSize, maxSize));
 		maxSizeScr = new Scr(maxSizeScr.x() > 0 ? maxSizeScr.x() + 1 : 1, maxSizeScr.y() > 0 ? maxSizeScr.y() + 1 : 1);
@@ -69,7 +73,7 @@ public class ImageSprite extends Sprite {
 	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#debug(boolean)
 	 */
-	public ImageSprite debug(boolean debug) {
+	public ImageSprite debug(Debug debug) {
 		super.debug(debug);
 		return this;
 	}
@@ -120,7 +124,7 @@ public class ImageSprite extends Sprite {
 	/**
 	 * @return die Undurchsichtigkeit des Sprites (0 ... 1.0)
 	 */
-	public float alpha() {
+	public double alpha() {
 		return alpha;
 	}
 
@@ -131,7 +135,7 @@ public class ImageSprite extends Sprite {
 	 *            die Undurchsichtigkeit des Sprites (0 ... 1.0)
 	 * @return this
 	 */
-	public ImageSprite alpha(float alpha) {
+	public ImageSprite alpha(double alpha) {
 		this.alpha = alpha;
 		return this;
 	}
@@ -159,15 +163,36 @@ public class ImageSprite extends Sprite {
 	 */
 	@Override
 	public void draw(GraphicsContext g) {
-		Scr scr = transformation().t(effektivePos());
-		g.setGlobalAlpha(this.alpha);
-		g.drawImage(image(), scr.x() - witdh / 2, scr.y() - height / 2);
-		if (debug()) {
-			g.setGlobalAlpha(1.0);
-			g.setStroke(Color.gray(0.5));
-			float d = transformation().zoom(r()) * 2;
-			g.strokeOval(scr.x() - d / 2, scr.y() - d / 2, d, d);
+		if (!debug().wireframe()) {
+			Scr scr = transformation().t(effektivePos());
+			g.setGlobalAlpha(this.alpha);
+			g.drawImage(image(), scr.x() - witdh / 2, scr.y() - height / 2);
 		}
+		if (debug().info()) {
+			drawWireframe(g);
+		}
+		if (debug().wireframe()) {
+			drawWireframe(g);
+			drawInfo(g);
+		}
+	}
+
+	private void drawWireframe(GraphicsContext g) {
+		Scr scr = transformation().t(effektivePos());
+		g.setGlobalAlpha(1.0);
+		g.setStroke(Color.gray(0.5));
+		double d = transformation().zoom(r()) * 2;
+		g.strokeOval(scr.x() - d / 2, scr.y() - d / 2, d, d);
+	}
+
+	private void drawInfo(GraphicsContext g) {
+		Scr scr = transformation().t(effektivePos());
+		g.setFill(Color.gray(0.5));
+		g.setFont(Font.font(16));
+		g.setTextAlign(TextAlignment.CENTER);
+		g.setTextBaseline(VPos.CENTER);
+		g.fillText(String.format("(%.3f / %.3f)", effektivePos().x(),
+				effektivePos().y()), scr.x(), scr.y());
 	}
 
 	/*
@@ -186,10 +211,10 @@ public class ImageSprite extends Sprite {
 	// -------------- override methods to return correct type --
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#pos(float, float)
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#pos(double, double)
 	 */
 	@Override
-	public ImageSprite pos(float x, float y) {
+	public ImageSprite pos(double x, double y) {
 		super.pos(x, y);
 		return this;
 	}
@@ -243,10 +268,10 @@ public class ImageSprite extends Sprite {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#r(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#r(double)
 	 */
 	@Override
-	public ImageSprite r(float r) {
+	public ImageSprite r(double r) {
 		super.r(r);
 		return this;
 	}
@@ -304,10 +329,10 @@ public class ImageSprite extends Sprite {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#move(float)
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#move(double)
 	 */
 	@Override
-	public ImageSprite move(float distance) {
+	public ImageSprite move(double distance) {
 		super.move(distance);
 		return this;
 	}

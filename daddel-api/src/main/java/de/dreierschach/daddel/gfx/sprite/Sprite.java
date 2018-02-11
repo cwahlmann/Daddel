@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import de.dreierschach.daddel.Screen.Debug;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
@@ -35,7 +36,7 @@ public abstract class Sprite {
 		}
 	};
 	private Pos pos = new Pos(0, 0);
-	private float r;
+	private double r;
 	private int type;
 	private List<SpriteGameLoop> gameLoops = new ArrayList<>();
 	private boolean alive = true;
@@ -44,7 +45,7 @@ public abstract class Sprite {
 	private double direction = 0;
 	private Transformation transformation;
 	private Sprite parent = null;
-	private boolean debug = false;
+	private Debug debug = Debug.off;
 
 	/**
 	 * Sprite mit vorgegebenen Radius erzeigen
@@ -83,7 +84,7 @@ public abstract class Sprite {
 	 *            true, wenn debug Informationen angezeigt werden sollen
 	 * @return this
 	 */
-	public Sprite debug(boolean debug) {
+	public Sprite debug(Debug debug) {
 		this.debug = debug;
 		return this;
 	}
@@ -91,7 +92,7 @@ public abstract class Sprite {
 	/**
 	 * @return true, wenn debug Informationen angezeigt werden sollen
 	 */
-	public boolean debug() {
+	public Debug debug() {
 		return debug;
 	}
 
@@ -100,7 +101,7 @@ public abstract class Sprite {
 	 *         Eltern-Sprite
 	 */
 	public Pos effektivePos() {
-		return !hasParent() ? pos : new Pos(parent.effektivePos().x() + pos.x(), parent.effektivePos().y() + pos.y());
+		return !hasParent() ? pos : parent.effektivePos().add(pos);
 	}
 
 	/**
@@ -119,7 +120,7 @@ public abstract class Sprite {
 	 *            die X-Koordinate
 	 * @return this
 	 */
-	public Sprite pos(float x, float y) {
+	public Sprite pos(double x, double y) {
 		this.pos(new Pos(x, y));
 		return this;
 	}
@@ -189,7 +190,7 @@ public abstract class Sprite {
 	/**
 	 * @return der Radius in Spielraster-Punkten
 	 */
-	public float r() {
+	public double r() {
 		return r;
 	}
 
@@ -201,7 +202,7 @@ public abstract class Sprite {
 	 *            Radius in Spielraster-Punkten
 	 * @return this
 	 */
-	public Sprite r(float r) {
+	public Sprite r(double r) {
 		this.r = r;
 		return this;
 	}
@@ -237,11 +238,11 @@ public abstract class Sprite {
 		if (!other.alive()) {
 			return false;
 		}
-		float dx = other.effektivePos().x() - this.effektivePos().x();
-		float dy = other.effektivePos().y() - this.effektivePos().y();
-		float dd = dx * dx + dy * dy;
-		float dr = other.r + this.r;
-		float ddr = dr * dr;
+		double dx = other.effektivePos().x() - this.effektivePos().x();
+		double dy = other.effektivePos().y() - this.effektivePos().y();
+		double dd = dx * dx + dy * dy;
+		double dr = other.r + this.r;
+		double ddr = dr * dr;
 		return dd < ddr;
 	}
 
@@ -348,11 +349,11 @@ public abstract class Sprite {
 		return this;
 	}
 
-	public Sprite move(float distance) {
+	public Sprite move(double distance) {
 		Rotate r = new Rotate(direction);
 		Point2D v2d = r.transform(new Point2D(1, 0));
-		Pos v = new Pos((float) (v2d.getX()), (float) (v2d.getY()));
-		this.pos = new Pos(this.pos.x() + v.x() * distance, pos.y() + v.y() * distance);
+		Pos v = new Pos((double) v2d.getX(), (double) v2d.getY());
+		this.pos = this.pos.add(v.mul(distance));
 		return this;
 	}
 
