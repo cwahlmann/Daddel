@@ -24,6 +24,32 @@ Daddel (ja, das kommt von "daddeln") stellt eine API zur Verfügung, die diese W
 * basierend auf JavaFx
 * Verhalten kann erweitert und überschrieben werden
 
+*Disclaimer:*
+Daddel enthält einige mitgelieferte *Grafiken*. Diese stammen aus folgenden Quellen:
+
+|===
+|Grafik | Quelle
+
+|UFOs:
+|https://openclipart.org/user-detail/firestorm200, free
+
+|Rocket:
+|https://openclipart.org/user-detail/rygle, free
+
+|Explosion:
+|https://openclipart.org/user-detail/dominiquechappard, free
+
+|Laser, Stern:
+|Christian Wahlmann, LGPL
+
+|Pacman-Grafiken
+|wurden Screenshots des original-Spiels nachempfunden
+|===
+
+Die mitgelieferten *Sound-Samples* (Additional sound effects) stammen von https://www.zapsplat.com - sehr zu empfehlen!
+
+----
+
 == Losdaddeln
 
 Los gehts!
