@@ -22,17 +22,17 @@ public class MenuBuilder {
 	private Transformation transformation;
 
 	private Pos pos = new Pos(0, 0);
-	private float lineHeight = 1f;
+	private double lineHeight = 1f;
 	private TextAlignment align = TextAlignment.CENTER;
 	private VPos valign = VPos.CENTER;
 
 	private Color colorOn = Color.GREEN;
-	private float sizeOn = 1;
+	private double sizeOn = 1;
 	private String familyOn = "sans-serif";
 	private FontWeight fontWeightOn = FontWeight.NORMAL;
 
 	private Color colorOff = Color.WHITE;
-	private float sizeOff = 1;
+	private double sizeOff = 1;
 	private String familyOff = "sans-serif";
 	private FontWeight fontWeightOff = FontWeight.NORMAL;
 
@@ -77,7 +77,7 @@ public class MenuBuilder {
 		}
 		TextSprite textSprite = new TextSprite(transformation, text).align(align, valign).color(colorOff)
 				.family(familyOff).size(sizeOff).weight(fontWeightOff).type(-1)
-				.pos(new Pos(pos.x(), pos.y() + lineHeight * (float) (menu.size())));
+				.pos(new Pos(pos.x(), pos.y() + lineHeight * (double) (menu.size())));
 		menu.addItem(textSprite, action);
 		screen.addSprite(textSprite);
 		return this;
@@ -92,7 +92,7 @@ public class MenuBuilder {
 	 *            die X-Koordinate
 	 * @return this
 	 */
-	public MenuBuilder pos(float x, float y) {
+	public MenuBuilder pos(double x, double y) {
 		this.pos(new Pos(x, y));
 		return this;
 	}
@@ -117,7 +117,7 @@ public class MenuBuilder {
 	 *            Zeilenhöhe in Spielraster-Punkten
 	 * @return this
 	 */
-	public MenuBuilder lineHeight(float lineHeight) {
+	public MenuBuilder lineHeight(double lineHeight) {
 		this.lineHeight = lineHeight;
 		return this;
 	}
@@ -164,7 +164,7 @@ public class MenuBuilder {
 	 *            Größe des inaktiven (Höhe) Menupunkts in Spielraster-Punkten
 	 * @return this
 	 */
-	public MenuBuilder size(float sizeOn, float sizeOff) {
+	public MenuBuilder size(double sizeOn, double sizeOff) {
 		menu.size(sizeOn, sizeOff);
 		this.sizeOn = sizeOn;
 		this.sizeOff = sizeOff;

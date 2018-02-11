@@ -83,41 +83,65 @@ public class TextSprite extends Sprite {
 
 	@Override
 	public void draw(GraphicsContext g) {
-		double newSize = transformation().zoom((float) size);
+		double newSize = transformation().zoom((double) size);
 		Font font = Font.font(family, fontWeight, newSize);
 		g.setTextAlign(align);
 		g.setTextBaseline(valign);
 		g.setFont(font);
 		g.setFill(color);
 		Scr scr = transformation().t(effektivePos());
-		g.fillText(text, scr.x(), scr.y());
-		if (debug()) {
-			Scr size = textSize(g, text);
-			g.setStroke(Color.gray(0.5));
-			int offsetX;
-			switch (this.align) {
-			case LEFT:
-				offsetX = 0;
-				break;
-			case RIGHT:
-				offsetX = -size.x();
-			case CENTER:
-			default:
-				offsetX = -size.x() / 2;
-			}
-			int offsetY;
-			switch (this.valign) {
-			case CENTER:
-				offsetY = -size.y() / 2;
-				break;
-			case BOTTOM:
-				offsetY = -size.y();
-			case TOP:
-			default:
-				offsetY = 0;
-			}
-			g.strokeRect(scr.x() + offsetX, scr.y() + offsetY, size.x(), size.y());
+		if (!debug().wireframe()) {
+			g.fillText(text, scr.x(), scr.y());
 		}
+		if (debug().info()) {
+			drawWireframe(g);
+		}
+		if (debug().wireframe()) {
+			drawWireframe(g);
+			drawInfo(g);
+		}
+	}
+
+	private void drawWireframe(GraphicsContext g) {
+		Scr scr = transformation().t(effektivePos());
+		g.setGlobalAlpha(1.0);
+		g.setStroke(Color.gray(0.5));
+		Scr size = textSize(g, text);
+		int offsetX;
+		switch (this.align) {
+		case LEFT:
+			offsetX = 0;
+			break;
+		case RIGHT:
+			offsetX = -size.x();
+			break;
+		case CENTER:
+		default:
+			offsetX = -size.x() / 2;
+		}
+		int offsetY;
+		switch (this.valign) {
+		case CENTER:
+			offsetY = -size.y() / 2;
+			break;
+		case BOTTOM:
+			offsetY = -size.y();
+			break;
+		case TOP:
+		default:
+			offsetY = 0;
+		}
+		g.strokeRect(scr.x() + offsetX, scr.y() + offsetY, size.x(), size.y());
+	}
+
+	private void drawInfo(GraphicsContext g) {
+		Scr scr = transformation().t(effektivePos());
+		g.setFill(Color.gray(0.5));
+		g.setFont(Font.font(16));
+		g.setTextAlign(TextAlignment.CENTER);
+		g.setTextBaseline(VPos.CENTER);
+		g.fillText(String.format("(%.3f / %.3f)", effektivePos().x(),
+				effektivePos().y()), scr.x(), scr.y());
 	}
 
 	private Scr textSize(GraphicsContext g, String text) {
@@ -142,10 +166,10 @@ public class TextSprite extends Sprite {
 	// overwrite methods for correct return type
 
 	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#pos(float, float)
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#pos(double, double)
 	 */
 	@Override
-	public TextSprite pos(float x, float y) {
+	public TextSprite pos(double x, double y) {
 		// TODO Auto-generated method stub
 		super.pos(x, y);
 		return this;
@@ -176,7 +200,7 @@ public class TextSprite extends Sprite {
 	}
 
 	@Override
-	public TextSprite r(float r) {
+	public TextSprite r(double r) {
 		super.r(r);
 		return this;
 	}
@@ -200,7 +224,7 @@ public class TextSprite extends Sprite {
 	}
 
 	@Override
-	public TextSprite move(float distance) {
+	public TextSprite move(double distance) {
 		super.move(distance);
 		return this;
 	}

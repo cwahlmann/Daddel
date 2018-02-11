@@ -13,10 +13,10 @@ public class Tutorial02RaketeSteuerung extends Daddel {
 	private final static int TYP_SPIELER = 1;
 
 	// Die Größe der Rakete wird in Spielraster-Punkten angegeben
-	private final static float RAKETE_GROESSE = 2f;
+	private final static double RAKETE_GROESSE = 2f;
 
 	// Die Geschwindigkeit der Rakete in Rasterpunkten pro Sekunde
-	private final static float RAKETE_GESCHWINDIGKEIT = 5f;
+	private final static double RAKETE_GESCHWINDIGKEIT = 5f;
 
 	// Startposition der Rakete
 	private final static Pos RAKETE_STARTPOS = new Pos(0, 3.5f);
@@ -62,7 +62,7 @@ public class Tutorial02RaketeSteuerung extends Daddel {
 				.gameLoop((me, totaltime, deltatime) -> {
 					// Die Strecke kann mit der vordefinierten Methode strecke() aus delta-Zeit und
 					// Geschwindigkeit errechnet werden
-					float strecke = strecke(deltatime, RAKETE_GESCHWINDIGKEIT);
+					double strecke = strecke(deltatime, RAKETE_GESCHWINDIGKEIT);
 					bewegeRakete(strecke);
 				});
 	}
@@ -80,7 +80,7 @@ public class Tutorial02RaketeSteuerung extends Daddel {
 	}
 
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
-	private void bewegeRakete(float strecke) {
+	private void bewegeRakete(double strecke) {
 		Pos neuePosition = rakete.pos().add(getPosRichtung(raketeRichtung, strecke));
 		if (!onGrid(neuePosition, rakete.r())) {
 			// Wenn die Rakete aus dem Bildschirm fliegen würde, wird sie gestoppt
@@ -92,7 +92,7 @@ public class Tutorial02RaketeSteuerung extends Daddel {
 	}
 
 	// Diese Methode gibt je nach Richtung die richtige Positions-Veränderung zurück
-	private Pos getPosRichtung(Richtung richtung, float strecke) {
+	private Pos getPosRichtung(Richtung richtung, double strecke) {
 		switch (raketeRichtung) {
 		case links:
 			return new Pos(-strecke, 0);

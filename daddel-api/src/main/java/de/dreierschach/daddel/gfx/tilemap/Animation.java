@@ -14,7 +14,7 @@ public class Animation implements SpriteGameLoop {
 	private int imageStart;
 	private int imageEnd;
 	private boolean bounce;
-	private float speed;
+	private double speed;
 
 	public Animation() {
 		super();
@@ -84,7 +84,7 @@ public class Animation implements SpriteGameLoop {
 	/**
 	 * @return die Geschwindigkeit der Animation in Bildern / s
 	 */
-	public float speed() {
+	public double speed() {
 		return speed;
 	}
 
@@ -95,7 +95,7 @@ public class Animation implements SpriteGameLoop {
 	 *            die Geschwindigkeit der Animation in Bildern / s
 	 * @return this
 	 */
-	public Animation speed(float speed) {
+	public Animation speed(double speed) {
 		this.speed = speed;
 		return this;
 	}
@@ -112,7 +112,7 @@ public class Animation implements SpriteGameLoop {
 		if (bounce) {
 			int d = imageEnd - imageStart;
 			int d2 = d * 2;
-			int actual = imageStart + ((int) ((float) total / 1000f * speed * (float) d) % d);
+			int actual = imageStart + ((int) ((double) total / 1000f * speed * (double) d) % d);
 			if (actual < d) {
 				((ImageSprite) sprite).actualImage(actual);
 			} else {
@@ -121,6 +121,6 @@ public class Animation implements SpriteGameLoop {
 			return;
 		}
 		int d = imageEnd - imageStart + 1;
-		((ImageSprite) sprite).actualImage(((int) (total / 1000f * speed * (float) d)) % d + imageStart);
+		((ImageSprite) sprite).actualImage(((int) (total / 1000f * speed * (double) d)) % d + imageStart);
 	}
 }

@@ -20,9 +20,9 @@ public class SpaceInvader extends Daddel {
 
 	// ---------- Einstellungen für Rakete --
 
-	private static float raketeRichtung = 0;
-	private static float raketeGeschwindigkeit = 15f; // raster / s
-	private static float raketeLaserGeschwindigkeit = 30f; // raster / s
+	private static double raketeRichtung = 0;
+	private static double raketeGeschwindigkeit = 15f; // raster / s
+	private static double raketeLaserGeschwindigkeit = 30f; // raster / s
 
 	private static long raketeLaserVerzoegerung = 100; // ms
 	private long raketeLaserVerbleibendeWartezeit = 0; // ms
@@ -35,7 +35,7 @@ public class SpaceInvader extends Daddel {
 
 	// ---------- Einstellungen für Gegner --
 
-	private float gegnerLaserGeschwindigkeit = 20f; // raster / s
+	private double gegnerLaserGeschwindigkeit = 20f; // raster / s
 
 	// ---------- Sprites --
 
@@ -331,7 +331,7 @@ public class SpaceInvader extends Daddel {
 
 	// ------------- Rakete erzeugen --
 
-	public void erzeugeRakete(float x, float y) {
+	public void erzeugeRakete(double x, double y) {
 		raketeSchutzschirm = raketeSchutzschirmDauer;
 		raketeSprite = sprite(TYP_SPIELER, 4f, GFX_ROCKET, GFX_ROCKET_SCHIRM).pos(x, y).gameLoop(raketeAnimieren).r(1f);
 		raketeRichtung = 0;
@@ -340,7 +340,7 @@ public class SpaceInvader extends Daddel {
 	// ------------- Rakete animieren
 
 	private SpriteGameLoop raketeAnimieren = (sprite, gesamtZeit, deltaZeit) -> {
-		float s = raketeRichtung * strecke(deltaZeit, raketeGeschwindigkeit);
+		double s = raketeRichtung * strecke(deltaZeit, raketeGeschwindigkeit);
 		if (raketeSprite.effektivePos().x() + s < -14.5) {
 			stop();
 			s = 0;
@@ -376,11 +376,11 @@ public class SpaceInvader extends Daddel {
 
 				// Gegner erzeugen und animieren
 
-				sprite(TYP_FEIND, 2.5f, enimy).pos(((float) i) * 3f, ((float) j) * 3f)
+				sprite(TYP_FEIND, 2.5f, enimy).pos(((double) i) * 3f, ((double) j) * 3f)
 						.gameLoop((spr, ticks, deltatime) -> {
 							spr.rotate(-rotation);
 							spr.direction(-spr.rotation());
-							spr.move((float) (rotation / 20));
+							spr.move((double) (rotation / 20));
 							if (Math.random() < 0.004) {
 								gegnerischenLaserAbfeuern(
 										spr.pos().add(new Pos(0, 1.5f)));

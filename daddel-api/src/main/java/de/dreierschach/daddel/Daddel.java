@@ -11,6 +11,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import de.dreierschach.daddel.Screen.Debug;
 import de.dreierschach.daddel.audio.AudioLib;
 import de.dreierschach.daddel.gfx.menu.MenuBuilder;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
@@ -172,21 +173,21 @@ public abstract class Daddel extends Application {
 	public final static String INI_FULLSCREEN = "fullscreen";
 
 	// strategy constants
-	
+
 	public final static ParticleStrategy PARTICLE_BOUNCE = ParticleStrategy.bounce;
 	public final static ParticleStrategy PARTICLE_IGNORE = ParticleStrategy.ignore;
 	public final static ParticleStrategy PARTICLE_KILL = ParticleStrategy.kill;
 	public final static ParticleStrategy PARTICLE_RESTART = ParticleStrategy.restart;
 	public final static ParticleStrategy PARTICLE_REAPPEAR = ParticleStrategy.reappear;
 	public final static ParticleStrategy PARTICLE_STOP = ParticleStrategy.stop;
-	
+
 	// text align constants
-	
+
 	public final static TextAlignment ALIGN_LEFT = TextAlignment.LEFT;
 	public final static TextAlignment ALIGN_RIGHT = TextAlignment.RIGHT;
 	public final static TextAlignment ALIGN_JUSTIFY = TextAlignment.JUSTIFY;
 	public final static TextAlignment ALIGN_CENTER = TextAlignment.CENTER;
-	
+
 	public final static VPos VALIGN_TOP = VPos.TOP;
 	public final static VPos VALIGN_BOTTOM = VPos.BOTTOM;
 	public final static VPos VALIGN_CENTER = VPos.CENTER;
@@ -462,15 +463,15 @@ public abstract class Daddel extends Application {
 	 * @param debug
 	 *            true: Debug wird angezeit, false: Debug wird nicht angezeigt
 	 */
-	public void debug(boolean debug) {
+	public void debug(Debug debug) {
 		screen.setDebug(debug);
 	}
 
 	/**
 	 * @return true, wenn die Debug-Anzeige aktiviert ist.
 	 */
-	public boolean debug() {
-		return screen.isDebug();
+	public Debug debug() {
+		return screen.getDebug();
 	}
 
 	// ------------------------ setup methods --
@@ -572,12 +573,12 @@ public abstract class Daddel extends Application {
 	 * @return die SpriteGameLoop, die an den Sprite angehangen werden kann
 	 */
 	public final static SpriteGameLoop animation(final int imageStart, final int imageEnd, final boolean bounce,
-			final float speed) {
+			final double speed) {
 		return (sprite, total, delta) -> {
 			if (bounce) {
 				int d = imageEnd - imageStart;
 				int d2 = d * 2;
-				int actual = imageStart + ((int) ((float) total / 1000f * speed * (float) d) % d);
+				int actual = imageStart + ((int) ((double) total / 1000f * speed * (double) d) % d);
 				if (actual < d) {
 					((ImageSprite) sprite).actualImage(actual);
 				} else {
@@ -586,7 +587,7 @@ public abstract class Daddel extends Application {
 				return;
 			}
 			int d = imageEnd - imageStart + 1;
-			((ImageSprite) sprite).actualImage(((int) (total / 1000f * speed * (float) d)) % d);
+			((ImageSprite) sprite).actualImage(((int) (total / 1000f * speed * (double) d)) % d);
 		};
 	}
 
@@ -602,7 +603,7 @@ public abstract class Daddel extends Application {
 	 *            Methode animation() gesteuert werden.
 	 * @return Eine neue Instanz der Klasse ImageSprite
 	 */
-	public ImageSprite sprite(int type, float groesse, String... bilder) {
+	public ImageSprite sprite(int type, double groesse, String... bilder) {
 		ImageSprite sprite = new ImageSprite(transformation, type, groesse, bilder);
 		screen.addSprite(sprite);
 		return sprite;
@@ -622,7 +623,7 @@ public abstract class Daddel extends Application {
 	 *            Methode animation() gesteuert werden.
 	 * @return eine neue Instanz der Klasse Particle.
 	 */
-	public Particle particle(int type, long lebensdauerMS, float groesse, String... bilder) {
+	public Particle particle(int type, long lebensdauerMS, double groesse, String... bilder) {
 		Particle particle = new Particle(transformation, type, groesse, lebensdauerMS, bilder);
 		screen.addSprite(particle);
 		return particle;
@@ -743,7 +744,7 @@ public abstract class Daddel extends Application {
 	 *            Die Farbe des Texts
 	 * @return eine Instanz der Klasse TextSprite
 	 */
-	public TextSprite text(String text, String family, float size, Color color) {
+	public TextSprite text(String text, String family, double size, Color color) {
 		TextSprite textSprite = new TextSprite(transformation, text).family(family).color(color).size(size);
 		screen.addText(textSprite);
 		return textSprite;
@@ -764,7 +765,7 @@ public abstract class Daddel extends Application {
 	 *            Die Farbe des Texts
 	 * @return eine Instanz der Klasse TextParticle
 	 */
-	public TextParticle textParticle(String text, long lebensdauer, String family, float size, Color color) {
+	public TextParticle textParticle(String text, long lebensdauer, String family, double size, Color color) {
 		TextParticle textParticle = new TextParticle(transformation, lebensdauer, text).family(family).color(color)
 				.size(size);
 		screen.addText(textParticle);
@@ -800,7 +801,7 @@ public abstract class Daddel extends Application {
 	 *            Größe einer Kachel in Spielraster-Punkten.
 	 * @return eine Instanz der Klasse TileMap
 	 */
-	public TileMap tilemap(float tileSize) {
+	public TileMap tilemap(double tileSize) {
 		TileMap tileMap = new TileMap(transformation, tileSize);
 		screen.setTileMap(tileMap);
 		return tileMap;
@@ -818,7 +819,7 @@ public abstract class Daddel extends Application {
 	 *            Methode animation() gesteuert werden.
 	 * @return this
 	 */
-	public Entity entity(int type, float maxSize, String... imagefiles) {
+	public Entity entity(int type, double maxSize, String... imagefiles) {
 		Entity entity = new Entity(transformation, screen.getTileMap(), type, maxSize, imagefiles);
 		entity.parent(screen.getTileMap());
 		screen.addSprite(entity);
@@ -848,7 +849,7 @@ public abstract class Daddel extends Application {
 	 *            die untere Ausdehnung des Spielrasters
 	 * @return this
 	 */
-	public Daddel grid(float x0, float x1, float y0, float y1) {
+	public Daddel grid(double x0, double x1, double y0, double y1) {
 		Pos pos0 = new Pos(x0, y0);
 		Pos pos1 = new Pos(x1, y1);
 		this.transformation.setRaster(pos0, pos1);
@@ -862,28 +863,28 @@ public abstract class Daddel extends Application {
 	/**
 	 * @return Linke Grenze des Rasters in Spielraster-Punkten
 	 */
-	public float gridLeft() {
+	public double gridLeft() {
 		return transformation.getRasterLeftUpper().x();
 	}
 
 	/**
 	 * @return Obere Grenze des Rasters in Spielraster-Punkten
 	 */
-	public float gridTop() {
+	public double gridTop() {
 		return transformation.getRasterLeftUpper().y();
 	}
 
 	/**
 	 * @return Rechte Grenze des Rasters in Spielraster-Punkten
 	 */
-	public float gridRight() {
+	public double gridRight() {
 		return transformation.getRasterRightBottom().x();
 	}
 
 	/**
 	 * @return Untere Grenze des Rasters in Spielraster-Punkten
 	 */
-	public float gridBottom() {
+	public double gridBottom() {
 		return transformation.getRasterRightBottom().y();
 	}
 
@@ -906,7 +907,7 @@ public abstract class Daddel extends Application {
 	 *            die Position
 	 * @return true: die Position liegt im Spielraster
 	 */
-	public boolean onGrid(Pos pos, float padding) {
+	public boolean onGrid(Pos pos, double padding) {
 		return pos.x() - padding >= gridLeft() && pos.x() + padding <= gridRight() && pos.y() - padding >= gridTop()
 				&& pos.y() + padding <= gridBottom();
 	}
@@ -923,8 +924,8 @@ public abstract class Daddel extends Application {
 	 *            Geschwindigkeit in Spielrasterpunkten / s
 	 * @return zurückgelegte Strecke in Spielrasterpunkten
 	 */
-	public float strecke(long delta, float speed) {
-		return (float) delta / (float) 1000 * speed;
+	public double strecke(long delta, double speed) {
+		return (double) delta / (double) 1000 * speed;
 	}
 
 	/**
@@ -963,10 +964,10 @@ public abstract class Daddel extends Application {
 	 *            der obere Wert der Welle
 	 * @return der errechnete Wert
 	 */
-	public float sinuswelle(long delta, long wavelength, float min, float max) {
-		double w = ((double) delta) / (float) wavelength * 2 * Math.PI;
-		float r = (max - min) / 2;
-		return (float) (Math.sin(w) * r + r + min);
+	public double sinuswelle(long delta, long wavelength, double min, double max) {
+		double w = ((double) delta) / (double) wavelength * 2 * Math.PI;
+		double r = (max - min) / 2;
+		return (double) (Math.sin(w) * r + r + min);
 	}
 
 	/**
@@ -983,10 +984,10 @@ public abstract class Daddel extends Application {
 	 *            der obere Wert der Welle
 	 * @return der errechnete Wert
 	 */
-	public float cosinuswelle(long delta, long wavelength, float min, float max) {
+	public double cosinuswelle(long delta, long wavelength, double min, double max) {
 		double w = ((double) delta) / (double) wavelength * 2 * Math.PI;
-		float r = (max - min) / 2;
-		return (float) (Math.cos(w) * r + r + min);
+		double r = (max - min) / 2;
+		return (double) (Math.cos(w) * r + r + min);
 	}
 
 	// ------------------------ level methods --
@@ -1076,7 +1077,7 @@ public abstract class Daddel extends Application {
 
 	private void clear() {
 		removeKeys();
-		key(KeyCode.F3, keyCode -> debug(!debug()));
+		key(KeyCode.F3, keyCode -> debug(debug().next()));
 		killallSprites();
 		killallText();
 	}
@@ -1171,7 +1172,7 @@ public abstract class Daddel extends Application {
 
 		this.transformation = new Transformation(this.witdh, this.height);
 		screen = new Screen(witdh, height, new Font(12));
-		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.5f).color(Color.WHITE)
+		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.25f).color(Color.WHITE)
 				.pos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
 		screen.setTransformation(transformation);
 		Scene scene = new Scene(screen.getPane(), witdh, height);

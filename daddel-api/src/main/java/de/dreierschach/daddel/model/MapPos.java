@@ -89,7 +89,7 @@ public class MapPos {
 	 *            der Faktor
 	 * @return das Ergebnis
 	 */
-	public MapPos mul(float a) {
+	public MapPos mul(double a) {
 		return new MapPos((int) (this.x * a), (int) (this.y * a), (int) (this.z * a));
 	}
 
@@ -111,7 +111,7 @@ public class MapPos {
 	 *            der Divisor
 	 * @return das Ergebnis
 	 */
-	public MapPos div(float a) {
+	public MapPos div(double a) {
 		return new MapPos((int) (this.x / a), (int) (this.y / a), (int) (this.z / a));
 	}
 
