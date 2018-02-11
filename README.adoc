@@ -23,7 +23,7 @@ Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie S
 |Daddel stellt eine Builder- und Runner-API breit, die einen funktionalen Ansatz unterstützt, aber nicht darauf beschränkt ist
  
 |schnell und einfach ein vorzeigbares Ergebnis produzieren können
-|Konvention steht über Konfiguration - mit minimalem Code lassen sich anschauliche Ergebnisse erzielen; basierend auf JavaFx; einige Grafiken.footnote[diese stammen z.T. von https://www.openclipart.org] und Sounds.footnote[Additional sound effects from https://www.zapsplat.com - sehr zu empfehlen] werden bereits mitgeliefert
+|Konvention steht über Konfiguration - mit minimalem Code lassen sich anschauliche Ergebnisse erzielen; basierend auf JavaFx; einige Grafiken (diese stammen z.T. von https://www.openclipart.org) und Sounds (Additional sound effects from https://www.zapsplat.com - sehr zu empfehlen) werden bereits mitgeliefert
 
 |nicht in der Gestaltungsfreiheit eingeschränkt zu sein
 |Funktion und Verhalten der API können erweitert und überschrieben werden
