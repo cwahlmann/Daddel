@@ -2,53 +2,32 @@
 
 == Am Anfang ist der Berg immer höher als man nachher denkt...
 
-Mit den eigenen Händen kreativ aus dem Nichts etwas neues, schönes zu schaffen, das macht für viele (und auch mich) den Reiz des Programmierens aus.
+[.lead]
+Mit den eigenen Händen kreativ aus dem Nichts etwas neues, schönes zu schaffen, das macht für viele (und auch mich) den Reiz des Programmierens aus. 
+
 Diese Freude (den eigenen) Kindern zu vermitteln, ist nicht ganz so leicht. Es gibt reihenweise Ansätze und Modelle: Turtle-Grafics, Maus-im-Labyrinth-Umgebungen, Mincraft-API, Scratch, Lego-Robotics etc.
 
 Auf der Suche nach der besten Einsteigersprache landen viele bei Python, da diese auch rein funktioniale Programmierung möglich macht, und von der Syntax recht schlank ist.
 
 Nun hat mein jüngerer Sohn entschieden, dass Java die Sprache seiner Wahl ist. Java: komplexe Syntax mit vielen Klammern, dem "alles-ist-eine-Klasse"-Paradigma und der ungezählten Vielfalt an Frameworks in allen Bereichen.
 
-Um motiviert mit Java in die Programmierung einsteigen zu können, braucht es meiner Meinung nach folgendes:
-
-* natürlich ein Grundverständnis der Standart-Sprachkonstrukte (diese werden am besten nebenher mitgelernt)
-* mit zunächst einer einzigen Klasse interessante Aufgaben lösen können
-* schnell und einfach ein vorzeigbares Ergebnis produzieren können
-* nicht in der Gestaltungsfreiheit eingeschränkt zu sein
-
-Daddel (ja, das kommt von "daddeln") stellt eine API zur Verfügung, die diese Wünsche einlösen möchte:
-
-* Bereitstellung von aufeinander aufbauenden Beispielen
-* eine Builder- und Runner-API, die einen funktionalen Ansatz unterstützt, aber nicht darauf beschränkt ist
-* Konvention über Konfiguration - mit minimalem Code lassen sich anschauliche Ergebnisse erzielen
-* basierend auf JavaFx
-* Verhalten kann erweitert und überschrieben werden
-
-*Disclaimer:*
-Daddel enthält einige mitgelieferte *Grafiken*. Diese stammen aus folgenden Quellen:
+Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie Schüler (oder Eltern wie Kinder, oder ...) vor einige Herausforderungen:
 
 |===
-|Grafik | Quelle
+| Herausforderungen | was Daddel bieten möchte
 
-|UFOs:
-|https://openclipart.org/user-detail/firestorm200, free
+|natürlich ein Grundverständnis der Standart-Sprachkonstrukte
+|durch aufeinander aufbauende bereitgestellten Beispiele wird Wissen (im Ansatz) nebenbei aufgebaut
 
-|Rocket:
-|https://openclipart.org/user-detail/rygle, free
+|interessante Aufgaben müssen ohne Klassenhierarchie lösbar sein, aber nicht darauf eingeschrenkt sein
+|Daddel stellt eine Builder- und Runner-API breit, die einen funktionalen Ansatz unterstützt, aber nicht darauf beschränkt ist
+ 
+|schnell und einfach ein vorzeigbares Ergebnis produzieren können
+|Konvention steht über Konfiguration - mit minimalem Code lassen sich anschauliche Ergebnisse erzielen; basierend auf JavaFx; einige Grafiken.footnote[diese stammen z.T. von https://www.openclipart.org] und Sounds.footnote[Additional sound effects from https://www.zapsplat.com - sehr zu empfehlen] werden bereits mitgeliefert
 
-|Explosion:
-|https://openclipart.org/user-detail/dominiquechappard, free
-
-|Laser, Stern:
-|Christian Wahlmann, LGPL
-
-|Pacman-Grafiken
-|wurden Screenshots des original-Spiels nachempfunden
+|nicht in der Gestaltungsfreiheit eingeschränkt zu sein
+|Funktion und Verhalten der API können erweitert und überschrieben werden
 |===
-
-Die mitgelieferten *Sound-Samples* (Additional sound effects) stammen von https://www.zapsplat.com - sehr zu empfehlen!
-
-----
 
 == Losdaddeln
 
