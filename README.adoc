@@ -72,8 +72,7 @@ public class Losdaddeln extends Daddel {
 <6> Diese Methode muss für jedes Spiel standartmäßig vorhanden sein, damit es überhaupt starten kann.
 
 Das wars schon. Nach Start des Programms erscheint die Rakete vor strahlend blauem Himmel.
-
-Übrigens: Durch drücken von F3 kannst du durch die einzelnen Debug-Modi durchschalten.
+(Übrigens: Durch drücken von F3 kannst du durch die einzelnen Debug-Modi durchschalten.)
 
 image::screenshots/Losdaddeln.jpg[]
 
@@ -120,4 +119,4 @@ Dazu ergänzen wir das Programm um zwei Befehle. Einer für Pacman, einer für d
 
 Und so sieht es jetzt aus:
 
-image::screenshots/Losdaddeln2_Raster.jpg[]
+image::screenshots/Losdaddeln2.jpg[]

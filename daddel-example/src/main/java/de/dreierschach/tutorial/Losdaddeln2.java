@@ -13,7 +13,8 @@ public class Losdaddeln2 extends Daddel {
 	@Override
 	public void initGame() {
 		grid(-10, 10, -5, 5);
-		background(Color.rgb(0, 64, 255));
+//		background(Color.rgb(0, 64, 255));
+		background(Color.WHITE);
 		toLevel(() -> {
 			sprite(1, 4, GFX_ROCKET);
 			
