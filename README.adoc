@@ -81,6 +81,8 @@ Das wars schon. Nach Start des Programms erscheint die Rakete vor strahlend blau
 
 image::screenshots/Losdaddeln.jpg[]
 
+== nochmal Losdaddeln
+
 Das ist noch ein wenig langweilig. Jetzt wollen wir etwas Action wagen. Wie wärs mit einem Pacman, der einen Banner hinter sich herzieht?
 
 image::screenshots/Losdaddeln2_Raster.jpg[]
