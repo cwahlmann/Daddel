@@ -1,4 +1,5 @@
 = Daddel - eine JavaFX-basierte 2D-Spieleengine
+:icons: font
 
 == Am Anfang ist der Berg immer höher als man nachher denkt...
 
@@ -43,7 +44,7 @@ image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,225]
 
 == Losdaddeln
 
-Für den Anfang erstellen wir eine Spielraster von der Größe 20 x 10. Der Hintergrund soll ein schönes Himmelblau sein und davor fliegt eine Rakete.
+Für den Anfang erstellen wir ein Spielraster von der Größe 20 x 10. Der Hintergrund soll ein schönes Himmelblau sein und davor fliegt eine Rakete.
 
 Hier das geplante Spielraster - die Rakete ist durch einen einfachen Kreis dargestellt:
 
