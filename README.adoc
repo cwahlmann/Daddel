@@ -29,6 +29,11 @@ Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie S
 |Funktion und Verhalten der API können erweitert und überschrieben werden
 |===
 
+== Screenshots
+
+.Space Invader Titel-Bildschirm
+image::invader1.png[Space Invader,640,400]
+
 == Losdaddeln
 
 Los gehts!
