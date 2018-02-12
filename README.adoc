@@ -47,7 +47,7 @@ Für den Anfang erstellen wir eine Spielraster von der Größe 20 x 10. Der Hint
 
 Hier das geplante Spielraster - die Rakete ist durch einen einfachen Kreis dargestellt:
 
-image::screenshots/Losdaddeln_Raster.jpg[]
+image::screenshots/Losdaddeln_Raster.jpg[Losdaddeln_Raster,400,225]
 
 Das Programm dazu ist schnell erstellt.
 
@@ -89,13 +89,13 @@ public class Losdaddeln extends Daddel {
 Das wars schon. Nach Start des Programms erscheint die Rakete vor strahlend blauem Himmel.
 (Übrigens: Durch drücken von F3 kannst du durch die einzelnen Debug-Modi durchschalten.)
 
-image::screenshots/Losdaddeln.jpg[]
+image::screenshots/Losdaddeln.jpg[Losdaddeln,400,225]
 
 == nochmal Losdaddeln
 
 Das ist noch ein wenig langweilig. Jetzt wollen wir etwas Action wagen. Wie wärs mit einem Pacman, der einen Banner hinter sich herzieht?
 
-image::screenshots/Losdaddeln2_Raster.jpg[]
+image::screenshots/Losdaddeln2_Raster.jpg[Losdaddeln2_Raster,400,225]
 
 Dazu ergänzen wir das Programm um zwei Befehle. Einer für Pacman, einer für das Banner.
 
@@ -136,4 +136,4 @@ Dazu ergänzen wir das Programm um zwei Befehle. Einer für Pacman, einer für d
 
 Und so sieht es jetzt aus:
 
-image::screenshots/Losdaddeln2.jpg[]
+image::screenshots/Losdaddeln2.jpg[Losdaddeln2,400,225]
