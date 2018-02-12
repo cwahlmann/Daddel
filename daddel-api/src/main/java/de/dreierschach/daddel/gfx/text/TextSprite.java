@@ -14,6 +14,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Affine;
 
 public class TextSprite extends Sprite {
 
@@ -95,10 +96,11 @@ public class TextSprite extends Sprite {
 		}
 		if (debug().info()) {
 			drawWireframe(g);
-		}
-		if (debug().wireframe()) {
+		} else if (debug().wireframe()) {
 			drawWireframe(g);
-			drawInfo(g);
+			if (showPosOnDebug()) {
+				drawInfo(g);
+			}
 		}
 	}
 
@@ -136,12 +138,12 @@ public class TextSprite extends Sprite {
 
 	private void drawInfo(GraphicsContext g) {
 		Scr scr = transformation().t(effektivePos());
+		g.setTransform(new Affine());
 		g.setFill(Color.gray(0.5));
 		g.setFont(Font.font(16));
 		g.setTextAlign(TextAlignment.CENTER);
 		g.setTextBaseline(VPos.CENTER);
-		g.fillText(String.format("(%.3f / %.3f)", effektivePos().x(),
-				effektivePos().y()), scr.x(), scr.y());
+		g.fillText(String.format("(%.3f / %.3f)", effektivePos().x(), effektivePos().y()), scr.x(), scr.y());
 	}
 
 	private Scr textSize(GraphicsContext g, String text) {
@@ -165,7 +167,9 @@ public class TextSprite extends Sprite {
 
 	// overwrite methods for correct return type
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#pos(double, double)
 	 */
 	@Override

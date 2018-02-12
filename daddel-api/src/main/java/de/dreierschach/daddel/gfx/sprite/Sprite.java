@@ -46,6 +46,7 @@ public abstract class Sprite {
 	private Transformation transformation;
 	private Sprite parent = null;
 	private Debug debug = Debug.off;
+	private boolean showPosOnDebug = true;
 
 	/**
 	 * Sprite mit vorgegebenen Radius erzeigen
@@ -94,6 +95,25 @@ public abstract class Sprite {
 	 */
 	public Debug debug() {
 		return debug;
+	}
+
+	/**
+	 * Legt fest, ob im Debug-Modus auch die Position angezeigt wird
+	 * 
+	 * @param showPosOnDebug
+	 *            true: zeige die Position im Debug-Modus
+	 * @return this
+	 */
+	public Sprite showPosOnDebug(boolean showPosOnDebug) {
+		this.showPosOnDebug = showPosOnDebug;
+		return this;
+	}
+
+	/**
+	 * @return true: zeige die Position im Debug-Modus
+	 */
+	public boolean showPosOnDebug() {
+		return showPosOnDebug;
 	}
 
 	/**

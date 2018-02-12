@@ -53,6 +53,7 @@ public class Particle extends ImageSprite {
 		this.rotationStart = rotation();
 		this.rotationEnd = rotation();
 		this.gameLoop(particleGameLoop);
+		showPosOnDebug(false);
 	}
 
 	/*

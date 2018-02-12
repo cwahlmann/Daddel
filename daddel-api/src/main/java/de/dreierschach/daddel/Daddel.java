@@ -1172,7 +1172,7 @@ public abstract class Daddel extends Application {
 
 		this.transformation = new Transformation(this.witdh, this.height);
 		screen = new Screen(witdh, height, new Font(12));
-		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.25f).color(Color.WHITE)
+		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(1f).color(Color.WHITE)
 				.pos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
 		screen.setTransformation(transformation);
 		Scene scene = new Scene(screen.getPane(), witdh, height);

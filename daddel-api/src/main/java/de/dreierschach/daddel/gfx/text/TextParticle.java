@@ -51,6 +51,7 @@ public class TextParticle extends TextSprite {
 		this.rotationStart = rotation();
 		this.rotationEnd = rotation();
 		this.gameLoop(particleGameLoop);
+		showPosOnDebug(false);
 	}
 
 	/**
