@@ -3,15 +3,13 @@
 == Am Anfang ist der Berg immer höher als man nachher denkt...
 
 [.lead]
-Mit den eigenen Händen kreativ aus dem Nichts etwas neues, schönes zu schaffen, das macht für viele (und auch mich) den Reiz des Programmierens aus. 
-
-Diese Freude (den eigenen) Kindern zu vermitteln, ist nicht ganz so leicht. Es gibt reihenweise Ansätze und Modelle: Turtle-Grafics, Maus-im-Labyrinth-Umgebungen, Mincraft-API, Scratch, Lego-Robotics etc.
+Mit den eigenen Händen aus dem Nichts etwas Neues, Schönes zu schaffen, das macht für viele (und auch für mich) den Reiz des Programmierens aus. Diese Freude Kindern zu vermitteln, ist nicht ganz so leicht. Es gibt reihenweise Ansätze und Modelle: Turtle-Grafics, Maus-im-Labyrinth-Umgebungen, Mincraft-API, Scratch, Lego-Robotics etc.
 
 Auf der Suche nach der besten Einsteigersprache landen viele bei Python, da diese auch rein funktioniale Programmierung möglich macht, und von der Syntax recht schlank ist.
 
-Nun hat mein jüngerer Sohn entschieden, dass Java die Sprache seiner Wahl ist. Java: komplexe Syntax mit vielen Klammern, dem "alles-ist-eine-Klasse"-Paradigma und der ungezählten Vielfalt an Frameworks in allen Bereichen.
+Nun hat mein jüngerer Sohn entschieden, dass Java die Sprache seiner Wahl ist. An sich eine gute Wahl. Wenn da nicht wären: eine komplexe Syntax mit vielen Klammern, das "alles-ist-eine-Klasse"-Paradigma, eine ungezählten Vielfalt an Frameworks in allen Bereichen. PUH...
 
-Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie Schüler (oder Eltern, Onkels, Kinder etc.) vor einige klitzekleine Herausforderungen:
+Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie Schüler (oder Eltern, Onkels, Kinder etc.) vor einige klitzekleine Herausforderungen.
 
 |===
 | nämlich... | ...und was Daddel bieten möchte
@@ -39,7 +37,7 @@ image:screenshots/invader1.png[Space Invader Titel,400,225] image:screenshots/in
 
 image:screenshots/invader2.png[Space Invader Level,400,225] image:screenshots/pacman.png[Pacman,400,225]
 
-image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,225] 
+image:screenshots/daddel_eclipse.png[Daddeln mit Eclipse,400,225] image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,225] 
 
 == Losdaddeln
 
