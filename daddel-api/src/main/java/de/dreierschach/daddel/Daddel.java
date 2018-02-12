@@ -66,7 +66,12 @@ public abstract class Daddel extends Application {
 	public final static String GFX_UFO_2 = "gfx/invader/ufo-2.png";
 
 	public final static String GFX_STERN = "gfx/invader/stern.png";
+	public final static String GFX_SONNE = "gfx/invader/sun.png";
+	public final static String GFX_ERDE = "gfx/invader/earth.png";
+	public final static String GFX_MOND = "gfx/invader/moon.png";
+	public final static String GFX_SATURN = "gfx/invader/saturn.png";
 
+	
 	public final static String[] GFX_EXPLOSION = { "gfx/invader/explosion-1.png", "gfx/invader/explosion-2.png",
 			"gfx/invader/explosion-3.png", "gfx/invader/explosion-4.png" };
 

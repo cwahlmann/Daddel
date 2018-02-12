@@ -8,8 +8,10 @@ import java.util.Random;
 
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
+import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.gfx.text.TextSprite;
 import de.dreierschach.daddel.listener.CollisionListener;
+import de.dreierschach.daddel.model.GameLoop;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
 import javafx.scene.input.KeyCode;
@@ -179,8 +181,7 @@ public class SpaceInvader extends Daddel {
 				toHighscore();
 			});
 		} else {
-			text("press <ENTER> to continue", "sans-serif", 1f, Color.YELLOW).pos(0, 3)
-					.weight(FontWeight.BLACK);
+			text("press <ENTER> to continue", "sans-serif", 1f, Color.YELLOW).pos(0, 3).weight(FontWeight.BLACK);
 			key(KeyCode.ENTER, (keyCode) -> toHighscore());
 		}
 	}
@@ -215,6 +216,7 @@ public class SpaceInvader extends Daddel {
 		// Sprites erzeugen
 
 		erzeugeHochscrollendeSterne();
+		erzeugeErdeUndMond();
 		erzeugeRakete(0f, 7.5f);
 		erzeugeFeinde();
 
@@ -320,6 +322,14 @@ public class SpaceInvader extends Daddel {
 				.sizeRange(0.01f, 0.2f, 4).direction(90).speedRange(1f, 5f).outsideGrid(PARTICLE_REAPPEAR).create();
 	}
 
+	public void erzeugeErdeUndMond() {
+		Sprite erde = sprite(TYP_STERN, 7, GFX_ERDE).pos(0, -2);
+		particle(TYP_STERN, 0, 2, GFX_MOND).parent(erde).gameLoop((me, gesamtZeit, deltaZeit) -> {
+			Pos pos = kreis(gesamtZeit, 20000, new Pos(-10, -6), new Pos(10, 6));
+			me.pos(pos);
+		});
+	}
+
 	// ------------- frontal-scrollende Sterne erzeugen --
 
 	public void erzeugeFrontalScrollendeSterne() {
@@ -382,8 +392,7 @@ public class SpaceInvader extends Daddel {
 							spr.direction(-spr.rotation());
 							spr.move((double) (rotation / 20));
 							if (Math.random() < 0.004) {
-								gegnerischenLaserAbfeuern(
-										spr.pos().add(new Pos(0, 1.5f)));
+								gegnerischenLaserAbfeuern(spr.pos().add(new Pos(0, 1.5f)));
 							}
 						});
 				anzahlFeinde++;
@@ -412,8 +421,8 @@ public class SpaceInvader extends Daddel {
 			return;
 		}
 		raketeLaserVerbleibendeWartezeit = raketeLaserVerzoegerung;
-		erzeugeRaketeLaser(raketeSprite.pos().add(new Pos(- 0.8f, - 1.5f)));
-		erzeugeRaketeLaser(raketeSprite.pos().add(new Pos(+ 0.8f, - 1.5f)));
+		erzeugeRaketeLaser(raketeSprite.pos().add(new Pos(-0.8f, -1.5f)));
+		erzeugeRaketeLaser(raketeSprite.pos().add(new Pos(+0.8f, -1.5f)));
 	}
 
 	public void erzeugeRaketeLaser(Pos pos) {
