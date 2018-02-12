@@ -11,23 +11,27 @@ Auf der Suche nach der besten Einsteigersprache landen viele bei Python, da dies
 
 Nun hat mein jüngerer Sohn entschieden, dass Java die Sprache seiner Wahl ist. Java: komplexe Syntax mit vielen Klammern, dem "alles-ist-eine-Klasse"-Paradigma und der ungezählten Vielfalt an Frameworks in allen Bereichen.
 
-Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie Schüler (oder Eltern wie Kinder, oder ...) vor einige Herausforderungen:
+Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie Schüler (oder Eltern, Onkels, Kinder etc.) vor einige klitzekleine Herausforderungen:
 
 |===
-| Herausforderungen | was Daddel bieten möchte
+| nämlich... | ...und was Daddel bieten möchte
 
-|natürlich ein Grundverständnis der Standart-Sprachkonstrukte
-|durch aufeinander aufbauende bereitgestellten Beispiele wird Wissen (im Ansatz) nebenbei aufgebaut
+|ein Grundverständnis der Java-Sprachkonstrukte
+|durch aufeinander aufbauende bereitgestellten Beispiele wird Java-Wissen (im Ansatz) nebenbei aufgebaut
 
-|interessante Aufgaben müssen ohne Klassenhierarchie lösbar sein, aber nicht darauf eingeschrenkt sein
-|Daddel stellt eine Builder- und Runner-API breit, die einen funktionalen Ansatz unterstützt, aber nicht darauf beschränkt ist
+|interessante Aufgaben sollten ohne große Klassenhierarchie lösbar, aber nicht darauf eingeschränkt sein
+|Daddel stellt eine Builder- und Runner-API breit, die einen funktionalen Ansatz unterstützt. Trotzdem ist es echtes Java, daraus kann voll geschöpft werden.
  
 |schnell und einfach ein vorzeigbares Ergebnis produzieren können
-|Konvention steht über Konfiguration - mit minimalem Code lassen sich anschauliche Ergebnisse erzielen; basierend auf JavaFx; einige Grafiken (diese stammen z.T. von https://www.openclipart.org) und Sounds (Additional sound effects from https://www.zapsplat.com - sehr zu empfehlen) werden bereits mitgeliefert
+|Konvention steht über Konfiguration (ja, es gibt kein Framework ohne diesen Satz!), d.h. mit minimalem Code lassen sich anschauliche Ergebnisse erzielen. Einige Grafiken (siehe https://www.openclipart.org) und Sounds (u.a. von https://www.zapsplat.com) werden bereits mitgeliefert.
 
 |nicht in der Gestaltungsfreiheit eingeschränkt zu sein
 |Funktion und Verhalten der API können erweitert und überschrieben werden
+
 |===
+
+*Übrigens:* Dies ist keine Web-Anwendung. Man kann sie nicht im Browser ansehen. Es gibt auch keinen Zurück-Button, denn:
+Im Hintergrund arbeitet *JavaFx*, also *Oracles moderne* und *native Desktop-Grafik-API*.
 
 == Screenshots
 
@@ -38,8 +42,6 @@ image:screenshots/invader2.png[Space Invader Level,400,225] image:screenshots/pa
 image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,225] 
 
 == Losdaddeln
-
-Los gehts!
 
 Für den Anfang erstellen wir eine Spielraster von der Größe 20 x 10. Der Hintergrund soll ein schönes Himmelblau sein und davor fliegt eine Rakete.
 
