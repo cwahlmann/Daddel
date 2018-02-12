@@ -31,7 +31,7 @@ Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie S
 
 |===
 
-*Übrigens:* Dies ist keine Web-Anwendung. Man kann sie nicht im Browser ansehen. Es gibt auch keinen Zurück-Button, denn:
+NOTE: Dies ist keine Web-Anwendung. Man kann sie nicht im Browser ansehen. Es gibt auch keinen Zurück-Button, denn:
 Im Hintergrund arbeitet *JavaFx*, also *Oracles moderne* und *native Desktop-Grafik-API*.
 
 == Screenshots
