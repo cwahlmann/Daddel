@@ -31,11 +31,11 @@ Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie S
 
 == Screenshots
 
-image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,225] image:screenshots/invader1.png[Space Invader Titel,400,225]
+image:screenshots/invader1.png[Space Invader Titel,400,225] image:screenshots/invader1a.png[Space Invader Titel (Debug-Modus),400,225]
 
-image:screenshots/invader1a.png[Space Invader Titel (Debug-Modus),400,225] image:screenshots/invader2.png[Space Invader Level,400,225]
+image:screenshots/invader2.png[Space Invader Level,400,225] image:screenshots/pacman.png[Pacman,400,225]
 
-image:screenshots/pacman.png[Pacman,400,225] image:screenshots/tutorial_rakete.png[Tutorial Rakete,400,225]
+image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,225] 
 
 == Losdaddeln
 
