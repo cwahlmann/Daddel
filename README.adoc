@@ -3,6 +3,7 @@
 == Am Anfang ist der Berg immer höher als man nachher denkt...
 
 [.lead]
+
 Mit den eigenen Händen aus dem Nichts etwas Neues, Schönes zu schaffen, das macht für viele (und auch für mich) den Reiz des Programmierens aus. Diese Freude Kindern zu vermitteln, ist nicht ganz so leicht. Es gibt reihenweise Ansätze und Modelle: Turtle-Grafics, Maus-im-Labyrinth-Umgebungen, Mincraft-API, Scratch, Lego-Robotics etc.
 
 image:screenshots/Climber.png[Climber,150,150] 
