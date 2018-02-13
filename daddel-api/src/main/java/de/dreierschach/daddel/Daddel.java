@@ -30,6 +30,7 @@ import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
 import de.dreierschach.daddel.setup.Setup;
+import de.dreierschach.daddel.util.FileUtils;
 import javafx.application.Application;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
@@ -54,100 +55,6 @@ import javafx.stage.Stage;
  */
 public abstract class Daddel extends Application {
 	private static Logger log = Logger.getLogger(Daddel.class);
-
-	// Sprites
-
-	public final static String GFX_ROCKET = "gfx/invader/rocket.png";
-	public final static String GFX_ROCKET_SCHIRM = "gfx/invader/rocket-schirm.png";
-	public final static String GFX_LASER = "gfx/invader/laser-red.png";
-	public final static String GFX_LASER_GEGNER = "gfx/invader/laser-green.png";
-
-	public final static String GFX_UFO_1 = "gfx/invader/ufo-1.png";
-	public final static String GFX_UFO_2 = "gfx/invader/ufo-2.png";
-
-	public final static String GFX_STERN = "gfx/invader/stern.png";
-
-	public final static String[] GFX_EXPLOSION = { "gfx/invader/explosion-1.png", "gfx/invader/explosion-2.png",
-			"gfx/invader/explosion-3.png", "gfx/invader/explosion-4.png" };
-
-	// Pacman
-
-	public final static String GFX_PAC_BASHFUL_INKY_D0 = "gfx/pacman/bashful-inky_D0.png";
-	public final static String GFX_PAC_BASHFUL_INKY_D1 = "gfx/pacman/bashful-inky_D1.png";
-	public final static String GFX_PAC_BASHFUL_INKY_L0 = "gfx/pacman/bashful-inky_L0.png";
-	public final static String GFX_PAC_BASHFUL_INKY_L1 = "gfx/pacman/bashful-inky_L1.png";
-	public final static String GFX_PAC_BASHFUL_INKY_R0 = "gfx/pacman/bashful-inky_R0.png";
-	public final static String GFX_PAC_BASHFUL_INKY_R1 = "gfx/pacman/bashful-inky_R1.png";
-	public final static String GFX_PAC_BASHFUL_INKY_U0 = "gfx/pacman/bashful-inky_U0.png";
-	public final static String GFX_PAC_BASHFUL_INKY_U1 = "gfx/pacman/bashful-inky_U1.png";
-	public final static String GFX_PAC_DEADEYES_D = "gfx/pacman/deadeyes_D.png";
-	public final static String GFX_PAC_DEADEYES_L = "gfx/pacman/deadeyes_L.png";
-	public final static String GFX_PAC_DEADEYES_R = "gfx/pacman/deadeyes_R.png";
-	public final static String GFX_PAC_DEADEYES_U = "gfx/pacman/deadeyes_U.png";
-	public final static String GFX_PAC_FRUIT_ANANAS = "gfx/pacman/fruit_ananas.png";
-	public final static String GFX_PAC_FRUIT_APPLE = "gfx/pacman/fruit_apple.png";
-	public final static String GFX_PAC_FRUIT_CHERRY = "gfx/pacman/fruit_cherry.png";
-	public final static String GFX_PAC_FRUIT_ORANGE = "gfx/pacman/fruit_orange.png";
-	public final static String GFX_PAC_FRUIT_STRAWBERRY = "gfx/pacman/fruit_strawberry.png";
-	public final static String GFX_PAC_GHOST_BLUE0 = "gfx/pacman/ghost_blue0.png";
-	public final static String GFX_PAC_GHOST_BLUE1 = "gfx/pacman/ghost_blue1.png";
-	public final static String GFX_PAC_GHOST_WHITE0 = "gfx/pacman/ghost_white0.png";
-	public final static String GFX_PAC_GHOST_WHITE1 = "gfx/pacman/ghost_white1.png";
-	public final static String GFX_PAC_PACMAN_DIE_0 = "gfx/pacman/pacman_die_0.png";
-	public final static String GFX_PAC_PACMAN_DIE_1 = "gfx/pacman/pacman_die_1.png";
-	public final static String GFX_PAC_PACMAN_DIE_2 = "gfx/pacman/pacman_die_2.png";
-	public final static String GFX_PAC_PACMAN_DIE_3 = "gfx/pacman/pacman_die_3.png";
-	public final static String GFX_PAC_PACMAN_DIE_4 = "gfx/pacman/pacman_die_4.png";
-	public final static String GFX_PAC_PACMAN_L0 = "gfx/pacman/pacman_L0.png";
-	public final static String GFX_PAC_PACMAN_L1 = "gfx/pacman/pacman_L1.png";
-	public final static String GFX_PAC_PACMAN_L2 = "gfx/pacman/pacman_L2.png";
-	public final static String GFX_PAC_PACMAN_L3 = "gfx/pacman/pacman_L3.png";
-	public final static String GFX_PAC_PACMAN_LIFE = "gfx/pacman/pacman_life.png";
-	public final static String GFX_PAC_PILLE_GROSS = "gfx/pacman/pille_gross.png";
-	public final static String GFX_PAC_PILLE_KLEIN = "gfx/pacman/pille_klein.png";
-	public final static String GFX_PAC_POKEY_CLYDE_D0 = "gfx/pacman/pokey-clyde_D0.png";
-	public final static String GFX_PAC_POKEY_CLYDE_D1 = "gfx/pacman/pokey-clyde_D1.png";
-	public final static String GFX_PAC_POKEY_CLYDE_L0 = "gfx/pacman/pokey-clyde_L0.png";
-	public final static String GFX_PAC_POKEY_CLYDE_L1 = "gfx/pacman/pokey-clyde_L1.png";
-	public final static String GFX_PAC_POKEY_CLYDE_R0 = "gfx/pacman/pokey-clyde_R0.png";
-	public final static String GFX_PAC_POKEY_CLYDE_R1 = "gfx/pacman/pokey-clyde_R1.png";
-	public final static String GFX_PAC_POKEY_CLYDE_U0 = "gfx/pacman/pokey-clyde_U0.png";
-	public final static String GFX_PAC_POKEY_CLYDE_U1 = "gfx/pacman/pokey-clyde_U1.png";
-	public final static String GFX_PAC_SCORE_200 = "gfx/pacman/score_200.png";
-	public final static String GFX_PAC_SHADOW_BLINKY_D0 = "gfx/pacman/shadow-blinky_D0.png";
-	public final static String GFX_PAC_SHADOW_BLINKY_D1 = "gfx/pacman/shadow-blinky_D1.png";
-	public final static String GFX_PAC_SHADOW_BLINKY_L0 = "gfx/pacman/shadow-blinky_L0.png";
-	public final static String GFX_PAC_SHADOW_BLINKY_L1 = "gfx/pacman/shadow-blinky_L1.png";
-	public final static String GFX_PAC_SHADOW_BLINKY_R0 = "gfx/pacman/shadow-blinky_R0.png";
-	public final static String GFX_PAC_SHADOW_BLINKY_R1 = "gfx/pacman/shadow-blinky_R1.png";
-	public final static String GFX_PAC_SHADOW_BLINKY_U0 = "gfx/pacman/shadow-blinky_U0.png";
-	public final static String GFX_PAC_SHADOW_BLINKY_U1 = "gfx/pacman/shadow-blinky_U1.png";
-	public final static String GFX_PAC_SPEEDY_PINKY_D0 = "gfx/pacman/speedy-pinky_D0.png";
-	public final static String GFX_PAC_SPEEDY_PINKY_D1 = "gfx/pacman/speedy-pinky_D1.png";
-	public final static String GFX_PAC_SPEEDY_PINKY_L0 = "gfx/pacman/speedy-pinky_L0.png";
-	public final static String GFX_PAC_SPEEDY_PINKY_L1 = "gfx/pacman/speedy-pinky_L1.png";
-	public final static String GFX_PAC_SPEEDY_PINKY_R0 = "gfx/pacman/speedy-pinky_R0.png";
-	public final static String GFX_PAC_SPEEDY_PINKY_R1 = "gfx/pacman/speedy-pinky_R1.png";
-	public final static String GFX_PAC_SPEEDY_PINKY_U0 = "gfx/pacman/speedy-pinky_U0.png";
-	public final static String GFX_PAC_SPEEDY_PINKY_U1 = "gfx/pacman/speedy-pinky_U1.png";
-	public final static String GFX_PAC_WALL_GATE = "gfx/pacman/wall_gate.png";
-	public final static String GFX_PAC_WALL_H = "gfx/pacman/wall_h.png";
-	public final static String GFX_PAC_WALL_V = "gfx/pacman/wall_v.png";
-	public final static String GFX_PAC_WALL_LO = "gfx/pacman/wall_lo.png";
-	public final static String GFX_PAC_WALL_RO = "gfx/pacman/wall_ro.png";
-	public final static String GFX_PAC_WALL_LU = "gfx/pacman/wall_lu.png";
-	public final static String GFX_PAC_WALL_RU = "gfx/pacman/wall_ru.png";
-	public final static String GFX_PAC_WALL_ROUND_LO = "gfx/pacman/wall_round_lo.png";
-	public final static String GFX_PAC_WALL_ROUND_LU = "gfx/pacman/wall_round_lu.png";
-	public final static String GFX_PAC_WALL_ROUND_RO = "gfx/pacman/wall_round_ro.png";
-	public final static String GFX_PAC_WALL_ROUND_RU = "gfx/pacman/wall_round_ru.png";
-
-	// Sounds
-
-	public final static String AUDIO_ROCKET_LASER = "sound/laser-rocket.mp3";
-	public final static String AUDIO_UFO_EXPLOSION = "sound/explosion-gegner.mp3";
-	public final static String AUDIO_UFO_LASER = "sound/laser-gegner.mp3";
-	public final static String AUDIO_ROCKET_EXPLOSION = "sound/explosion-rocket.mp3";
 
 	// Defaults
 
@@ -725,7 +632,8 @@ public abstract class Daddel extends Application {
 	 *            Priorität, mit der der Sample abgespielt wird
 	 */
 	public void sound(String path, double volume, double balance, double rate, double pan, int priority) {
-		String url = Daddel.class.getResource(path).toExternalForm();
+		// TODO: Filesystem unterstützen
+		String url = FileUtils.getInputUrl(path).toExternalForm();
 		AudioLib.audioclip(url).play(volume, balance, rate, pan, priority);
 	}
 
@@ -905,6 +813,8 @@ public abstract class Daddel extends Application {
 	 * 
 	 * @param pos
 	 *            die Position
+	 * @param padding
+	 *            gibt an, wieviel Rand einkalkuliert werden soll
 	 * @return true: die Position liegt im Spielraster
 	 */
 	public boolean onGrid(Pos pos, double padding) {
@@ -944,10 +854,10 @@ public abstract class Daddel extends Application {
 	 *            (der Ellipse) bestimmt
 	 * @return die errechnete Position
 	 */
-	public Pos kreis(long delta, long wavelength, Pos min, Pos max) {
+	public Pos circlePosition(long delta, long wavelength, Pos min, Pos max) {
 		return new Pos( //
-				cosinuswelle(delta, wavelength, min.x(), max.x()), //
-				sinuswelle(delta, wavelength, min.y(), max.y()));
+				cosinusWave(delta, wavelength, min.x(), max.x()), //
+				sinusWave(delta, wavelength, min.y(), max.y()));
 	}
 
 	/**
@@ -964,7 +874,7 @@ public abstract class Daddel extends Application {
 	 *            der obere Wert der Welle
 	 * @return der errechnete Wert
 	 */
-	public double sinuswelle(long delta, long wavelength, double min, double max) {
+	public double sinusWave(long delta, long wavelength, double min, double max) {
 		double w = ((double) delta) / (double) wavelength * 2 * Math.PI;
 		double r = (max - min) / 2;
 		return (double) (Math.sin(w) * r + r + min);
@@ -984,7 +894,7 @@ public abstract class Daddel extends Application {
 	 *            der obere Wert der Welle
 	 * @return der errechnete Wert
 	 */
-	public double cosinuswelle(long delta, long wavelength, double min, double max) {
+	public double cosinusWave(long delta, long wavelength, double min, double max) {
 		double w = ((double) delta) / (double) wavelength * 2 * Math.PI;
 		double r = (max - min) / 2;
 		return (double) (Math.cos(w) * r + r + min);
@@ -1040,22 +950,9 @@ public abstract class Daddel extends Application {
 		TITLE, INTRO, MENU, SETUP, LEVEL_INTRO, LEVEL, GAMEOVER, WINGAME, CREDITS, HIGHSCORE
 	}
 
-	private Map<GamePhase, GamePhaseAction> gamePhases = new HashMap<GamePhase, GamePhaseAction>() {
-		private static final long serialVersionUID = 1L;
-		{
-			// defaults
-			put(GamePhase.TITLE, () -> toIntro());
-			put(GamePhase.INTRO, () -> toMenu());
-			put(GamePhase.MENU, () -> toLevelIntro());
-			put(GamePhase.SETUP, () -> toMenu());
-			put(GamePhase.LEVEL_INTRO, () -> toLevel());
-			put(GamePhase.LEVEL, () -> toMenu());
-			put(GamePhase.GAMEOVER, () -> toHighscore());
-			put(GamePhase.WINGAME, () -> toHighscore());
-			put(GamePhase.CREDITS, () -> exit());
-			put(GamePhase.HIGHSCORE, () -> toMenu());
-		}
-	};
+	private Map<GamePhase, GamePhaseAction> gamePhases=new HashMap<GamePhase,GamePhaseAction>(){private static final long serialVersionUID=1L;{
+	// defaults
+	put(GamePhase.TITLE,()->toIntro());put(GamePhase.INTRO,()->toMenu());put(GamePhase.MENU,()->toLevelIntro());put(GamePhase.SETUP,()->toMenu());put(GamePhase.LEVEL_INTRO,()->toLevel());put(GamePhase.LEVEL,()->toMenu());put(GamePhase.GAMEOVER,()->toHighscore());put(GamePhase.WINGAME,()->toHighscore());put(GamePhase.CREDITS,()->exit());put(GamePhase.HIGHSCORE,()->toMenu());}};
 
 	private Daddel gamePhase(GamePhase gamePhase, GamePhaseAction action) {
 		this.gamePhases.put(gamePhase, action);
@@ -1172,7 +1069,7 @@ public abstract class Daddel extends Application {
 
 		this.transformation = new Transformation(this.witdh, this.height);
 		screen = new Screen(witdh, height, new Font(12));
-		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(0.25f).color(Color.WHITE)
+		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(1f).color(Color.WHITE)
 				.pos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
 		screen.setTransformation(transformation);
 		Scene scene = new Scene(screen.getPane(), witdh, height);

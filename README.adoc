@@ -3,41 +3,52 @@
 == Am Anfang ist der Berg immer höher als man nachher denkt...
 
 [.lead]
-Mit den eigenen Händen kreativ aus dem Nichts etwas neues, schönes zu schaffen, das macht für viele (und auch mich) den Reiz des Programmierens aus. 
 
-Diese Freude (den eigenen) Kindern zu vermitteln, ist nicht ganz so leicht. Es gibt reihenweise Ansätze und Modelle: Turtle-Grafics, Maus-im-Labyrinth-Umgebungen, Mincraft-API, Scratch, Lego-Robotics etc.
+Mit den eigenen Händen aus dem Nichts etwas Neues, Schönes zu schaffen, das macht für viele (und auch für mich) den Reiz des Programmierens aus. Diese Freude Kindern zu vermitteln, ist nicht ganz so leicht. Es gibt reihenweise Ansätze und Modelle: Turtle-Grafics, Maus-im-Labyrinth-Umgebungen, Mincraft-API, Scratch, Lego-Robotics etc.
+
+image:screenshots/Climber.png[Climber,150,150] 
 
 Auf der Suche nach der besten Einsteigersprache landen viele bei Python, da diese auch rein funktioniale Programmierung möglich macht, und von der Syntax recht schlank ist.
 
-Nun hat mein jüngerer Sohn entschieden, dass Java die Sprache seiner Wahl ist. Java: komplexe Syntax mit vielen Klammern, dem "alles-ist-eine-Klasse"-Paradigma und der ungezählten Vielfalt an Frameworks in allen Bereichen.
+Nun hat mein jüngerer Sohn entschieden, dass Java die Sprache seiner Wahl ist. An sich eine gute Wahl. Wenn da nicht wären: eine komplexe Syntax mit vielen Klammern, das "alles-ist-eine-Klasse"-Paradigma, eine ungezählten Vielfalt an Frameworks in allen Bereichen. PUH...
 
-Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie Schüler (oder Eltern wie Kinder, oder ...) vor einige Herausforderungen:
+Motiviert mit Java in die Programmierung einzusteigen, stellt Informatiker wie Schüler (oder Eltern, Onkels, Kinder etc.) vor einige klitzekleine Herausforderungen.
 
 |===
-| Herausforderungen | was Daddel bieten möchte
+| nämlich... | ...und was Daddel bieten möchte
 
-|natürlich ein Grundverständnis der Standart-Sprachkonstrukte
-|durch aufeinander aufbauende bereitgestellten Beispiele wird Wissen (im Ansatz) nebenbei aufgebaut
+|ein Grundverständnis der Java-Sprachkonstrukte
+|durch aufeinander aufbauende bereitgestellten Beispiele wird Java-Wissen (im Ansatz) nebenbei aufgebaut
 
-|interessante Aufgaben müssen ohne Klassenhierarchie lösbar sein, aber nicht darauf eingeschrenkt sein
-|Daddel stellt eine Builder- und Runner-API breit, die einen funktionalen Ansatz unterstützt, aber nicht darauf beschränkt ist
+|interessante Aufgaben sollten ohne große Klassenhierarchie lösbar, aber nicht darauf eingeschränkt sein
+|Daddel stellt eine Builder- und Runner-API breit, die einen funktionalen Ansatz unterstützt. Trotzdem ist es echtes Java, daraus kann voll geschöpft werden.
  
 |schnell und einfach ein vorzeigbares Ergebnis produzieren können
-|Konvention steht über Konfiguration - mit minimalem Code lassen sich anschauliche Ergebnisse erzielen; basierend auf JavaFx; einige Grafiken (diese stammen z.T. von https://www.openclipart.org) und Sounds (Additional sound effects from https://www.zapsplat.com - sehr zu empfehlen) werden bereits mitgeliefert
+|Konvention steht über Konfiguration (ja, es gibt kein Framework ohne diesen Satz!), d.h. mit minimalem Code lassen sich anschauliche Ergebnisse erzielen. Einige Grafiken (siehe https://www.openclipart.org) und Sounds (u.a. von https://www.zapsplat.com) werden bereits mitgeliefert.
 
 |nicht in der Gestaltungsfreiheit eingeschränkt zu sein
 |Funktion und Verhalten der API können erweitert und überschrieben werden
+
 |===
+
+*Übrigens:* Dies ist keine Web-Anwendung. Man kann sie nicht im Browser ansehen. Es gibt auch keinen Zurück-Button, denn:
+Im Hintergrund arbeitet *JavaFx*, also *Oracles moderne* und *native Desktop-Grafik-API*.
+
+== Screenshots
+
+image:screenshots/invader1.png[Space Invader Titel,400,225] image:screenshots/invader1a.png[Space Invader Titel (Debug-Modus),400,225]
+
+image:screenshots/invader2.png[Space Invader Level,400,225] image:screenshots/pacman.png[Pacman,400,225]
+
+image:screenshots/daddel_eclipse.png[Daddeln mit Eclipse,400,225] image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,225] 
 
 == Losdaddeln
 
-Los gehts!
-
-Für den Anfang erstellen wir eine Spielraster von der Größe 20 x 10. Der Hintergrund soll ein schönes Himmelblau sein und davor fliegt eine Rakete.
+Für den Anfang erstellen wir ein Spielraster von der Größe 20 x 10. Der Hintergrund soll ein schönes Himmelblau sein und davor fliegt eine Rakete.
 
 Hier das geplante Spielraster - die Rakete ist durch einen einfachen Kreis dargestellt:
 
-image::screenshots/Losdaddeln_Raster.jpg[]
+image::screenshots/Losdaddeln_Raster.jpg[Losdaddeln_Raster,400,225]
 
 Das Programm dazu ist schnell erstellt.
 
@@ -47,7 +58,7 @@ Das Programm dazu ist schnell erstellt.
 package de.dreierschach.tutorial;
 
 import de.dreierschach.daddel.Daddel;
-import de.dreierschach.daddel.gfx.sprite.Particle;
+import de.dreierschach.daddel.gfx.Gfx;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
@@ -58,7 +69,7 @@ public class Losdaddeln extends Daddel {
 		grid(-10, 10, -5, 5); // <1>
 		background(Color.rgb(0, 64, 255)); // <2>
 		toLevel(() -> { // <3>
-			sprite(1, 4, GFX_ROCKET); // <4>
+			sprite(1, 4, Gfx.ROCKET); // <4>
 			key(KeyCode.ESCAPE, keyCode -> exit()); // <5>
 		});
 	}
@@ -79,25 +90,26 @@ public class Losdaddeln extends Daddel {
 Das wars schon. Nach Start des Programms erscheint die Rakete vor strahlend blauem Himmel.
 (Übrigens: Durch drücken von F3 kannst du durch die einzelnen Debug-Modi durchschalten.)
 
-image::screenshots/Losdaddeln.jpg[]
+image::screenshots/Losdaddeln.jpg[Losdaddeln,400,225]
 
 == nochmal Losdaddeln
 
 Das ist noch ein wenig langweilig. Jetzt wollen wir etwas Action wagen. Wie wärs mit einem Pacman, der einen Banner hinter sich herzieht?
 
-image::screenshots/Losdaddeln2_Raster.jpg[]
+image::screenshots/Losdaddeln2_Raster.jpg[Losdaddeln2_Raster,400,225]
 
 Dazu ergänzen wir das Programm um zwei Befehle. Einer für Pacman, einer für das Banner.
 
 .Losdaddeln2.java
 [source,java]
 ----
+import de.dreierschach.daddel.gfx.sprite.Particle;
 ...
 		toLevel(() -> {
-			sprite(1, 4, GFX_ROCKET);
+			sprite(1, 4, Gfx.ROCKET);
 
 			Particle pacman = // <1>
-				particle(1, 8000, 1.5, GFX_PAC_PACMAN_L0, GFX_PAC_PACMAN_L1, GFX_PAC_PACMAN_L2, GFX_PAC_PACMAN_L3) // <2>
+				particle(1, 8000, 1.5, Gfx.PAC_PACMAN_L0, Gfx.PAC_PACMAN_L1, Gfx.PAC_PACMAN_L2, Gfx.PAC_PACMAN_L3) // <2>
 				.pos(-11, 3) // <3>
 				.rotation(180) // <4>
 				.speed(4) // <5>
@@ -126,4 +138,4 @@ Dazu ergänzen wir das Programm um zwei Befehle. Einer für Pacman, einer für d
 
 Und so sieht es jetzt aus:
 
-image::screenshots/Losdaddeln2.jpg[]
+image::screenshots/Losdaddeln2.jpg[Losdaddeln2,400,225]

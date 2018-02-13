@@ -1,6 +1,7 @@
 package de.dreierschach.tutorial;
 
 import de.dreierschach.daddel.Daddel;
+import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.model.Pos;
@@ -63,7 +64,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 
 	private void erzeugeRakete() {
 		// erzeuge die Rakete
-		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, GFX_ROCKET, GFX_ROCKET_SCHIRM) //
+		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, Gfx.ROCKET, Gfx.ROCKET_SCHIRM) //
 				.pos(RAKETE_STARTPOS) //
 				// In der Spielschleife der Rakete wird diese bewegt
 				.gameLoop((me, totaltime, deltatime) -> {
@@ -87,7 +88,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 		for (int i = 0; i < 3 + level(); i++) {
 			// zufällige Position
 			Pos pos = new Pos((double) Math.random() * 20f - 10f, (double) Math.random() * 5f - 5f);
-			sprite(TYP_GEGNER, GEGNER_GROESSE, GFX_UFO_1) //
+			sprite(TYP_GEGNER, GEGNER_GROESSE, Gfx.UFO_1) //
 					.pos(pos) //
 					.gameLoop((ufo, totaltime, deltatime) -> bewegeUfo(ufo, deltatime)) //
 					// berechne einen kleineren Radius für die Kollisionskontrolle
@@ -114,7 +115,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 	// Wenn die Rakete gegen ein Ufo fliegt, explodiert sie, bevor das Spiel endet
 	public void raketeGetroffen() {
 		rakete.kill();
-		particle(TYP_EXPLOSION, 500, 2f, GFX_EXPLOSION) //
+		particle(TYP_EXPLOSION, 500, 2f, Gfx.EXPLOSION) //
 				.pos(rakete.pos()) //
 				.speedAnimation(8f) //
 				// wenn der Partikel ( = die Explosion) stirbt, beende das Spiel
@@ -176,7 +177,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 		// Kollision mit einem Ufo.
 		// Die Lebensdauer beträgt 0 Millisekunden (= unendlich). Die Größe ist ein
 		// halber (0.5) Rasterpunkt.
-		particle(TYP_LASER, 0, 0.5f, GFX_LASER) //
+		particle(TYP_LASER, 0, 0.5f, Gfx.LASER) //
 				// Die Startposition ist ein Rasterpunkt über der Rakete.
 				.pos(rakete.pos().add(new Pos(0, -1))) //
 				// der Laser soll nach oben fliegen (rechts = 0 Grad, unten = 90 Grad, links =
@@ -193,7 +194,7 @@ public class Tutorial06RaketeTreffer extends Daddel {
 					if (other.type() == TYP_GEGNER) {
 						me.kill();
 						other.kill();
-						particle(TYP_EXPLOSION, 500, 2f, GFX_EXPLOSION) //
+						particle(TYP_EXPLOSION, 500, 2f, Gfx.EXPLOSION) //
 								.pos(other.pos()) //
 								.speedAnimation(8f);
 					}

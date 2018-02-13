@@ -3,6 +3,7 @@ package de.dreierschach.pacman;
 import java.util.Random;
 
 import de.dreierschach.daddel.Daddel;
+import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.tilemap.Entity;
 import de.dreierschach.daddel.gfx.tilemap.Entity.Dir;
 import de.dreierschach.daddel.gfx.tilemap.MoveFinishedListener;
@@ -49,49 +50,49 @@ public class Pacman extends Daddel {
 
 	private static final String[][] GFX_GHOSTS = { //
 			{ //
-					GFX_PAC_BASHFUL_INKY_L0, GFX_PAC_BASHFUL_INKY_L1, //
-					GFX_PAC_BASHFUL_INKY_U0, GFX_PAC_BASHFUL_INKY_U1, //
-					GFX_PAC_BASHFUL_INKY_R0, GFX_PAC_BASHFUL_INKY_R1, //
-					GFX_PAC_BASHFUL_INKY_D0, GFX_PAC_BASHFUL_INKY_D1, //
-					GFX_PAC_GHOST_BLUE0, GFX_PAC_GHOST_BLUE1, //
-					GFX_PAC_GHOST_WHITE0, GFX_PAC_GHOST_WHITE1, //
-					GFX_PAC_DEADEYES_L, //
-					GFX_PAC_DEADEYES_U, //
-					GFX_PAC_DEADEYES_R, //
-					GFX_PAC_DEADEYES_D //
+					Gfx.PAC_BASHFUL_INKY_L0, Gfx.PAC_BASHFUL_INKY_L1, //
+					Gfx.PAC_BASHFUL_INKY_U0, Gfx.PAC_BASHFUL_INKY_U1, //
+					Gfx.PAC_BASHFUL_INKY_R0, Gfx.PAC_BASHFUL_INKY_R1, //
+					Gfx.PAC_BASHFUL_INKY_D0, Gfx.PAC_BASHFUL_INKY_D1, //
+					Gfx.PAC_GHOST_BLUE0, Gfx.PAC_GHOST_BLUE1, //
+					Gfx.PAC_GHOST_WHITE0, Gfx.PAC_GHOST_WHITE1, //
+					Gfx.PAC_DEADEYES_L, //
+					Gfx.PAC_DEADEYES_U, //
+					Gfx.PAC_DEADEYES_R, //
+					Gfx.PAC_DEADEYES_D //
 			}, { //
-					GFX_PAC_POKEY_CLYDE_L0, GFX_PAC_POKEY_CLYDE_L1, //
-					GFX_PAC_POKEY_CLYDE_U0, GFX_PAC_POKEY_CLYDE_U1, //
-					GFX_PAC_POKEY_CLYDE_R0, GFX_PAC_POKEY_CLYDE_R1, //
-					GFX_PAC_POKEY_CLYDE_D0, GFX_PAC_POKEY_CLYDE_D1, //
-					GFX_PAC_GHOST_BLUE0, GFX_PAC_GHOST_BLUE1, //
-					GFX_PAC_GHOST_WHITE0, GFX_PAC_GHOST_WHITE1, //
-					GFX_PAC_DEADEYES_L, //
-					GFX_PAC_DEADEYES_U, //
-					GFX_PAC_DEADEYES_R, //
-					GFX_PAC_DEADEYES_D //
+					Gfx.PAC_POKEY_CLYDE_L0, Gfx.PAC_POKEY_CLYDE_L1, //
+					Gfx.PAC_POKEY_CLYDE_U0, Gfx.PAC_POKEY_CLYDE_U1, //
+					Gfx.PAC_POKEY_CLYDE_R0, Gfx.PAC_POKEY_CLYDE_R1, //
+					Gfx.PAC_POKEY_CLYDE_D0, Gfx.PAC_POKEY_CLYDE_D1, //
+					Gfx.PAC_GHOST_BLUE0, Gfx.PAC_GHOST_BLUE1, //
+					Gfx.PAC_GHOST_WHITE0, Gfx.PAC_GHOST_WHITE1, //
+					Gfx.PAC_DEADEYES_L, //
+					Gfx.PAC_DEADEYES_U, //
+					Gfx.PAC_DEADEYES_R, //
+					Gfx.PAC_DEADEYES_D //
 			}, { //
-					GFX_PAC_SHADOW_BLINKY_L0, GFX_PAC_SHADOW_BLINKY_L1, //
-					GFX_PAC_SHADOW_BLINKY_U0, GFX_PAC_SHADOW_BLINKY_U1, //
-					GFX_PAC_SHADOW_BLINKY_R0, GFX_PAC_SHADOW_BLINKY_R1, //
-					GFX_PAC_SHADOW_BLINKY_D0, GFX_PAC_SHADOW_BLINKY_D1, //
-					GFX_PAC_GHOST_BLUE0, GFX_PAC_GHOST_BLUE1, //
-					GFX_PAC_GHOST_WHITE0, GFX_PAC_GHOST_WHITE1, //
-					GFX_PAC_DEADEYES_L, //
-					GFX_PAC_DEADEYES_U, //
-					GFX_PAC_DEADEYES_R, //
-					GFX_PAC_DEADEYES_D //
+					Gfx.PAC_SHADOW_BLINKY_L0, Gfx.PAC_SHADOW_BLINKY_L1, //
+					Gfx.PAC_SHADOW_BLINKY_U0, Gfx.PAC_SHADOW_BLINKY_U1, //
+					Gfx.PAC_SHADOW_BLINKY_R0, Gfx.PAC_SHADOW_BLINKY_R1, //
+					Gfx.PAC_SHADOW_BLINKY_D0, Gfx.PAC_SHADOW_BLINKY_D1, //
+					Gfx.PAC_GHOST_BLUE0, Gfx.PAC_GHOST_BLUE1, //
+					Gfx.PAC_GHOST_WHITE0, Gfx.PAC_GHOST_WHITE1, //
+					Gfx.PAC_DEADEYES_L, //
+					Gfx.PAC_DEADEYES_U, //
+					Gfx.PAC_DEADEYES_R, //
+					Gfx.PAC_DEADEYES_D //
 			}, { //
-					GFX_PAC_SPEEDY_PINKY_L0, GFX_PAC_SPEEDY_PINKY_L1, //
-					GFX_PAC_SPEEDY_PINKY_U0, GFX_PAC_SPEEDY_PINKY_U1, //
-					GFX_PAC_SPEEDY_PINKY_R0, GFX_PAC_SPEEDY_PINKY_R1, //
-					GFX_PAC_SPEEDY_PINKY_D0, GFX_PAC_SPEEDY_PINKY_D1, //
-					GFX_PAC_GHOST_BLUE0, GFX_PAC_GHOST_BLUE1, //
-					GFX_PAC_GHOST_WHITE0, GFX_PAC_GHOST_WHITE1, //
-					GFX_PAC_DEADEYES_L, //
-					GFX_PAC_DEADEYES_U, //
-					GFX_PAC_DEADEYES_R, //
-					GFX_PAC_DEADEYES_D //
+					Gfx.PAC_SPEEDY_PINKY_L0, Gfx.PAC_SPEEDY_PINKY_L1, //
+					Gfx.PAC_SPEEDY_PINKY_U0, Gfx.PAC_SPEEDY_PINKY_U1, //
+					Gfx.PAC_SPEEDY_PINKY_R0, Gfx.PAC_SPEEDY_PINKY_R1, //
+					Gfx.PAC_SPEEDY_PINKY_D0, Gfx.PAC_SPEEDY_PINKY_D1, //
+					Gfx.PAC_GHOST_BLUE0, Gfx.PAC_GHOST_BLUE1, //
+					Gfx.PAC_GHOST_WHITE0, Gfx.PAC_GHOST_WHITE1, //
+					Gfx.PAC_DEADEYES_L, //
+					Gfx.PAC_DEADEYES_U, //
+					Gfx.PAC_DEADEYES_R, //
+					Gfx.PAC_DEADEYES_D //
 			} };
 
 	private Random random = new Random();
@@ -172,21 +173,21 @@ public class Pacman extends Daddel {
 
 	private void initMap() {
 		grid(-16, 16, -9f, 9f);
-		map = tilemap(1f).tile(ID_WALL_ROUND_LO, TYPE_WALL, GFX_PAC_WALL_ROUND_LO) //
-				.tile(ID_WALL_ROUND_RO, TYPE_WALL, GFX_PAC_WALL_ROUND_RO) //
-				.tile(ID_WALL_ROUND_LU, TYPE_WALL, GFX_PAC_WALL_ROUND_LU) //
-				.tile(ID_WALL_ROUND_RU, TYPE_WALL, GFX_PAC_WALL_ROUND_RU)//
-				.tile(ID_WALL_LO, TYPE_WALL, GFX_PAC_WALL_LO) //
-				.tile(ID_WALL_RO, TYPE_WALL, GFX_PAC_WALL_RO) //
-				.tile(ID_WALL_LU, TYPE_WALL, GFX_PAC_WALL_LU) //
-				.tile(ID_WALL_RU, TYPE_WALL, GFX_PAC_WALL_RU) //
-				.tile(ID_WALL_H, TYPE_WALL, GFX_PAC_WALL_H) //
-				.tile(ID_WALL_V, TYPE_WALL, GFX_PAC_WALL_V) //
-				.tile(ID_WALL_GATE, TYPE_GATE, GFX_PAC_WALL_GATE) //
-				.tile(ID_PILLE, TYPE_PILLE, GFX_PAC_PILLE_KLEIN) //
-				.tile(ID_GROSSE_PILLE, TYPE_PILLE_GROSS, GFX_PAC_PILLE_GROSS) //
-				.tile(ID_DEATEYES_D, TYPE_WALL, GFX_PAC_DEADEYES_D, GFX_PAC_DEADEYES_R, GFX_PAC_DEADEYES_U,
-						GFX_PAC_DEADEYES_L)
+		map = tilemap(1f).tile(ID_WALL_ROUND_LO, TYPE_WALL, Gfx.PAC_WALL_ROUND_LO) //
+				.tile(ID_WALL_ROUND_RO, TYPE_WALL, Gfx.PAC_WALL_ROUND_RO) //
+				.tile(ID_WALL_ROUND_LU, TYPE_WALL, Gfx.PAC_WALL_ROUND_LU) //
+				.tile(ID_WALL_ROUND_RU, TYPE_WALL, Gfx.PAC_WALL_ROUND_RU)//
+				.tile(ID_WALL_LO, TYPE_WALL, Gfx.PAC_WALL_LO) //
+				.tile(ID_WALL_RO, TYPE_WALL, Gfx.PAC_WALL_RO) //
+				.tile(ID_WALL_LU, TYPE_WALL, Gfx.PAC_WALL_LU) //
+				.tile(ID_WALL_RU, TYPE_WALL, Gfx.PAC_WALL_RU) //
+				.tile(ID_WALL_H, TYPE_WALL, Gfx.PAC_WALL_H) //
+				.tile(ID_WALL_V, TYPE_WALL, Gfx.PAC_WALL_V) //
+				.tile(ID_WALL_GATE, TYPE_GATE, Gfx.PAC_WALL_GATE) //
+				.tile(ID_PILLE, TYPE_PILLE, Gfx.PAC_PILLE_KLEIN) //
+				.tile(ID_GROSSE_PILLE, TYPE_PILLE_GROSS, Gfx.PAC_PILLE_GROSS) //
+				.tile(ID_DEATEYES_D, TYPE_WALL, Gfx.PAC_DEADEYES_D, Gfx.PAC_DEADEYES_R, Gfx.PAC_DEADEYES_U,
+						Gfx.PAC_DEADEYES_L)
 				.pos(0, 0) //
 				.defaultTile(ID_DEATEYES_D)//
 				.initMap(LEVEL[level() - 1]);
@@ -206,7 +207,7 @@ public class Pacman extends Daddel {
 			}
 		}
 
-		pacman = entity(TYPE_PACMAN, 2f, GFX_PAC_PACMAN_L3, GFX_PAC_PACMAN_L0, GFX_PAC_PACMAN_L1, GFX_PAC_PACMAN_L2)
+		pacman = entity(TYPE_PACMAN, 2f, Gfx.PAC_PACMAN_L3, Gfx.PAC_PACMAN_L0, Gfx.PAC_PACMAN_L1, Gfx.PAC_PACMAN_L2)
 				.mapPos(pacmanLevelPos).rotate(180).moveSpeed(PACMAN_SPEED);
 		pacman.animation().imageStart(0).imageEnd(0).speed(PACMAN_ANIMATION_SPEED).bounce(false);
 		map.focus(pacman);

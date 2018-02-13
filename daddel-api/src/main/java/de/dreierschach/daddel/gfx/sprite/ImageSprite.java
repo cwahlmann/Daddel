@@ -16,6 +16,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
 
 /**
  * ein Sprite in Form eines Bildes; kann animiert sein
@@ -170,10 +172,11 @@ public class ImageSprite extends Sprite {
 		}
 		if (debug().info()) {
 			drawWireframe(g);
-		}
-		if (debug().wireframe()) {
+		} else if (debug().wireframe()) {
 			drawWireframe(g);
-			drawInfo(g);
+			if (showPosOnDebug()) {
+				drawInfo(g);
+			}
 		}
 	}
 
@@ -187,12 +190,12 @@ public class ImageSprite extends Sprite {
 
 	private void drawInfo(GraphicsContext g) {
 		Scr scr = transformation().t(effektivePos());
+		g.setTransform(new Affine());
 		g.setFill(Color.gray(0.5));
 		g.setFont(Font.font(16));
 		g.setTextAlign(TextAlignment.CENTER);
 		g.setTextBaseline(VPos.CENTER);
-		g.fillText(String.format("(%.3f / %.3f)", effektivePos().x(),
-				effektivePos().y()), scr.x(), scr.y());
+		g.fillText(String.format("(%.3f / %.3f)", effektivePos().x(), effektivePos().y()), scr.x(), scr.y());
 	}
 
 	/*
@@ -208,9 +211,21 @@ public class ImageSprite extends Sprite {
 		return this;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#showPosOnDebug(boolean)
+	 */
+	@Override
+	public ImageSprite showPosOnDebug(boolean showPosOnDebug) {
+		super.showPosOnDebug(showPosOnDebug);
+		return this;
+	}
 	// -------------- override methods to return correct type --
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#pos(double, double)
 	 */
 	@Override
@@ -218,7 +233,7 @@ public class ImageSprite extends Sprite {
 		super.pos(x, y);
 		return this;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

@@ -53,6 +53,7 @@ public class Particle extends ImageSprite {
 		this.rotationStart = rotation();
 		this.rotationEnd = rotation();
 		this.gameLoop(particleGameLoop);
+		showPosOnDebug(false);
 	}
 
 	/*
@@ -183,7 +184,7 @@ public class Particle extends ImageSprite {
 	 * Legt fest, was mit dem Partikel geschehen soll, wenn er das Spielraster
 	 * verlässt
 	 * 
-	 * @param outsideRasterStrategy
+	 * @param outsideGridStrategy
 	 *            mögliche Strategien sind: ignorieren (ignore), Partikel töten
 	 *            (kill), zurücktitschen (bounce), auf der gegenüberliegenden Seite
 	 *            erscheinen (reappear), Partikel neu starten (restart)
