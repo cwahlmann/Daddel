@@ -1,7 +1,12 @@
 package de.dreierschach.daddel.gfx.tilemap;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import de.dreierschach.daddel.Screen.Debug;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
@@ -24,6 +29,7 @@ public class TileMap extends Sprite {
 	public static final int NO_TYPE = -1;
 
 	private Map<Integer, Tile> tiles = new HashMap<>();
+	private List<Entity> entities = new LinkedList<>();
 	private MapPos size;
 	private double tileSize;
 	private int[][][] map;
@@ -78,6 +84,7 @@ public class TileMap extends Sprite {
 	public TileMap clear(MapPos size, int id) {
 		this.size = size;
 		this.map = new int[size.x()][size.y()][size.z()];
+//		this.entities.clear();
 		return clear(id);
 	}
 
@@ -120,6 +127,15 @@ public class TileMap extends Sprite {
 		return this;
 	}
 
+	public TileMap entity(Entity entity) {
+		this.entities.add(entity);
+		return this;
+	}
+
+	public List<Entity> entities() {
+		return entities;
+	}
+	
 	/**
 	 * @return Größe des Spielfelds
 	 */
@@ -340,9 +356,29 @@ public class TileMap extends Sprite {
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#gameLoop(long)
 	 */
 	public void gameLoop(long delta) {
+		runEntities(delta);
 		tiles.values().forEach(tile -> tile.gameLoop(delta));
 		if (hasFocus()) {
 			pos(new Pos(-focus.pos().x(), -focus.pos().y()));
+		}
+	}
+
+	private void runEntities(long delta) {
+		List<Entity> entitiesCopy = new ArrayList<>(entities);
+		Iterator<Entity> it = entitiesCopy.iterator();
+		while (it.hasNext()) {
+			Entity entity = it.next();
+			if (entity.alive()) {
+				entity.gameLoop(delta);
+			}
+		}
+
+		it = entities.iterator();
+		while (it.hasNext()) {
+			Entity entity = it.next();
+			if (!entity.alive()) {
+				it.remove();
+			}
 		}
 	}
 
@@ -394,19 +430,25 @@ public class TileMap extends Sprite {
 		int x1 = 2 + x0 + (int) (dx / tileSize);
 		int y1 = 2 + y0 + (int) (dy / tileSize);
 
-		if (!debug().wireframe())
-		for (int x = x0; x <= x1; x++) {
-			for (int y = y0; y <= y1; y++) {
-				Pos prel = toPos(x, y);
-				Pos p = new Pos(prel.x() + effektivePos().x(), prel.y() + effektivePos().y());
-				for (int d = 0; d < size.z(); d++) {
-					int id = id(new MapPos(x, y, d));
-					Tile tile = tile(id);
-					if (tile != NO_TILE) {
-						tile.draw(g, p);
+		if (!debug().wireframe()) {
+			drawEntities(g, entity -> entity.mapPos().z() < 0);
+			for (int d = 0; d < size.z(); d++) {
+				for (int x = x0; x <= x1; x++) {
+					for (int y = y0; y <= y1; y++) {
+						Pos prel = toPos(x, y);
+						Pos p = new Pos(prel.x() + effektivePos().x(), prel.y() + effektivePos().y());
+						int id = id(new MapPos(x, y, d));
+						Tile tile = tile(id);
+						if (tile != NO_TILE) {
+							tile.draw(g, p);
+						}
 					}
 				}
+				final int depth = d;
+				
+				drawEntities(g, entity -> entity.mapPos().z() == depth);
 			}
+			drawEntities(g, entity -> entity.mapPos().z() >= size.z());
 		}
 		if (debug().info() || debug().wireframe()) {
 			Pos halfTileSize = new Pos(tileSize / 2, tileSize / 2);
@@ -423,15 +465,26 @@ public class TileMap extends Sprite {
 		}
 	}
 
+	private void drawEntities(GraphicsContext g, Predicate<Entity> predicate) {
+		entities.stream().filter(predicate).forEach(entity -> {
+			g.save();
+			entity.debug(debug());
+			entity.drawSprite(g);
+			g.restore();
+		});
+	}
+	
 	private void line(GraphicsContext g, Pos p0, Pos p1) {
 		Scr scr0 = transformation().t(p0);
 		Scr scr1 = transformation().t(p1);
 		g.setFill(Color.gray(0.5));
-		g.fillRect(scr0.x(), scr0.y(), scr1.x()-scr0.x()+1, scr1.y()-scr0.y()+1);
+		g.fillRect(scr0.x(), scr0.y(), scr1.x() - scr0.x() + 1, scr1.y() - scr0.y() + 1);
 	}
 	// overwrite methods for correct return type
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#debug(boolean)
 	 */
 	@Override
@@ -439,13 +492,13 @@ public class TileMap extends Sprite {
 		super.debug(debug);
 		return this;
 	}
-	
+
 	@Override
 	public TileMap pos(double x, double y) {
 		super.pos(x, y);
 		return this;
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 

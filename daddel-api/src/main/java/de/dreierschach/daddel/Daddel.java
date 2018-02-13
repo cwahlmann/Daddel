@@ -730,7 +730,8 @@ public abstract class Daddel extends Application {
 	public Entity entity(int type, double maxSize, String... imagefiles) {
 		Entity entity = new Entity(transformation, screen.getTileMap(), type, maxSize, imagefiles);
 		entity.parent(screen.getTileMap());
-		screen.addSprite(entity);
+		screen.getTileMap().entity(entity);
+//		screen.addSprite(entity);
 		return entity;
 	}
 
@@ -1036,6 +1037,9 @@ public abstract class Daddel extends Application {
 
 	private void checkCollisions() {
 		List<Sprite> sprites = new ArrayList<>(screen.getSprites());
+		if (screen.getTileMap() != null) {
+			sprites.addAll(screen.getTileMap().entities());
+		}
 		for (int i = 0; i < sprites.size() - 1; i++) {
 			if (sprites.get(i).alive()) {
 				for (int j = i + 1; j < sprites.size(); j++) {
