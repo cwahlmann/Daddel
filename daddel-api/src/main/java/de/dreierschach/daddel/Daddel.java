@@ -147,6 +147,47 @@ public abstract class Daddel extends Application {
 	public final static String GFX_PAC_WALL_ROUND_RO = "gfx/pacman/wall_round_ro.png";
 	public final static String GFX_PAC_WALL_ROUND_RU = "gfx/pacman/wall_round_ru.png";
 
+	// Mondauto
+
+	public static final String GFX_MONDAUTO_FELS = "gfx/mondauto/bfels.png";
+	public static final String GFX_MONDAUTO_GOLD = "gfx/mondauto/bgold.png";
+	public static final String GFX_MONDAUTO_KOMPASS_DEF = "gfx/mondauto/bkompassDef.png";
+	public static final String GFX_MONDAUTO_KOMPASS_N = "gfx/mondauto/bkompassN.png";
+	public static final String GFX_MONDAUTO_KOMPASS_NO = "gfx/mondauto/bkompassNO.png";
+	public static final String GFX_MONDAUTO_KOMPASS_NW = "gfx/mondauto/bkompassNW.png";
+	public static final String GFX_MONDAUTO_KOMPASS_O = "gfx/mondauto/bkompassO.png";
+	public static final String GFX_MONDAUTO_KOMPASS_S = "gfx/mondauto/bkompassS.png";
+	public static final String GFX_MONDAUTO_KOMPASS_SO = "gfx/mondauto/bkompassSO.png";
+	public static final String GFX_MONDAUTO_KOMPASS_SW = "gfx/mondauto/bkompassSW.png";
+	public static final String GFX_MONDAUTO_KOMPASS_W = "gfx/mondauto/bkompassW.png";
+	public static final String GFX_MONDAUTO_KRATER_0000 = "gfx/mondauto/bkrater00.png";
+	public static final String GFX_MONDAUTO_KRATER_0001 = "gfx/mondauto/bkrater01.png";
+	public static final String GFX_MONDAUTO_KRATER_0010 = "gfx/mondauto/bkrater02.png";
+	public static final String GFX_MONDAUTO_KRATER_0011 = "gfx/mondauto/bkrater03.png";
+	public static final String GFX_MONDAUTO_KRATER_0100 = "gfx/mondauto/bkrater04.png";
+	public static final String GFX_MONDAUTO_KRATER_0101 = "gfx/mondauto/bkrater05.png";
+	public static final String GFX_MONDAUTO_KRATER_0110 = "gfx/mondauto/bkrater06.png";
+	public static final String GFX_MONDAUTO_KRATER_0111 = "gfx/mondauto/bkrater07.png";
+	public static final String GFX_MONDAUTO_KRATER_1000 = "gfx/mondauto/bkrater08.png";
+	public static final String GFX_MONDAUTO_KRATER_1001 = "gfx/mondauto/bkrater09.png";
+	public static final String GFX_MONDAUTO_KRATER_1010 = "gfx/mondauto/bkrater10.png";
+	public static final String GFX_MONDAUTO_KRATER_1011 = "gfx/mondauto/bkrater11.png";
+	public static final String GFX_MONDAUTO_KRATER_1100 = "gfx/mondauto/bkrater12.png";
+	public static final String GFX_MONDAUTO_KRATER_1101 = "gfx/mondauto/bkrater13.png";
+	public static final String GFX_MONDAUTO_KRATER_1110 = "gfx/mondauto/bkrater14.png";
+	public static final String GFX_MONDAUTO_KRATER_1111 = "gfx/mondauto/bkrater15.png";
+	public static final String GFX_MONDAUTO_MARSEI = "gfx/mondauto/bmarsei.png";
+	public static final String GFX_MONDAUTO_MARSEIERSCHALE = "gfx/mondauto/bmarseierschale.png";
+	public static final String GFX_MONDAUTO_MARSIPOLINCHEN = "gfx/mondauto/bmarsipolinchen.png";
+	public static final String GFX_MONDAUTO_MONDAUTO = "gfx/mondauto/bmondauto.png";
+	public static final String GFX_MONDAUTO_QUECKSILBER = "gfx/mondauto/bquecksilber.png";
+	public static final String GFX_MONDAUTO_SCHLUPFLOCH = "gfx/mondauto/bschlupfloch.png";
+	public static final String GFX_MONDAUTO_STATION = "gfx/mondauto/bstation.png";
+	
+	// Texturen
+	
+	public static final String GFX_TEXTURE_RASEN = "gfx/texture/rasen.png";
+
 	// Sounds
 
 	public final static String AUDIO_ROCKET_LASER = "sound/laser-rocket.mp3";
@@ -731,7 +772,7 @@ public abstract class Daddel extends Application {
 	 */
 	public void sound(String path, double volume, double balance, double rate, double pan, int priority) {
 		// TODO: Filesystem unterstützen
-		String url = FileUtils.getInputUrl(path).toExternalForm(); 
+		String url = FileUtils.getInputUrl(path).toExternalForm();
 		AudioLib.audioclip(url).play(volume, balance, rate, pan, priority);
 	}
 
@@ -1048,22 +1089,9 @@ public abstract class Daddel extends Application {
 		TITLE, INTRO, MENU, SETUP, LEVEL_INTRO, LEVEL, GAMEOVER, WINGAME, CREDITS, HIGHSCORE
 	}
 
-	private Map<GamePhase, GamePhaseAction> gamePhases = new HashMap<GamePhase, GamePhaseAction>() {
-		private static final long serialVersionUID = 1L;
-		{
-			// defaults
-			put(GamePhase.TITLE, () -> toIntro());
-			put(GamePhase.INTRO, () -> toMenu());
-			put(GamePhase.MENU, () -> toLevelIntro());
-			put(GamePhase.SETUP, () -> toMenu());
-			put(GamePhase.LEVEL_INTRO, () -> toLevel());
-			put(GamePhase.LEVEL, () -> toMenu());
-			put(GamePhase.GAMEOVER, () -> toHighscore());
-			put(GamePhase.WINGAME, () -> toHighscore());
-			put(GamePhase.CREDITS, () -> exit());
-			put(GamePhase.HIGHSCORE, () -> toMenu());
-		}
-	};
+	private Map<GamePhase, GamePhaseAction> gamePhases=new HashMap<GamePhase,GamePhaseAction>(){private static final long serialVersionUID=1L;{
+	// defaults
+	put(GamePhase.TITLE,()->toIntro());put(GamePhase.INTRO,()->toMenu());put(GamePhase.MENU,()->toLevelIntro());put(GamePhase.SETUP,()->toMenu());put(GamePhase.LEVEL_INTRO,()->toLevel());put(GamePhase.LEVEL,()->toMenu());put(GamePhase.GAMEOVER,()->toHighscore());put(GamePhase.WINGAME,()->toHighscore());put(GamePhase.CREDITS,()->exit());put(GamePhase.HIGHSCORE,()->toMenu());}};
 
 	private Daddel gamePhase(GamePhase gamePhase, GamePhaseAction action) {
 		this.gamePhases.put(gamePhase, action);
