@@ -48,7 +48,7 @@ Für den Anfang erstellen wir ein Spielraster von der Größe 20 x 10. Der Hinte
 
 Hier das geplante Spielraster - die Rakete ist durch einen einfachen Kreis dargestellt:
 
-image::screenshots/Losdaddeln_Raster.jpg[Losdaddeln_Raster,400,225]
+image::screenshots/Losdaddeln_Raster.jpg[Losdaddeln_Raster,400,200]
 
 Das Programm dazu ist schnell erstellt.
 
