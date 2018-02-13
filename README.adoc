@@ -36,11 +36,11 @@ Im Hintergrund arbeitet *JavaFx*, also *Oracles moderne* und *native Desktop-Gra
 
 == Screenshots
 
-image:screenshots/invader1.png[Space Invader Titel,400,200] image:screenshots/invader1a.png[Space Invader Titel (Debug-Modus),400,200]
+image:screenshots/invader1.png[Space Invader Titel,400,225] image:screenshots/invader1a.png[Space Invader Titel (Debug-Modus),400,225]
 
-image:screenshots/invader2.png[Space Invader Level,400,200] image:screenshots/pacman.png[Pacman,400,200]
+image:screenshots/invader2.png[Space Invader Level,400,225] image:screenshots/pacman.png[Pacman,400,225]
 
-image:screenshots/daddel_eclipse.png[Daddeln mit Eclipse,400,200] image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,200] 
+image:screenshots/daddel_eclipse.png[Daddeln mit Eclipse,400,225] image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,225] 
 
 == Losdaddeln
 
@@ -90,7 +90,7 @@ public class Losdaddeln extends Daddel {
 Das wars schon. Nach Start des Programms erscheint die Rakete vor strahlend blauem Himmel.
 (Übrigens: Durch drücken von F3 kannst du durch die einzelnen Debug-Modi durchschalten.)
 
-image::screenshots/Losdaddeln.jpg[Losdaddeln,400,200]
+image::screenshots/Losdaddeln.jpg[Losdaddeln,400,225]
 
 == nochmal Losdaddeln
 
@@ -138,4 +138,4 @@ import de.dreierschach.daddel.gfx.sprite.Particle;
 
 Und so sieht es jetzt aus:
 
-image::screenshots/Losdaddeln2.jpg[Losdaddeln2,400,200]
+image::screenshots/Losdaddeln2.jpg[Losdaddeln2,400,225]
