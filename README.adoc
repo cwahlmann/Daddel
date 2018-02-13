@@ -4,7 +4,7 @@
 
 [.lead]
 
-image::screenshots/Climber.png[Climber,300,300,role="right"]
+image::screenshots/Climber.png[Climber,150,150,role="right"]
 
 Mit den eigenen Händen aus dem Nichts etwas Neues, Schönes zu schaffen, das macht für viele (und auch für mich) den Reiz des Programmierens aus. Diese Freude Kindern zu vermitteln, ist nicht ganz so leicht. Es gibt reihenweise Ansätze und Modelle: Turtle-Grafics, Maus-im-Labyrinth-Umgebungen, Mincraft-API, Scratch, Lego-Robotics etc.
 
