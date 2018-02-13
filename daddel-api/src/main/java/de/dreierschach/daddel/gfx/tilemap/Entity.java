@@ -159,6 +159,8 @@ public class Entity extends ImageSprite {
 			}
 		}, animation);
 		this.tileMap = tileMap;
+//		tileMap.entity(this);
+//		parent(tileMap);
 	}
 
 	/**
