@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.dreierschach.daddel.Daddel;
+import de.dreierschach.daddel.util.FileUtils;
 import javafx.scene.image.Image;
 
 /**
@@ -29,7 +30,7 @@ public class ImageLib {
 	}
 
 	/**
-	 * /** Lädt ein BIld vom angegebenen Dateipfad und gibt es zurück. Wenn das Bild
+	 * /** Lädt ein Bild vom angegebenen Dateipfad und gibt es zurück. Wenn das Bild
 	 * schon einmal geladen wurde, wird das im Speicher abgelegte Bild zurückgegeben
 	 * 
 	 * @param path
@@ -42,7 +43,7 @@ public class ImageLib {
 		ImageLib imageLib = instance();
 		String id = path + "//" + maxSize;
 		if (!imageLib.images.containsKey(id)) {
-			imageLib.images.put(id, new Image(Daddel.class.getResourceAsStream(path), maxSize, maxSize, true, true));
+			imageLib.images.put(id, new Image(FileUtils.getInputStream(path), maxSize, maxSize, true, true));
 		}
 		return imageLib.images.get(id);
 	}

@@ -30,6 +30,7 @@ import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
 import de.dreierschach.daddel.setup.Setup;
+import de.dreierschach.daddel.util.FileUtils;
 import javafx.application.Application;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
@@ -71,7 +72,6 @@ public abstract class Daddel extends Application {
 	public final static String GFX_MOND = "gfx/invader/moon.png";
 	public final static String GFX_SATURN = "gfx/invader/saturn.png";
 
-	
 	public final static String[] GFX_EXPLOSION = { "gfx/invader/explosion-1.png", "gfx/invader/explosion-2.png",
 			"gfx/invader/explosion-3.png", "gfx/invader/explosion-4.png" };
 
@@ -730,7 +730,8 @@ public abstract class Daddel extends Application {
 	 *            Priorität, mit der der Sample abgespielt wird
 	 */
 	public void sound(String path, double volume, double balance, double rate, double pan, int priority) {
-		String url = Daddel.class.getResource(path).toExternalForm();
+		// TODO: Filesystem unterstützen
+		String url = FileUtils.getInputUrl(path).toExternalForm(); 
 		AudioLib.audioclip(url).play(volume, balance, rate, pan, priority);
 	}
 
@@ -910,6 +911,8 @@ public abstract class Daddel extends Application {
 	 * 
 	 * @param pos
 	 *            die Position
+	 * @param padding
+	 *            gibt an, wieviel Rand einkalkuliert werden soll
 	 * @return true: die Position liegt im Spielraster
 	 */
 	public boolean onGrid(Pos pos, double padding) {
@@ -949,10 +952,10 @@ public abstract class Daddel extends Application {
 	 *            (der Ellipse) bestimmt
 	 * @return die errechnete Position
 	 */
-	public Pos kreis(long delta, long wavelength, Pos min, Pos max) {
+	public Pos circlePosition(long delta, long wavelength, Pos min, Pos max) {
 		return new Pos( //
-				cosinuswelle(delta, wavelength, min.x(), max.x()), //
-				sinuswelle(delta, wavelength, min.y(), max.y()));
+				cosinusWave(delta, wavelength, min.x(), max.x()), //
+				sinusWave(delta, wavelength, min.y(), max.y()));
 	}
 
 	/**
@@ -969,7 +972,7 @@ public abstract class Daddel extends Application {
 	 *            der obere Wert der Welle
 	 * @return der errechnete Wert
 	 */
-	public double sinuswelle(long delta, long wavelength, double min, double max) {
+	public double sinusWave(long delta, long wavelength, double min, double max) {
 		double w = ((double) delta) / (double) wavelength * 2 * Math.PI;
 		double r = (max - min) / 2;
 		return (double) (Math.sin(w) * r + r + min);
@@ -989,7 +992,7 @@ public abstract class Daddel extends Application {
 	 *            der obere Wert der Welle
 	 * @return der errechnete Wert
 	 */
-	public double cosinuswelle(long delta, long wavelength, double min, double max) {
+	public double cosinusWave(long delta, long wavelength, double min, double max) {
 		double w = ((double) delta) / (double) wavelength * 2 * Math.PI;
 		double r = (max - min) / 2;
 		return (double) (Math.cos(w) * r + r + min);

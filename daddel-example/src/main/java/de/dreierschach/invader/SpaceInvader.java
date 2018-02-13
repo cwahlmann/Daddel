@@ -322,10 +322,12 @@ public class SpaceInvader extends Daddel {
 				.sizeRange(0.01f, 0.2f, 4).direction(90).speedRange(1f, 5f).outsideGrid(PARTICLE_REAPPEAR).create();
 	}
 
+	// ------------- Erde und Mond erzeugen --
+
 	public void erzeugeErdeUndMond() {
 		Sprite erde = sprite(TYP_STERN, 7, GFX_ERDE).pos(0, -2);
 		particle(TYP_STERN, 0, 2, GFX_MOND).parent(erde).gameLoop((me, gesamtZeit, deltaZeit) -> {
-			Pos pos = kreis(gesamtZeit, 20000, new Pos(-10, -6), new Pos(10, 6));
+			Pos pos = circlePosition(gesamtZeit, 20000, new Pos(-10, -6), new Pos(10, 6));
 			me.pos(pos);
 		});
 	}

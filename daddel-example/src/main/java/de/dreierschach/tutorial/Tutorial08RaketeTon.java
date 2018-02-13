@@ -61,9 +61,9 @@ public class Tutorial08RaketeTon extends Daddel {
 	public void gameLoop(long gesamtZeit, long deltaZeit) {
 		// Wechsle die Hintergrundfarbe abhängig von der verstrichenen Zeit
 		// cos(Zeit, Länge der Wellen in ms, Wert-von, Wert-bis) 
-		int r = (int)cosinuswelle(gesamtZeit, 3000, 0f, 16f);
-		int g = (int)sinuswelle(gesamtZeit, 20000, 0f, 16f);
-		int b = (int)sinuswelle(gesamtZeit, 2000, 0f, 24f);
+		int r = (int)cosinusWave(gesamtZeit, 3000, 0f, 16f);
+		int g = (int)sinusWave(gesamtZeit, 20000, 0f, 16f);
+		int b = (int)sinusWave(gesamtZeit, 2000, 0f, 24f);
 		background(Color.rgb(r, g, b));
 	}
 

@@ -127,10 +127,6 @@ public class Screen {
 	 *            Fensterhöhe
 	 * @param font
 	 *            Standart-Zeichensatz
-	 * @param foreground
-	 *            Vordergrundfarbe, wird derzeit nicht verwendet
-	 * @param background
-	 *            Hintergrundfarbe
 	 * @throws IOException
 	 *             wird geworfen, wenn die Resource "screen.fxml" nicht geladen
 	 *             werden kann
