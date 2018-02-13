@@ -55,7 +55,7 @@ Das Programm dazu ist schnell erstellt.
 package de.dreierschach.tutorial;
 
 import de.dreierschach.daddel.Daddel;
-import de.dreierschach.daddel.gfx.sprite.Particle;
+import de.dreierschach.daddel.gfx.Gfx;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
@@ -66,7 +66,7 @@ public class Losdaddeln extends Daddel {
 		grid(-10, 10, -5, 5); // <1>
 		background(Color.rgb(0, 64, 255)); // <2>
 		toLevel(() -> { // <3>
-			sprite(1, 4, GFX_ROCKET); // <4>
+			sprite(1, 4, Gfx.ROCKET); // <4>
 			key(KeyCode.ESCAPE, keyCode -> exit()); // <5>
 		});
 	}
@@ -100,12 +100,13 @@ Dazu ergänzen wir das Programm um zwei Befehle. Einer für Pacman, einer für d
 .Losdaddeln2.java
 [source,java]
 ----
+import de.dreierschach.daddel.gfx.sprite.Particle;
 ...
 		toLevel(() -> {
-			sprite(1, 4, GFX_ROCKET);
+			sprite(1, 4, Gfx.ROCKET);
 
 			Particle pacman = // <1>
-				particle(1, 8000, 1.5, GFX_PAC_PACMAN_L0, GFX_PAC_PACMAN_L1, GFX_PAC_PACMAN_L2, GFX_PAC_PACMAN_L3) // <2>
+				particle(1, 8000, 1.5, Gfx.PAC_PACMAN_L0, Gfx.PAC_PACMAN_L1, Gfx.PAC_PACMAN_L2, Gfx.PAC_PACMAN_L3) // <2>
 				.pos(-11, 3) // <3>
 				.rotation(180) // <4>
 				.speed(4) // <5>
