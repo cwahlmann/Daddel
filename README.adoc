@@ -5,7 +5,7 @@
 [.lead]
 Mit den eigenen Händen aus dem Nichts etwas Neues, Schönes zu schaffen, das macht für viele (und auch für mich) den Reiz des Programmierens aus. Diese Freude Kindern zu vermitteln, ist nicht ganz so leicht. Es gibt reihenweise Ansätze und Modelle: Turtle-Grafics, Maus-im-Labyrinth-Umgebungen, Mincraft-API, Scratch, Lego-Robotics etc.
 
-  image:screenshots/Climber.png[Climber,150,150] 
+image:screenshots/Climber.png[Climber,150,150] 
 
 Auf der Suche nach der besten Einsteigersprache landen viele bei Python, da diese auch rein funktioniale Programmierung möglich macht, und von der Syntax recht schlank ist.
 
