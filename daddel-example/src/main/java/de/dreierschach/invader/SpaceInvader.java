@@ -7,11 +7,12 @@ import java.util.List;
 import java.util.Random;
 
 import de.dreierschach.daddel.Daddel;
+import de.dreierschach.daddel.audio.Audio;
+import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.gfx.text.TextSprite;
 import de.dreierschach.daddel.listener.CollisionListener;
-import de.dreierschach.daddel.model.GameLoop;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
 import javafx.scene.input.KeyCode;
@@ -91,13 +92,13 @@ public class SpaceInvader extends Daddel {
 		textParticle("I N V A D E R", 4000, "sans-serif", 1.5f, Color.RED).pos(0, 2f).weight(FontWeight.BOLD)
 				.size(0.01f, 1.5f).endOfLifeStrategy(PARTICLE_STOP);
 
-		particle(TYP_FEIND, 10000, 3, GFX_UFO_1).rotation(0, 360).pos(-7f, 2f).endOfLife(PARTICLE_RESTART).alpha(0.5f,
+		particle(TYP_FEIND, 10000, 3, Gfx.UFO_1).rotation(0, 360).pos(-7f, 2f).endOfLife(PARTICLE_RESTART).alpha(0.5f,
 				1f);
 
-		particle(TYP_FEIND, 15000, 3, GFX_UFO_2).rotation(360, 0).pos(7f, 2f).endOfLife(PARTICLE_RESTART).alpha(1f,
+		particle(TYP_FEIND, 15000, 3, Gfx.UFO_2).rotation(360, 0).pos(7f, 2f).endOfLife(PARTICLE_RESTART).alpha(1f,
 				0.5f);
 
-		particle(TYP_SPIELER, 0, 3, GFX_ROCKET).pos(0, -0.2f);
+		particle(TYP_SPIELER, 0, 3, Gfx.ROCKET).pos(0, -0.2f);
 
 		key(KeyCode.ENTER, (keyCode) -> toIntro());
 		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
@@ -318,15 +319,15 @@ public class SpaceInvader extends Daddel {
 	// ------------- hoch-scrollende Sterne erzeugen --
 
 	public void erzeugeHochscrollendeSterne() {
-		particleSwarmBuilder(200, TYP_STERN, GFX_STERN).initialPosRange(new Pos(-16, -10), new Pos(16, 10))
+		particleSwarmBuilder(200, TYP_STERN, Gfx.STERN).initialPosRange(new Pos(-16, -10), new Pos(16, 10))
 				.sizeRange(0.01f, 0.2f, 4).direction(90).speedRange(1f, 5f).outsideGrid(PARTICLE_REAPPEAR).create();
 	}
 
 	// ------------- Erde und Mond erzeugen --
 
 	public void erzeugeErdeUndMond() {
-		Sprite erde = sprite(TYP_STERN, 7, GFX_ERDE).pos(0, -2);
-		particle(TYP_STERN, 0, 2, GFX_MOND).parent(erde).gameLoop((me, gesamtZeit, deltaZeit) -> {
+		Sprite erde = sprite(TYP_STERN, 7, Gfx.ERDE).pos(0, -2);
+		particle(TYP_STERN, 0, 2, Gfx.MOND).parent(erde).gameLoop((me, gesamtZeit, deltaZeit) -> {
 			Pos pos = circlePosition(gesamtZeit, 20000, new Pos(-10, -6), new Pos(10, 6));
 			me.pos(pos);
 		});
@@ -335,7 +336,7 @@ public class SpaceInvader extends Daddel {
 	// ------------- frontal-scrollende Sterne erzeugen --
 
 	public void erzeugeFrontalScrollendeSterne() {
-		particleSwarmBuilder(400, TYP_STERN, GFX_STERN).initialPosRange(new Pos(0, 0), new Pos(0, 0))
+		particleSwarmBuilder(400, TYP_STERN, Gfx.STERN).initialPosRange(new Pos(0, 0), new Pos(0, 0))
 				.sizeRange(0.02f, 0.4f, 4).directionRange(0, 359).speedStartRange(0.1f, 5f).speedEndRange(5f, 10f)
 				.alphaStart(0f).alphaEnd(1f).lifeSpan(5000).endOfLife(PARTICLE_IGNORE).outsideGrid(PARTICLE_RESTART)
 				.create();
@@ -345,7 +346,7 @@ public class SpaceInvader extends Daddel {
 
 	public void erzeugeRakete(double x, double y) {
 		raketeSchutzschirm = raketeSchutzschirmDauer;
-		raketeSprite = sprite(TYP_SPIELER, 4f, GFX_ROCKET, GFX_ROCKET_SCHIRM).pos(x, y).gameLoop(raketeAnimieren).r(1f);
+		raketeSprite = sprite(TYP_SPIELER, 4f, Gfx.ROCKET, Gfx.ROCKET_SCHIRM).pos(x, y).gameLoop(raketeAnimieren).r(1f);
 		raketeRichtung = 0;
 	}
 
@@ -376,12 +377,12 @@ public class SpaceInvader extends Daddel {
 				double rotation;
 				switch (random.nextInt(2)) {
 				case 0:
-					enimy = GFX_UFO_1;
+					enimy = Gfx.UFO_1;
 					rotation = 6 * Math.random() - 3;
 					break;
 				default:
 				case 1:
-					enimy = GFX_UFO_2;
+					enimy = Gfx.UFO_2;
 					rotation = 3 * Math.random() - 1.5;
 					break;
 				}
@@ -428,17 +429,17 @@ public class SpaceInvader extends Daddel {
 	}
 
 	public void erzeugeRaketeLaser(Pos pos) {
-		particle(TYP_LASER, 0, 1.5f, GFX_LASER).pos(pos).collision(raketeTrefferBehandeln).direction(-90)
+		particle(TYP_LASER, 0, 1.5f, Gfx.LASER).pos(pos).collision(raketeTrefferBehandeln).direction(-90)
 				.outsideGrid(PARTICLE_KILL).speed(raketeLaserGeschwindigkeit, raketeLaserGeschwindigkeit);
-		sound(AUDIO_ROCKET_LASER);
+		sound(Audio.ROCKET_LASER);
 	}
 
 	// ------------- gegnerischen Laser abfeuern --
 
 	public void gegnerischenLaserAbfeuern(Pos pos) {
-		particle(TYP_GEGNERISCHER_LASER, 0, 1.5f, GFX_LASER_GEGNER).pos(pos).collision(gegnerischeTrefferBehandeln)
+		particle(TYP_GEGNERISCHER_LASER, 0, 1.5f, Gfx.LASER_GEGNER).pos(pos).collision(gegnerischeTrefferBehandeln)
 				.direction(90).outsideGrid(PARTICLE_KILL).speed(gegnerLaserGeschwindigkeit, gegnerLaserGeschwindigkeit);
-		sound(AUDIO_UFO_LASER, 0.2);
+		sound(Audio.UFO_LASER, 0.2);
 	}
 
 	// ------------- Treffer durch Rakete behandeln --
@@ -452,9 +453,9 @@ public class SpaceInvader extends Daddel {
 				punkte += 150;
 				punkteAnzeigen();
 
-				particle(TYP_EXPLOSION, 400, 4f, GFX_EXPLOSION).speedAnimation(10f)
+				particle(TYP_EXPLOSION, 400, 4f, Gfx.EXPLOSION).speedAnimation(10f)
 						.pos(getroffenerSprite.effektivePos());
-				sound(AUDIO_UFO_EXPLOSION, 0.8);
+				sound(Audio.UFO_EXPLOSION, 0.8);
 			}
 			laserSprite.kill();
 		}
@@ -470,9 +471,9 @@ public class SpaceInvader extends Daddel {
 				leben--;
 				lebenAnzeigen();
 
-				particle(TYP_EXPLOSION, 400, 6f, GFX_EXPLOSION).speedAnimation(10f)
+				particle(TYP_EXPLOSION, 400, 6f, Gfx.EXPLOSION).speedAnimation(10f)
 						.pos(getroffenerSprite.effektivePos());
-				sound(AUDIO_ROCKET_EXPLOSION, 1.0);
+				sound(Audio.ROCKET_EXPLOSION, 1.0);
 				neueRaketeVerzoegerung = neueRaketeVerzoegerungDauer;
 			}
 			laserSprite.kill();

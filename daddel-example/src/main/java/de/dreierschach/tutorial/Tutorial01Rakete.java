@@ -1,6 +1,7 @@
 package de.dreierschach.tutorial;
 
 import de.dreierschach.daddel.Daddel;
+import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.model.Pos;
 import javafx.scene.input.KeyCode;
@@ -44,7 +45,7 @@ public class Tutorial01Rakete extends Daddel {
 
 	private void erzeugeRakete() {
 		// erzeuge die Rakete
-		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, GFX_ROCKET, GFX_ROCKET_SCHIRM) //
+		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, Gfx.ROCKET, Gfx.ROCKET_SCHIRM) //
 				.pos(RAKETE_STARTPOS);
 	}
 

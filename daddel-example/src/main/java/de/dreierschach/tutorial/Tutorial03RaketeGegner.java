@@ -1,6 +1,7 @@
 package de.dreierschach.tutorial;
 
 import de.dreierschach.daddel.Daddel;
+import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.model.Pos;
@@ -61,7 +62,7 @@ public class Tutorial03RaketeGegner extends Daddel {
 
 	private void erzeugeRakete() {
 		// erzeuge die Rakete
-		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, GFX_ROCKET, GFX_ROCKET_SCHIRM) //
+		rakete = sprite(TYP_SPIELER, RAKETE_GROESSE, Gfx.ROCKET, Gfx.ROCKET_SCHIRM) //
 				.pos(RAKETE_STARTPOS) //
 				// In der Spielschleife der Rakete wird diese bewegt
 				.gameLoop((me, totaltime, deltatime) -> {
@@ -77,7 +78,7 @@ public class Tutorial03RaketeGegner extends Daddel {
 		for (int i = 0; i < 3 + level(); i++) {
 			// zufällige Position
 			Pos pos = new Pos((double) Math.random() * 20f - 10f, (double) Math.random() * 5f - 5f);
-			sprite(TYP_GEGNER, GEGNER_GROESSE, GFX_UFO_1) //
+			sprite(TYP_GEGNER, GEGNER_GROESSE, Gfx.UFO_1) //
 					.pos(pos) //
 					.gameLoop((ufo, totaltime, deltatime) -> bewegeUfo(ufo, deltatime)) //
 					// berechne einen kleineren Radius für die Kollisionskontrolle
