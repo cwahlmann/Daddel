@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 //Das Spiel erweitert die Spiele-API Daddel
-public class Tutorial08RaketeTon extends Daddel {
+public class Tutorial09RaketeTitel extends Daddel {
 
 	// Sprites können einen Typ haben, z.B. einen für Spieler und einen für Gegner
 	private final static int TYP_SPIELER = 1;
@@ -52,9 +52,57 @@ public class Tutorial08RaketeTon extends Daddel {
 		// Bestimme die Hintergrundfarbe
 		background(Color.rgb(0, 0, 32));
 
-		// Für jede Phase des Spiels kann eine Methode festgelegt werden. Hier reicht
+		// Für jede Phase des Spiels kann eine Methode festgelegt werden.
+		// die Phase Titel wird beim Start des Programms gestartet
+		toTitle(() -> startTitel());
 		// die Phase Level, also das Spielen eines Levels.
 		toLevel(() -> startLevel());
+	}
+
+	// Hier wird der Titelbildschirm gestartet
+
+	private void startTitel() {
+		erzeugeSterneTitel();
+
+		// erzeuge den Titeltext
+		text("R A K E T E", "sans-serif", 1, Color.WHITE).pos(-1, 0);
+
+		// erzeuge Planeten und (psst...!) ein Ufo...
+		sprite(0, 1.5, Gfx.ERDE).pos(-8, -3);
+		sprite(0, 0.3, Gfx.MOND).pos(-6, -4);
+		sprite(0, 0.7, Gfx.SONNE).pos(5, -4);
+		sprite(0, 2.5, Gfx.UFO_1).pos(8.5, 1.5);
+		sprite(0, 14, Gfx.SATURN).pos(6, 4);
+
+		// und eine Rakete, die im Kreis fliegt
+		particle(1, 2000, 3, Gfx.ROCKET).speed(12).direction(-90, 270).rotation(0, 360).pos(-7, 0)
+				.endOfLife(PARTICLE_IGNORE).outsideGrid(PARTICLE_IGNORE);
+
+		// ESCAPE beendet das Spiel
+		key(KeyCode.ESCAPE, (keycode) -> exit());
+
+		// ENTER startet den Level
+		key(KeyCode.ENTER, (keycode) -> toLevel());
+	}
+
+	public void erzeugeSterneTitel() {
+		// Ein PartikleSwarmBuilder erzeugt einen Schwarm von Partikeln. Hier sind es
+		// 200.
+		particleSwarmBuilder(200, TYP_STERN, Gfx.STERN) //
+				// durch eine Range kann ein Bereich angegeben werden, in dem die Partikel
+				// zufällig verteilt werden. Zunächst die Position:
+				.initialPosRange(new Pos(-10, -5), new Pos(10, 5)) //
+				// Dann die Größe
+				.sizeRange(0.03, 0.15, 4) //
+				// die Richtung ist nach rechts unten
+				.direction(30) //
+				// die Geschwindigkeit variiert
+				.speedRange(0.1f, 0.5f) //
+				// wandert ein Stern oberen Bildschirmrand hinaus, erscheint er gegenüber
+				// (unten) wieder.
+				.outsideGrid(PARTICLE_REAPPEAR)//
+				// Jetzt wird der Partikelschwarm erzeugt und angezeigt
+				.create();
 	}
 
 	// Hier wird ein Level gestartet

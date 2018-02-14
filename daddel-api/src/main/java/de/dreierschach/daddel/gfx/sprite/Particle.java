@@ -19,16 +19,16 @@ public class Particle extends ImageSprite {
 
 	private Pos initialPos = new Pos(0, 0);
 	private long lifespan = 1000L;
-	private double rotationStart = 0f;
-	private double rotationEnd = 0f;
-	private double directionStart = 0f;
-	private double directionEnd = 0f;
-	private double alphaStart = 1f;
-	private double alphaEnd = 1f;
-	private double speed = 0f;
-	private double speedStart = 0f;
-	private double speedEnd = 0f;
-	private double speedAnimation = 10f; // bilder/s
+	private double rotationStart = 0;
+	private double rotationEnd = 0;
+	private double directionStart = 0;
+	private double directionEnd = 0;
+	private double alphaStart = 1;
+	private double alphaEnd = 1;
+	private double speed = 0;
+	private double speedStart = 0;
+	private double speedEnd = 0;
+	private double speedAnimation = 10; // bilder/s
 	private ParticleStrategy outsideGridStrategy = ParticleStrategy.kill;
 	private ParticleStrategy endOfLifeStrategy = ParticleStrategy.kill;
 	private ParticleDiesListener particleDiesListener = particle -> {
@@ -79,6 +79,7 @@ public class Particle extends ImageSprite {
 	public Particle rotation(double rotationStart, double rotationEnde) {
 		this.rotationStart = rotationStart;
 		this.rotationEnd = rotationEnde;
+		super.rotation(rotationStart);
 		return this;
 	}
 
@@ -95,6 +96,7 @@ public class Particle extends ImageSprite {
 	public Particle direction(double directionStart, double directionEnd) {
 		this.directionStart = directionStart;
 		this.directionEnd = directionEnd;
+		super.direction(directionStart);
 		return this;
 	}
 
@@ -235,7 +237,8 @@ public class Particle extends ImageSprite {
 			case reappear:
 			case restart:
 				setTicks(getTicks() - lifespan);
-				pos(initialPos);
+				super.pos(initialPos);
+				break;
 			case bounce:
 				// TODO
 				break;
@@ -248,7 +251,7 @@ public class Particle extends ImageSprite {
 		super.direction((directionEnd - directionStart) * factor + directionStart);
 		super.alpha((alphaEnd - alphaStart) * (double) factor + alphaStart);
 		actualImage(((int) (gesamtZeit * speedAnimation / 1000)) % imageCount());
-		move(((double)deltaZeit) / 1000f * speed );
+		move(((double) deltaZeit) / 1000d * speed);
 		Pos min = transformation().getRasterLeftUpper();
 		Pos max = transformation().getRasterRightBottom();
 		if (this.effektivePos().x() < min.x() || this.effektivePos().x() > max.x() || this.effektivePos().y() < min.y()
@@ -287,13 +290,14 @@ public class Particle extends ImageSprite {
 
 	// ---------------- override methods to return correct type --
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#pos(double, double)
 	 */
 	@Override
 	public Particle pos(double x, double y) {
-		super.pos(x, y);
-		return this;
+		return this.pos(new Pos(x, y));
 	}
 
 	/*
