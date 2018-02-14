@@ -40,7 +40,7 @@ image:screenshots/invader1.png[Space Invader Titel,400,225] image:screenshots/in
 
 image:screenshots/invader2.png[Space Invader Level,400,225] image:screenshots/pacman.png[Pacman,400,225]
 
-image:screenshots/daddel_eclipse.png[Daddeln mit Eclipse,400,225] image:screenshots/Losdaddeln2.jpg[Losdaddeln,400,225] 
+image:screenshots/daddel_eclipse.png[Daddeln mit Eclipse,400,225]
 
 == Losdaddeln
 

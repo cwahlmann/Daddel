@@ -530,6 +530,12 @@ public abstract class Daddel extends Application {
 	 *            Methode animation() gesteuert werden.
 	 * @return eine neue Instanz der Klasse Particle.
 	 */
+	public Particle particle(Pos pos, int type, long lebensdauerMS, double groesse, String... bilder) {
+		Particle particle = new Particle(transformation, type, groesse, lebensdauerMS, bilder).pos(pos);
+		screen.addSprite(particle);
+		return particle;
+	}
+
 	public Particle particle(int type, long lebensdauerMS, double groesse, String... bilder) {
 		Particle particle = new Particle(transformation, type, groesse, lebensdauerMS, bilder);
 		screen.addSprite(particle);
@@ -1072,7 +1078,7 @@ public abstract class Daddel extends Application {
 		stage.setFullScreen(fullscreen);
 
 		this.transformation = new Transformation(this.witdh, this.height);
-		screen = new Screen(witdh, height, new Font(12));
+		screen = new Screen(this.witdh, this.height, new Font(12));
 		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(1f).color(Color.WHITE)
 				.pos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
 		screen.setTransformation(transformation);
