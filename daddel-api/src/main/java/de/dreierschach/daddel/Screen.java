@@ -317,6 +317,21 @@ public class Screen {
 	}
 
 	/**
+	 * @return die aktuelle Eingabe
+	 */
+	public String getInputString() {
+		return inputString;
+	}
+
+	/**
+	 * @param inputString
+	 *            setzt die aktuellen Eingabe auf den angegebenen Text
+	 */
+	public void setInputString(String inputString) {
+		this.inputString = inputString;
+	}
+
+	/**
 	 * Fügt einen Sprite hinzu, der auf dem Bildschirm angezeigt werden soll
 	 * 
 	 * @param sprite
@@ -471,21 +486,21 @@ public class Screen {
 		g.setFont(Font.font(24));
 
 		g.setTextAlign(TextAlignment.LEFT);
-		
+
 		g.setTextBaseline(VPos.TOP);
 		g.fillText(String.format("(%.3f / %.3f)", transformation.getRasterLeftUpper().x(),
 				transformation.getRasterLeftUpper().y()), scr0.x(), scr0.y());
-		
+
 		g.setTextBaseline(VPos.BOTTOM);
 		g.fillText(String.format("(%.3f / %.3f)", transformation.getRasterLeftUpper().x(),
 				transformation.getRasterRightBottom().y()), scr0.x(), scr1.y());
 
 		g.setTextAlign(TextAlignment.RIGHT);
-		
+
 		g.setTextBaseline(VPos.TOP);
 		g.fillText(String.format("(%.3f / %.3f)", transformation.getRasterRightBottom().x(),
 				transformation.getRasterLeftUpper().y()), scr1.x(), scr0.y());
-		
+
 		g.setTextBaseline(VPos.BOTTOM);
 		g.fillText(String.format("(%.3f / %.3f)", transformation.getRasterRightBottom().x(),
 				transformation.getRasterRightBottom().y()), scr1.x(), scr1.y());

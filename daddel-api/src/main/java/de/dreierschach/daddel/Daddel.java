@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import de.dreierschach.daddel.Screen.Debug;
 import de.dreierschach.daddel.audio.AudioLib;
 import de.dreierschach.daddel.gfx.menu.MenuBuilder;
+import de.dreierschach.daddel.gfx.roll.Roll;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Particle;
 import de.dreierschach.daddel.gfx.sprite.ParticleSwarmBuilder;
@@ -24,6 +25,7 @@ import de.dreierschach.daddel.gfx.tilemap.Entity;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.listener.InputListener;
 import de.dreierschach.daddel.listener.KeyListener;
+import de.dreierschach.daddel.model.Highscore;
 import de.dreierschach.daddel.model.ParticleStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
@@ -64,6 +66,7 @@ public abstract class Daddel extends Application {
 	private Stage stage;
 	private Transformation transformation;
 	private int level = 1;
+	private Roll roll = null;
 
 	// Properties:
 
@@ -191,7 +194,7 @@ public abstract class Daddel extends Application {
 	/**
 	 * Startet die Spielphase "GameOver".
 	 */
-	public void toGameover() {
+	public void toGameOver() {
 		clear();
 		screen.setGameLoop((gesamtZeit, deltaZeit) -> basicScreenLoop(gesamtZeit, deltaZeit));
 		runGamePhase(GamePhase.GAMEOVER);
@@ -461,7 +464,21 @@ public abstract class Daddel extends Application {
 		getScreen().setEnableInput(false);
 		getScreen().setInputListener(input -> {
 		});
-		getScreen().clearInput();
+	}
+
+	/**
+	 * @return der aktuelle Eingabe-String
+	 */
+	public String input() {
+		return screen.getInputString();
+	}
+
+	/**
+	 * @param inputString
+	 *            setzt den aktuellen Eingabe-String
+	 */
+	public void input(String inputString) {
+		screen.setInputString(inputString);
 	}
 
 	// ------------------------ sprite methods --
@@ -518,7 +535,9 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Erzeugt einen neuen Partikel und hängt ihn in die View-Hierarchie ein.
-	 * 
+	 *
+	 * @param pos
+	 *            Start-Position des Partikel
 	 * @param type
 	 *            Benutzerdefinierter Typ, ein Integer
 	 * @param lebensdauerMS
@@ -638,7 +657,6 @@ public abstract class Daddel extends Application {
 	 *            Priorität, mit der der Sample abgespielt wird
 	 */
 	public void sound(String path, double volume, double balance, double rate, double pan, int priority) {
-		// TODO: Filesystem unterstützen
 		String url = FileUtils.getInputUrl(path).toExternalForm();
 		AudioLib.audioclip(url).play(volume, balance, rate, pan, priority);
 	}
@@ -737,7 +755,7 @@ public abstract class Daddel extends Application {
 		Entity entity = new Entity(transformation, screen.getTileMap(), type, maxSize, imagefiles);
 		entity.parent(screen.getTileMap());
 		screen.getTileMap().entity(entity);
-//		screen.addSprite(entity);
+		// screen.addSprite(entity);
 		return entity;
 	}
 
@@ -949,6 +967,13 @@ public abstract class Daddel extends Application {
 		// nichts zu tun
 	}
 
+	// Abspann
+
+	public Roll roll() {
+		this.roll = new Roll(getScreen(), transformation);
+		return this.roll;
+	}
+
 	// ------------------------ private methods --
 
 	// Lifecycle
@@ -957,9 +982,22 @@ public abstract class Daddel extends Application {
 		TITLE, INTRO, MENU, SETUP, LEVEL_INTRO, LEVEL, GAMEOVER, WINGAME, CREDITS, HIGHSCORE
 	}
 
-	private Map<GamePhase, GamePhaseAction> gamePhases=new HashMap<GamePhase,GamePhaseAction>(){private static final long serialVersionUID=1L;{
-	// defaults
-	put(GamePhase.TITLE,()->toIntro());put(GamePhase.INTRO,()->toMenu());put(GamePhase.MENU,()->toLevelIntro());put(GamePhase.SETUP,()->toMenu());put(GamePhase.LEVEL_INTRO,()->toLevel());put(GamePhase.LEVEL,()->toMenu());put(GamePhase.GAMEOVER,()->toHighscore());put(GamePhase.WINGAME,()->toHighscore());put(GamePhase.CREDITS,()->exit());put(GamePhase.HIGHSCORE,()->toMenu());}};
+	private Map<GamePhase, GamePhaseAction> gamePhases = new HashMap<GamePhase, GamePhaseAction>() {
+		private static final long serialVersionUID = 1L;
+		{
+			// defaults
+			put(GamePhase.TITLE, () -> toIntro());
+			put(GamePhase.INTRO, () -> toMenu());
+			put(GamePhase.MENU, () -> toLevelIntro());
+			put(GamePhase.SETUP, () -> toMenu());
+			put(GamePhase.LEVEL_INTRO, () -> toLevel());
+			put(GamePhase.LEVEL, () -> toMenu());
+			put(GamePhase.GAMEOVER, () -> toHighscore());
+			put(GamePhase.WINGAME, () -> toHighscore());
+			put(GamePhase.CREDITS, () -> exit());
+			put(GamePhase.HIGHSCORE, () -> toMenu());
+		}
+	};
 
 	private Daddel gamePhase(GamePhase gamePhase, GamePhaseAction action) {
 		this.gamePhases.put(gamePhase, action);
@@ -977,6 +1015,7 @@ public abstract class Daddel extends Application {
 		runSprites(deltaZeit);
 		runTexts(deltaZeit);
 		runTileMap(deltaZeit);
+		runRoll(deltaZeit);
 	}
 
 	private void clear() {
@@ -1055,6 +1094,12 @@ public abstract class Daddel extends Application {
 					}
 				}
 			}
+		}
+	}
+
+	public void runRoll(long delta) {
+		if (this.roll != null) {
+			this.roll.gameloop(delta);
 		}
 	}
 

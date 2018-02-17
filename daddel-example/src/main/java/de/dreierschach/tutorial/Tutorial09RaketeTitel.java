@@ -75,8 +75,20 @@ public class Tutorial09RaketeTitel extends Daddel {
 		sprite(0, 14, Gfx.SATURN).pos(6, 4);
 
 		// und eine Rakete, die im Kreis fliegt
-		particle(1, 2000, 3, Gfx.ROCKET).speed(12).direction(-90, 270).rotation(0, 360).pos(-7, 0)
-				.endOfLife(PARTICLE_IGNORE).outsideGrid(PARTICLE_IGNORE);
+		sprite(1, 3, Gfx.ROCKET) //
+				// gameloop() ist die Spielschleife des Sprite und wird ca. 50 mal / Sekunde
+				// aufgerufen
+				// ticks gibt die bisherige Lebensspanne in ms an, deltatime die ms seit dem
+				// letzten Aufruf
+				.gameLoop((rakete, ticks, deltatime) -> {
+					// Kreisbahn berechnen: 2 Sekunden = 2000 ms für den ganzen Kreis
+					rakete.pos(circlePosition(ticks, 2000, new Pos(-7, -4), new Pos(1, 4)));
+					// Rotation mithilfe der Funktion strecke() berechnen:
+					// 1 Umdrehung / 2 Sekunden = 0.5 Umdrehungen/s
+					// Damit die Rakete vorwärts fliegt, muss sie zusätzlich noch um 180° gedreht
+					// werden.
+					rakete.rotation(180 + 360 * strecke(ticks, 0.5));
+				});
 
 		// ESCAPE beendet das Spiel
 		key(KeyCode.ESCAPE, (keycode) -> exit());

@@ -1,0 +1,63 @@
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+}
+
+apply plugin: 'java-library'
+apply plugin: "eclipse"
+apply plugin: 'maven-publish'
+ 
+repositories {
+    jcenter()
+	mavenCentral()
+}
+
+dependencies {
+	compile 'log4j:log4j:1.2.17'
+	compile 'commons-lang:commons-lang:2.6'
+	compile 'com.google.code.gson:gson:2.8.2'
+	
+	testCompile 'junit:junit:4.12'
+}
+
+bintray {
+    user = 'cwahlmann'
+	key = System.getenv('BINTRAY_KEY')
+    pkg {
+        repo = 'Daddel'
+        name = 'daddel-api'
+//        userOrg = 'de.dreierschach.daddel'
+        licenses = ['LGPL-3.0']
+        vcsUrl = 'https://github.com/cwahlmann/Daddel.git'
+        publications = ['mavenJava']
+    }
+}
+	
+javadoc {
+    options.charSet= 'UTF-8'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+	
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+	
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId 'de.dreierschach.daddel'
+            artifactId 'daddel-api'
+            version '0.1'
+        }
+    }
+}

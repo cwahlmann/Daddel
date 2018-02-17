@@ -51,7 +51,7 @@ public class TextSprite extends Sprite {
 		return this;
 	}
 
-	public String getText() {
+	public String text() {
 		return text;
 	}
 
@@ -60,7 +60,7 @@ public class TextSprite extends Sprite {
 		return this;
 	}
 
-	public double getSize() {
+	public double size() {
 		return size;
 	}
 
@@ -91,6 +91,16 @@ public class TextSprite extends Sprite {
 		g.setFont(font);
 		g.setFill(color);
 		Scr scr = transformation().t(effektivePos());
+		Scr textSize = textSize(g, text());
+		switch (valign) {
+		case TOP: break;
+		case BASELINE:
+		case BOTTOM:
+			scr.add(new Scr(0, -textSize.y()));
+			break;
+		case CENTER:
+			scr.add(new Scr(0, -textSize.y()/2));			
+		}
 		if (!debug().wireframe()) {
 			g.fillText(text, scr.x(), scr.y());
 		}
@@ -146,6 +156,10 @@ public class TextSprite extends Sprite {
 		g.fillText(String.format("(%.3f / %.3f)", effektivePos().x(), effektivePos().y()), scr.x(), scr.y());
 	}
 
+	public int lines() {
+		return text.split("\n").length;
+	}
+	
 	private Scr textSize(GraphicsContext g, String text) {
 		FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(g.getFont());
 		String[] lines = text.split("\n");

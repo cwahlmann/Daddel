@@ -1,0 +1,21 @@
+	apply plugin: "java"
+	apply plugin: "eclipse"
+
+	repositories {
+	    jcenter()
+		mavenCentral()
+		// mavenLocal()
+		maven { url "https://dl.bintray.com/cwahlmann/Daddel" }
+	}
+
+	javadoc {
+	    options.charSet= 'UTF-8'
+	}
+
+	dependencies {
+		compile 'de.dreierschach.daddel:daddel-api:0.1'
+		compile 'log4j:log4j:1.2.17'
+		compile 'commons-lang:commons-lang:2.6'
+		
+		testCompile 'junit:junit:4.12'		
+	}
