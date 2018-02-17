@@ -29,6 +29,11 @@ bintray {
         licenses = ['LGPL-3.0']
         vcsUrl = 'https://github.com/cwahlmann/Daddel.git'
         publications = ['mavenJava']
+        version {
+	        name = '0.2-alpha'
+	        desc = 'second alpha version'
+	        released  = new Date()
+        }
     }
 }
 	
@@ -57,7 +62,7 @@ publishing {
             from components.java
             groupId 'de.dreierschach.daddel'
             artifactId 'daddel-api'
-            version '0.1'
+            version '0.2'
         }
     }
 }
