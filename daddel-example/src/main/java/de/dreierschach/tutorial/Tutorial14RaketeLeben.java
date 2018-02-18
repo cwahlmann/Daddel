@@ -5,12 +5,13 @@ import de.dreierschach.daddel.audio.Audio;
 import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
+import de.dreierschach.daddel.gfx.text.TextSprite;
 import de.dreierschach.daddel.model.Pos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 //Das Spiel erweitert die Spiele-API Daddel
-public class Tutorial10RaketeMenu extends Daddel {
+public class Tutorial14RaketeLeben extends Daddel {
 
 	// Sprites können einen Typ haben, z.B. einen für Spieler und einen für Gegner
 	private final static int TYP_SPIELER = 1;
@@ -57,6 +58,8 @@ public class Tutorial10RaketeMenu extends Daddel {
 		toTitle(() -> startTitel());
 		// die Phase Menu wird nach dem Titel gestartet
 		toMenu(() -> startMenu());
+		// die Phase Level-Intro, vor dem Starten eines Levels.
+		toLevelIntro(() -> startLevelIntro());
 		// die Phase Level, also das Spielen eines Levels.
 		toLevel(() -> startLevel());
 	}
@@ -122,10 +125,37 @@ public class Tutorial10RaketeMenu extends Daddel {
 	private void startMenu() {
 		menu()//
 				.item("Titel", (keyCode) -> toTitle())//
-				.item("Neues Spiel", (keyCode) -> toLevel())//
+				.item("Neues Spiel", (keyCode) -> neuesSpiel())//
 				.item("Beenden", (keyCode) -> exit())//
 				.create();
 		key(KeyCode.ESCAPE, (keyCode) -> exit());
+	}
+
+	private int anzahlGegner = 0;
+	private int score = 0;
+	private int leben = 0;
+	
+	private void neuesSpiel() {
+		// setze Level auf 1
+		level(1);
+		// setzt Score auf 0
+		score = 0;
+		// setzt Leben auf 3
+		leben = 3;
+		// und starte ihn
+		toLevelIntro();
+	}
+
+	private void startLevelIntro() {
+		// Sterne
+		erzeugeSterneTitel();
+		// der anzuzeigende Text
+		text("LEVEL " + level(), "sans-serif", 1, Color.RED).pos(0, 0);
+		text("PRESS ENTER WHEN READY", "sans-serif", 0.5, Color.WHITE).pos(0, 2);
+		// Enter startet den Level
+		key(KeyCode.ENTER, (keyCode) -> toLevel());
+		// ESCAPE kehrt zum Menu zurück
+		key(KeyCode.ESCAPE, (keyCode) -> toMenu());
 	}
 
 	// Hier wird ein Level gestartet
@@ -133,6 +163,7 @@ public class Tutorial10RaketeMenu extends Daddel {
 		erzeugeRakete();
 		erzeugeGegner();
 		erzeugeSterne();
+		erzeugeAnzeige();
 		definiereSteuerung();
 	}
 
@@ -149,7 +180,7 @@ public class Tutorial10RaketeMenu extends Daddel {
 				}) //
 				.collision((me, other) -> {
 					if (other.type() == TYP_GEGNER) {
-						raketeGetroffen();
+						raketeGetroffen(other);
 					}
 				}) //
 					// berechne einen kleineren Radius für die Kollisionskontrolle
@@ -158,8 +189,10 @@ public class Tutorial10RaketeMenu extends Daddel {
 	}
 
 	private void erzeugeGegner() {
+		// Anzahl Gegner berechnen
+		anzahlGegner = level() + 3;
 		// erzeuge Ufos
-		for (int i = 0; i < 3 + level(); i++) {
+		for (int i = 0; i < anzahlGegner; i++) {
 			// zufällige Position
 			Pos pos = new Pos((double) Math.random() * 20f - 10f, (double) Math.random() * 5f - 5f);
 			sprite(TYP_GEGNER, GEGNER_GROESSE, Gfx.UFO_1) //
@@ -191,6 +224,39 @@ public class Tutorial10RaketeMenu extends Daddel {
 				.create();
 	}
 
+	// TextSprite für die Score-Anzeige
+	private TextSprite scoreAnzeige;
+
+	// 
+	private Sprite[] lebenAnzeige = new Sprite[3]; 
+	
+	// Punkte zum Score hinzufügen
+	private void addScore(int punkte) {
+		score += punkte;
+		// und die Anzeige auffrischen
+		scoreAnzeige.text(String.format("SCORE: %08d", score));
+	}
+	
+	private void lebenVerlieren() {
+		if (leben > 0) {
+			leben--;
+			lebenAnzeige[leben].kill();
+		}
+	}
+	
+	// Score- und Leben-Anzeige erzeugen
+	private void erzeugeAnzeige() {
+		scoreAnzeige = text(String.format("SCORE: %08d", score), "sans-serif", 0.5, Color.ALICEBLUE) //
+				// Position = linker unterer Bildschirmrand
+				.pos(gridLeft(), gridBottom()) //
+				// Textausrichtung ist links unten
+				.align(ALIGN_LEFT, VALIGN_BOTTOM);
+				;
+		for (int i=0; i<leben; i++) {
+			lebenAnzeige[i] = sprite(TYP_STERN, 1, Gfx.ROCKET).pos(gridRight()-1-0.5*(double)i, 4);
+		}
+	}
+	
 	private void definiereSteuerung() {
 		// Je nach Taste wird eine andere Richtung eingeschlagen
 		key(KeyCode.LEFT, keyCode -> raketeRichtung = Richtung.links);
@@ -207,14 +273,30 @@ public class Tutorial10RaketeMenu extends Daddel {
 	}
 
 	// Wenn die Rakete gegen ein Ufo fliegt, explodiert sie, bevor das Spiel endet
-	public void raketeGetroffen() {
+	public void raketeGetroffen(Sprite gegner) {
 		rakete.kill();
+		gegner.kill();
+		anzahlGegner--;
 		sound(Audio.ROCKET_EXPLOSION, 1f);
+		sound(Audio.UFO_EXPLOSION, 1f);
 		particle(TYP_EXPLOSION, 500, 2f, Gfx.EXPLOSION) //
+		.pos(gegner.pos()) //
+		.speedAnimation(8f) //
+		;
+		particle(TYP_EXPLOSION, 500, 3f, Gfx.EXPLOSION) //
 				.pos(rakete.pos()) //
 				.speedAnimation(8f) //
 				// wenn der Partikel ( = die Explosion) stirbt, beende das Spiel
-				.onDeath(particle -> toMenu());
+				.onDeath(particle -> {
+					if (leben == 0) {
+						toMenu();						
+					} else if (anzahlGegner == 0) {
+						nextLevel();
+					} else {
+						erzeugeRakete();
+					}
+				});
+		lebenVerlieren();
 	}
 
 	// Methode, um die Rakete in die richtige Richtung zu bewegen.
@@ -294,6 +376,14 @@ public class Tutorial10RaketeMenu extends Daddel {
 						particle(TYP_EXPLOSION, 500, 2f, Gfx.EXPLOSION) //
 								.pos(other.pos()) //
 								.speedAnimation(8f);
+						// Gegner herunterzählen
+						anzahlGegner--;
+						// Score
+						addScore(250);
+						// keiner mehr übrig? Dann zum nächsten Level!
+						if (anzahlGegner == 0) {
+							nextLevel();
+						}
 					}
 				});
 	}

@@ -10,7 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 
 //Das Spiel erweitert die Spiele-API Daddel
-public class Tutorial10RaketeMenu extends Daddel {
+public class Tutorial11RaketeLevelIntro extends Daddel {
 
 	// Sprites können einen Typ haben, z.B. einen für Spieler und einen für Gegner
 	private final static int TYP_SPIELER = 1;
@@ -57,6 +57,8 @@ public class Tutorial10RaketeMenu extends Daddel {
 		toTitle(() -> startTitel());
 		// die Phase Menu wird nach dem Titel gestartet
 		toMenu(() -> startMenu());
+		// die Phase Level-Intro, vor dem Starten eines Levels.
+		toLevelIntro(() -> startLevelIntro());
 		// die Phase Level, also das Spielen eines Levels.
 		toLevel(() -> startLevel());
 	}
@@ -122,10 +124,22 @@ public class Tutorial10RaketeMenu extends Daddel {
 	private void startMenu() {
 		menu()//
 				.item("Titel", (keyCode) -> toTitle())//
-				.item("Neues Spiel", (keyCode) -> toLevel())//
+				.item("Neues Spiel", (keyCode) -> neuesSpiel())//
 				.item("Beenden", (keyCode) -> exit())//
 				.create();
 		key(KeyCode.ESCAPE, (keyCode) -> exit());
+	}
+
+	private void neuesSpiel() {
+		toLevelIntro();
+	}
+
+	private void startLevelIntro() {
+		erzeugeSterneTitel();
+		text("LEVEL " + level(), "sans-serif", 1, Color.RED).pos(0, 0);
+		text("PRESS ENTER WHEN READY", "sans-serif", 0.5, Color.WHITE).pos(0, 2);
+		key(KeyCode.ENTER, (keyCode) -> toLevel());
+		key(KeyCode.ESCAPE, (keyCode) -> toMenu());
 	}
 
 	// Hier wird ein Level gestartet

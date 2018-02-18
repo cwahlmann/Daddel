@@ -42,6 +42,43 @@ image:screenshots/invader2.png[Space Invader Level,400,225] image:screenshots/pa
 
 image:screenshots/daddel_eclipse.png[Daddeln mit Eclipse,400,225]
 
+== Daddel-API ins Projekt einbinden
+
+*mit Gradle:*
+
+.build.gradle
+[source,gradle]
+----
+repositories {
+	maven { url "https://dl.bintray.com/cwahlmann/Daddel" }
+}
+
+dependencies {
+	compile 'de.dreierschach.daddel:daddel-api:0.3'
+}
+----
+
+*mit Maven:*
+
+.maven.pom
+[source,xml]
+----
+<repositories>
+	<repository>
+  		<id>daddel</id>
+  		<name>Daddel Repository</name>
+  		<url>https://dl.bintray.com/cwahlmann/Daddel</url>
+	</repository>
+</repositories>
+  
+<dependency>
+	<groupId>de.dreierschach.daddel</groupId>
+	<artifactId>daddel-api</artifactId>
+	<version>0.3</version>
+	<type>pom</type>
+</dependency>
+----
+
 == Losdaddeln
 
 Für den Anfang erstellen wir ein Spielraster von der Größe 20 x 10. Der Hintergrund soll ein schönes Himmelblau sein und davor fliegt eine Rakete.

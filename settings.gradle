@@ -1,4 +1,0 @@
-rootProject.name = 'daddel'
-
-include 'daddel-api'
-include 'daddel-example'

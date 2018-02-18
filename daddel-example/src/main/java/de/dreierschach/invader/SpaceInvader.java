@@ -1,18 +1,16 @@
 package de.dreierschach.invader;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.audio.Audio;
 import de.dreierschach.daddel.gfx.Gfx;
+import de.dreierschach.daddel.gfx.roll.Roll;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.gfx.text.TextSprite;
 import de.dreierschach.daddel.listener.CollisionListener;
+import de.dreierschach.daddel.model.Highscore;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
 import javafx.scene.input.KeyCode;
@@ -59,11 +57,10 @@ public class SpaceInvader extends Daddel {
 	private int punkte = 0;
 	private int leben = 5;
 
-	// ---------- Highscore-Liste --
-
-	private List<HighscoreEintrag> highscoreListe = new ArrayList<>();
-	private static String SETUP_HIGHSCORE_LISTE = "setup_highscore_liste";
-
+	// ---------- Highscore --
+	
+	private Highscore highscore = new Highscore();
+	
 	// ---------- Titel-Bildschirm --
 
 	@Override
@@ -78,6 +75,7 @@ public class SpaceInvader extends Daddel {
 		// toCredits(() -> abspann());
 		toLevelIntro(() -> levelIntro());
 		toLevel(() -> starteLevel());
+		toCredits(() -> abspann());
 	}
 
 	public void titel() {
@@ -138,11 +136,8 @@ public class SpaceInvader extends Daddel {
 		grid(-16, 16, -10, 10);
 		erzeugeHochscrollendeSterne();
 		text("HIGHSCORE", "sans-serif", 2f, Color.YELLOW).pos(0, -8).weight(FontWeight.BLACK);
-		for (int i = 0; i < highscoreListe.size(); i++) {
-			HighscoreEintrag eintrag = highscoreListe.get(i);
-			text(String.format("%2d. %20s %10d", i + 1, eintrag.name, eintrag.score), "monospaced", 1f, Color.WHITE)
-					.pos(0, 1.4f * i - 4.5f).weight(FontWeight.BLACK);
-		}
+		text(highscore.toString(), "monospaced", 1f, Color.WHITE)
+					.pos(0, - 4.5f).weight(FontWeight.BLACK).align(ALIGN_CENTER, VALIGN_TOP);
 
 		key(KeyCode.ENTER, (keyCode) -> toMenu());
 		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
@@ -162,23 +157,21 @@ public class SpaceInvader extends Daddel {
 
 		text("GAME OVER", "sans-serif", 3f, Color.RED).pos(0, 0).weight(FontWeight.BLACK);
 
-		if (istNeuerHighscore()) {
-			HighscoreEintrag eintrag = new HighscoreEintrag("", punkte);
+		if (highscore.isNewHighscore(punkte)) {
 			text("You got a new highscore!!", "sans-serif", 1f, Color.YELLOW).pos(0, 3).weight(FontWeight.BLACK);
 			text("enter your name: ", "monospaced", 1f, Color.YELLOW).pos(0, 7).weight(FontWeight.BLACK)
 					.align(ALIGN_RIGHT, VALIGN_CENTER);
 
-			TextSprite inputText = text("", "monospaced", 1f, Color.WHITE).pos(0, 7).weight(FontWeight.BLACK)
+			TextSprite inputText = text("_", "monospaced", 1f, Color.WHITE).pos(0, 7).weight(FontWeight.BLACK)
 					.align(ALIGN_LEFT, VALIGN_CENTER);
 
 			input(20, input -> {
-				inputText.text(input.toUpperCase());
-				eintrag.name = input.toUpperCase();
+				inputText.text(input.toUpperCase()+"_");
 			});
 
 			key(KeyCode.ENTER, (keyCode) -> {
 				noInput();
-				neuerHighscore(eintrag);
+				neuerHighscore(input().toUpperCase().trim(), punkte);
 				toHighscore();
 			});
 		} else {
@@ -189,8 +182,17 @@ public class SpaceInvader extends Daddel {
 
 	// ---------- Abspann-Bildschirm --
 
-	// public void abspann() {
-	// }
+	 public void abspann() {
+		 Roll roll = roll();
+		 roll.text("SPACE INVADER").size(2).family("sans-serif").color(Color.YELLOW);
+		 roll.sprite(3, Gfx.ROCKET);
+		 roll.text("Das was das tolle Spiel!\n"
+		 		+ "GFX by C.Wahlmann\n"
+		 		+ "based on Daddel"
+				 ).size(1).color(Color.GREEN)
+		 ;
+		 key(KeyCode.ESCAPE, (keyCode) -> exit());
+	 }
 
 	// ---------- Level-Intro-Bildschirm --
 
@@ -243,7 +245,7 @@ public class SpaceInvader extends Daddel {
 	@Override
 	public void gameLoop(long gesamtZeit, long deltaZeit) {
 		if (leben == 0) {
-			toGameover();
+			toGameOver();
 			return;
 		}
 		raketeLaserVerbleibendeWartezeit -= deltaZeit;
@@ -276,32 +278,20 @@ public class SpaceInvader extends Daddel {
 	// ------------- Highscore laden bzw. neu erzeugen --
 
 	public void initHighscore() {
-		if (!getSetup().contains(SETUP_HIGHSCORE_LISTE)) {
-			highscoreListe.clear();
-			for (int i = 0; i < 10; i++) {
-				highscoreListe.add(new HighscoreEintrag("FREDVOMJUPITER", 10000 - 1000 * i));
-			}
-			getSetup().set(SETUP_HIGHSCORE_LISTE, highscoreListe);
+		if (!getSetup().contains(Highscore.SETUP_HIGHSCORE)) {
+			highscore.init();
+			getSetup().set(Highscore.SETUP_HIGHSCORE, highscore);
 			setupSave();
 		}
-		highscoreListe = new ArrayList<>(
-				Arrays.asList(getSetup().get(SETUP_HIGHSCORE_LISTE, HighscoreEintrag[].class)));
+		highscore = getSetup().get(Highscore.SETUP_HIGHSCORE, Highscore.class);
 	}
 
 	// ------------- neuen Highscore eintragen --
 
-	public void neuerHighscore(HighscoreEintrag eintrag) {
-		highscoreListe.add(eintrag);
-		Collections.sort(highscoreListe);
-		highscoreListe.remove(highscoreListe.size() - 1);
-		getSetup().set(SETUP_HIGHSCORE_LISTE, highscoreListe);
+	public void neuerHighscore(String name, int score) {
+		highscore.insert(name, score);
+		getSetup().set(Highscore.SETUP_HIGHSCORE, highscore);
 		setupSave();
-	}
-
-	// ------------- ist das ein neuer Highscore? --
-
-	public boolean istNeuerHighscore() {
-		return punkte > highscoreListe.get(highscoreListe.size() - 1).score;
 	}
 
 	// ------------- Punkte anzeigen --
