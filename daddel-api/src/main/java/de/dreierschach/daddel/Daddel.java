@@ -534,6 +534,7 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
+	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert wird.
 	 * Erzeugt einen neuen Partikel und hängt ihn in die View-Hierarchie ein.
 	 *
 	 * @param pos
@@ -555,6 +556,21 @@ public abstract class Daddel extends Application {
 		return particle;
 	}
 
+	/**
+	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert wird.
+	 * Erzeugt einen neuen Partikel und hängt ihn in die View-Hierarchie ein.
+	 *
+	 * @param type
+	 *            Benutzerdefinierter Typ, ein Integer
+	 * @param lebensdauerMS
+	 *            Die Lebensdauer des Partikel in ms.
+	 * @param groesse
+	 *            Die maximale Breite und Höhe des Sprite, in Spielrasterpunkten. *
+	 * @param bilder
+	 *            Die einzelnen Bilder (Frames) des Sprite. Diese können über die
+	 *            Methode animation() gesteuert werden.
+	 * @return eine neue Instanz der Klasse Particle.
+	 */
 	public Particle particle(int type, long lebensdauerMS, double groesse, String... bilder) {
 		Particle particle = new Particle(transformation, type, groesse, lebensdauerMS, bilder);
 		screen.addSprite(particle);
@@ -563,6 +579,8 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Erzeugt einen Partikel-Schwarm-Builder.
+	 * Ein Partikel-Schwarm ist ein Schwarm von Partikeln mit zufälliger Verteilung.
+	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert wird.
 	 * 
 	 * @param count
 	 *            Anzahl zu erzeugender Partikel
@@ -683,7 +701,9 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
+
 	 * erzeugt ein Text-Partikel und fügt ihn der View-Hierarchie hinzu.
+	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert wird.
 	 * 
 	 * @param text
 	 *            Der anzuzeigende Text
@@ -706,6 +726,7 @@ public abstract class Daddel extends Application {
 
 	/**
 	 * Erzeugt einen Menu-Builder
+	 * Ein Menu ist eine Liste von Optionen. Wird eine Option ausgewählt, dann wird eine bestimmte Aktion ausgeführt. 
 	 * 
 	 * @return Eine Instanz der Klasse MenuBuilder. Mit der Methode create() wird
 	 *         eine Instanz der Klasse Menu erzeugt und in die View-Hierarchie
