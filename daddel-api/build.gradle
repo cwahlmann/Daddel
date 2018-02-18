@@ -30,7 +30,7 @@ bintray {
         vcsUrl = 'https://github.com/cwahlmann/Daddel.git'
         publications = ['mavenJava']
         version {
-	        name = '0.2-alpha'
+	        name = '0.3-alpha'
 	        desc = 'second alpha version'
 	        released  = new Date()
         }
@@ -60,9 +60,15 @@ publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
+            artifact sourcesJar {
+                classifier "sources"
+            }
+			artifact javadocJar {
+			    classifier = 'javadoc'
+			}
             groupId 'de.dreierschach.daddel'
             artifactId 'daddel-api'
-            version '0.2'
+            version '0.3'
         }
     }
 }
