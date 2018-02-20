@@ -41,6 +41,7 @@ image:screenshots/invader1.png[Space Invader Titel,400,225] image:screenshots/in
 image:screenshots/invader2.png[Space Invader Level,400,225] image:screenshots/pacman.png[Pacman,400,225]
 
 image:screenshots/daddel_eclipse.png[Daddeln mit Eclipse,400,225]
+image:screenshots/Mondauto.png[Mondauto01,400,225]
 
 == Daddel-API ins Projekt einbinden
 

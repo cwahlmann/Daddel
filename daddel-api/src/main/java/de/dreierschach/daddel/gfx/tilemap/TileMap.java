@@ -120,7 +120,7 @@ public class TileMap extends Sprite {
 		for (int z = 0; z < size.z(); z++) {
 			for (int y = 0; y < size.y(); y++) {
 				for (int x = 0; x < size.x(); x++) {
-					id(new MapPos(x, y, 0), (int) (levelData[z][y].charAt(x)));
+					id(new MapPos(x, y, z), (int) (levelData[z][y].charAt(x)));
 				}
 			}
 		}
