@@ -55,7 +55,7 @@ repositories {
 }
 
 dependencies {
-	compile 'de.dreierschach.daddel:daddel-api:0.5'
+    compile 'de.dreierschach.daddel:daddel-api:0.5'
 }
 ----
 
@@ -65,18 +65,18 @@ dependencies {
 [source,xml]
 ----
 <repositories>
-	<repository>
+    <repository>
       	<id>jcenter</id>
-  		<name>Bintray JCenter Repository</name>
+       <name>Bintray JCenter Repository</name>
       	<url>http://jcenter.bintray.com</url>  
-	</repository>
+    </repository>
 </repositories>
-  
+
 <dependency>
-	<groupId>de.dreierschach.daddel</groupId>
-	<artifactId>daddel-api</artifactId>
-	<version>0.5</version>
-	<type>pom</type>
+    <groupId>de.dreierschach.daddel</groupId>
+    <artifactId>daddel-api</artifactId>
+    <version>0.5</version>
+    <type>pom</type>
 </dependency>
 ----
 
