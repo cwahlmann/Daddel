@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.dreierschach.daddel.Screen.Debug;
@@ -60,23 +62,22 @@ public abstract class Daddel extends Application {
 
 	// Defaults
 
-	private int witdh = 1920;
-	private int height = 1080;
+	public final static String DEFAULT_WIDTH = "1360";
+	public final static String DEFAULT_HEIGHT = "768";
+	public final static String DEFAULT_FULLSCREEN = "false";
+
+	// Properties:
+
 	private Screen screen;
 	private Stage stage;
 	private Transformation transformation;
 	private int level = 1;
 	private Roll roll = null;
-
-	// Properties:
-
-	private Properties properties;
 	private Setup setup = new Setup();
-	private String setupFile = DEFAULT_SETUP_FILE;
-	private String iniFile = DEFAULT_INI_FILE;
+	private String setupFile = "";
+	private int witdh = 1920;
+	private int height = 1080;
 
-	public final static String DEFAULT_INI_FILE = "config/game.ini";
-	public final static String DEFAULT_SETUP_FILE = "config/setup.ini";
 	public final static String INI_SETUP_FILE = "setup-file";
 	public final static String INI_WIDTH = "width";
 	public final static String INI_HEIGHT = "height";
@@ -1118,12 +1119,34 @@ public abstract class Daddel extends Application {
 		}
 	}
 
-	public void runRoll(long delta) {
+	private void runRoll(long delta) {
 		if (this.roll != null) {
 			this.roll.gameloop(delta);
 		}
 	}
 
+	/**
+	 * @return der Dateipfad der Setup-Datei
+	 */
+	public String getSetupFile() {
+		return this.getClass().getSimpleName().toLowerCase()+"/setup.properties";
+	}
+	
+	/**
+	 * @return der Titel der Anwendung
+	 */
+	public String getTitle() {
+		return this.getClass().getSimpleName();
+	};
+
+	private void initSetup() {
+		setupLoad();
+		setup.setIfNew(INI_WIDTH, DEFAULT_WIDTH);
+		setup.setIfNew(INI_HEIGHT, DEFAULT_HEIGHT);
+		setup.setIfNew(INI_FULLSCREEN, DEFAULT_FULLSCREEN);
+		setupSave();
+	}
+	
 	// ======================== Programmstart durch JavaFx ==
 
 	/*
@@ -1134,12 +1157,11 @@ public abstract class Daddel extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		this.stage = stage;
-		readIniFile(iniFile);
-		this.witdh = Integer.valueOf(properties.getProperty(INI_WIDTH, "1920" + this.witdh));
-		this.height = Integer.valueOf(properties.getProperty(INI_HEIGHT, "1080" + this.height));
-		boolean fullscreen = Boolean.valueOf(properties.getProperty(INI_FULLSCREEN, "true"));
-		this.setupFile = (String) properties.getProperty(INI_SETUP_FILE, DEFAULT_SETUP_FILE);
-		setupLoad();
+		this.setupFile = getSetupFile();
+		initSetup();
+		this.witdh = Integer.valueOf(setup.get(INI_WIDTH, DEFAULT_WIDTH));
+		this.height = Integer.valueOf(setup.get(INI_HEIGHT, DEFAULT_HEIGHT));
+		boolean fullscreen = Boolean.valueOf(setup.get(INI_FULLSCREEN, DEFAULT_FULLSCREEN));
 
 		stage.setFullScreen(fullscreen);
 
@@ -1152,19 +1174,10 @@ public abstract class Daddel extends Application {
 		if (fullscreen) {
 			scene.setCursor(Cursor.NONE);
 		}
-		stage.setTitle("Daddel");
+		stage.setTitle(getTitle());
 		stage.setScene(scene);
 		stage.show();
 		initGame();
 		toTitle();
-	}
-
-	private void readIniFile(String inifile) {
-		this.properties = new Properties();
-		try {
-			this.properties.load(new FileInputStream(inifile));
-		} catch (IOException e) {
-			log.warn("Konnte .ini-File nicht laden: " + inifile, e);
-		}
 	}
 }
