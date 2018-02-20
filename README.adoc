@@ -51,11 +51,11 @@ image:screenshots/Mondauto.png[Mondauto01,400,225]
 [source,gradle]
 ----
 repositories {
-	maven { url "https://dl.bintray.com/cwahlmann/Daddel" }
+    jcenter()
 }
 
 dependencies {
-	compile 'de.dreierschach.daddel:daddel-api:0.3'
+    compile 'de.dreierschach.daddel:daddel-api:0.5'
 }
 ----
 
@@ -65,18 +65,18 @@ dependencies {
 [source,xml]
 ----
 <repositories>
-	<repository>
-  		<id>daddel</id>
-  		<name>Daddel Repository</name>
-  		<url>https://dl.bintray.com/cwahlmann/Daddel</url>
-	</repository>
+    <repository>
+      	<id>jcenter</id>
+       <name>Bintray JCenter Repository</name>
+      	<url>http://jcenter.bintray.com</url>  
+    </repository>
 </repositories>
-  
+
 <dependency>
-	<groupId>de.dreierschach.daddel</groupId>
-	<artifactId>daddel-api</artifactId>
-	<version>0.3</version>
-	<type>pom</type>
+    <groupId>de.dreierschach.daddel</groupId>
+    <artifactId>daddel-api</artifactId>
+    <version>0.5</version>
+    <type>pom</type>
 </dependency>
 ----
 

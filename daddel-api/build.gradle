@@ -68,7 +68,7 @@ publishing {
 			}
             groupId 'de.dreierschach.daddel'
             artifactId 'daddel-api'
-            version '0.5-SNAPSHOT'
+            version '0.5'
         }
     }
 }
