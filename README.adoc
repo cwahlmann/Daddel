@@ -51,7 +51,7 @@ image:screenshots/Mondauto.png[Mondauto01,400,225]
 [source,gradle]
 ----
 repositories {
-	maven { url "https://dl.bintray.com/cwahlmann/Daddel" }
+    jcenter()
 }
 
 dependencies {
@@ -66,9 +66,9 @@ dependencies {
 ----
 <repositories>
 	<repository>
-  		<id>daddel</id>
-  		<name>Daddel Repository</name>
-  		<url>https://dl.bintray.com/cwahlmann/Daddel</url>
+      	<id>jcenter</id>
+  		<name>Bintray JCenter Repository</name>
+      	<url>http://jcenter.bintray.com</url>  
 	</repository>
 </repositories>
   
