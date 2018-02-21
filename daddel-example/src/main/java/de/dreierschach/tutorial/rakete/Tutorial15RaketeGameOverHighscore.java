@@ -6,9 +6,12 @@ import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.gfx.text.TextSprite;
+import de.dreierschach.daddel.listener.InputListener;
+import de.dreierschach.daddel.model.Highscore;
 import de.dreierschach.daddel.model.Pos;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.text.FontWeight;
 
 //Das Spiel erweitert die Spiele-API Daddel
 public class Tutorial15RaketeGameOverHighscore extends Daddel {
@@ -43,6 +46,10 @@ public class Tutorial15RaketeGameOverHighscore extends Daddel {
 	// In dieser Variablen merke ich mir den Sprite Rakete
 	private ImageSprite rakete;
 
+	// In dieser Variablen wird der Highscore gespeichert
+
+	private Highscore highscore = new Highscore();
+
 	// In dieser Methode wird das Spiel einmal initialisiert.
 	@Override
 	public void initGame() {
@@ -65,8 +72,9 @@ public class Tutorial15RaketeGameOverHighscore extends Daddel {
 		// die Phase Game Over, wenn das Spiel zu Ende ist
 		toGameOver(() -> startGameOver());
 		// die Phase Game Over, wenn das Spiel zu Ende ist
+		initHighscore();
 		toHighscore(() -> startHighscore());
-}
+	}
 
 	// Hier wird der Titelbildschirm gestartet
 
@@ -398,26 +406,59 @@ public class Tutorial15RaketeGameOverHighscore extends Daddel {
 		// Sterne
 		erzeugeSterne();
 		// der anzuzeigende Text
-		text("GAME OVER", "sans-serif", 2, Color.RED).pos(0, 0);
-		text(String.format("SCORE: %08d", score), "sans-serif", 0.5, Color.ALICEBLUE).pos(0, 2);
+		text("GAME OVER", "sans-serif", 2, Color.RED).pos(0, -2);
+		text(String.format("SCORE: %08d", score), "sans-serif", 1, Color.ALICEBLUE).pos(0, 0);
 
+		if (highscore.isNewHighscore(score)) {
+			text("Du hast einen neuen Highscore erreicht!", "sans-serif", 0.8, Color.YELLOW).pos(0, 2);
+			text("Gib deinen Namen ein: ", "sans-serif", 0.8, Color.YELLOW).pos(0, 3).align(ALIGN_RIGHT, VALIGN_CENTER);
+			TextSprite inputText = text("_", "sans-serif", 0.8, Color.ALICEBLUE).weight(FontWeight.BOLD).pos(0, 3)
+					.align(ALIGN_LEFT, VALIGN_CENTER);
+			input(20, input -> inputText.text(input.trim().toUpperCase() + "_"));
+			// Enter startet den Level
+			key(KeyCode.ENTER, (keyCode) -> {
+				neuerHighscore(input().trim().toUpperCase(), score);
+				noInput();
+				toHighscore();
+			});
+		} else {
+			// Enter startet den Level
+			key(KeyCode.ENTER, (keyCode) -> toHighscore());
+			// ESCAPE kehrt zum Menu zurück
+			key(KeyCode.ESCAPE, (keyCode) -> toMenu());
+		}
+	}
+
+	public void startHighscore() {
+		// Sterne
+		erzeugeSterneTitel();
+		// der anzuzeigende Text
+		text("HIGHSCORE", "sans-serif", 1, Color.ALICEBLUE).pos(0, -4);
+		// der Highscore
+		text(highscore.toString(), "monospace", 0.6, Color.YELLOW).pos(0, -2.5).align(ALIGN_CENTER, VALIGN_TOP);
 		// Enter startet den Level
 		key(KeyCode.ENTER, (keyCode) -> toMenu());
 		// ESCAPE kehrt zum Menu zurück
 		key(KeyCode.ESCAPE, (keyCode) -> toMenu());
 	}
 
+	// Highscore laden bzw. neu erzeugen
 
-	public void startHighscore() {
-		// Sterne
-		erzeugeSterne();
-		// der anzuzeigende Text
-		text("HIGHSCORE", "sans-serif", 1, Color.ALICEBLUE).pos(0, -4);
+	public void initHighscore() {
+		if (!getSetup().contains(Highscore.SETUP_HIGHSCORE)) {
+			highscore.init();
+			getSetup().set(Highscore.SETUP_HIGHSCORE, highscore);
+			setupSave();
+		}
+		highscore = getSetup().get(Highscore.SETUP_HIGHSCORE, Highscore.class);
+	}
 
-		// Enter startet den Level
-		key(KeyCode.ENTER, (keyCode) -> toMenu());
-		// ESCAPE kehrt zum Menu zurück
-		key(KeyCode.ESCAPE, (keyCode) -> toMenu());
+	// neuen Highscore eintragen
+
+	public void neuerHighscore(String name, int score) {
+		highscore.insert(name, score);
+		getSetup().set(Highscore.SETUP_HIGHSCORE, highscore);
+		setupSave();
 	}
 
 	// ===================== Standart-Main-Methode, um das Programm zu starten
