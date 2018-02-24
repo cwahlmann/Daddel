@@ -208,7 +208,7 @@ public class Pacman extends Daddel {
 		}
 
 		pacman = entity(TYPE_PACMAN, 2f, Gfx.PAC_PACMAN_L3, Gfx.PAC_PACMAN_L0, Gfx.PAC_PACMAN_L1, Gfx.PAC_PACMAN_L2)
-				.mapPos(pacmanLevelPos).rotate(180).moveSpeed(PACMAN_SPEED);
+				.mapPos(pacmanLevelPos).rotate(180).moveSpeed(PACMAN_SPEED).r(0.8);
 		pacman.animation().imageStart(0).imageEnd(0).speed(PACMAN_ANIMATION_SPEED).bounce(false);
 		map.focus(pacman);
 		pacman.onFinishMove((me, map) -> pacmanGo());
@@ -291,7 +291,7 @@ public class Pacman extends Daddel {
 		for (int i = 0; i < 4; i++) {
 			ghosts[i] = entity(TYPE_GHOST, 2f, //
 					GFX_GHOSTS[i]).mapPos(homeGhosts[i]).moveSpeed(GHOST_SPEED)
-							.onFinishMove(ghostMoveFinischedListener);
+							.onFinishMove(ghostMoveFinischedListener).r(0.8);
 			ghosts[i].animation().speed(GHOST_ANIMATION_SPEED);
 			// do first move
 			// TODO: automate
