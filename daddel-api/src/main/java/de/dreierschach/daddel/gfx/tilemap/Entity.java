@@ -446,6 +446,7 @@ public class Entity extends ImageSprite {
 	 */
 	public Entity onFinishMove(MoveFinishedListener moveFinishedListener) {
 		this.moveFinishedListener = moveFinishedListener;
+		this.moveFinishedListener.onDestinationReached(this, tileMap);
 		return this;
 	}
 

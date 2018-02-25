@@ -84,7 +84,7 @@ public class TileMap extends Sprite {
 	public TileMap clear(MapPos size, int id) {
 		this.size = size;
 		this.map = new int[size.x()][size.y()][size.z()];
-//		this.entities.clear();
+		// this.entities.clear();
 		return clear(id);
 	}
 
@@ -110,17 +110,19 @@ public class TileMap extends Sprite {
 	 * Initialisiert das Spielfeld mit dem angegebenen Array von Strings
 	 * 
 	 * @param levelData
-	 *            z.B. {{"oxo", "xox", "oxo"},["x.x", "x.x", "xxx"}} definiert ein
-	 *            3x3 Spielfeld mit 2 Ebenen
+	 *            z.B. {"oxo", "xox", "oxo"},["x.x", "x.x", "xxx"} definiert ein 3x3
+	 *           
+	 *            Spielfeld mit 2 Ebenen
 	 * @return this
 	 */
-	public TileMap initMap(String[][] levelData) {
+	public TileMap initMap(String[]... levelData) {
 		this.size = new MapPos(levelData[0][0].length(), levelData[0].length, levelData.length);
 		this.map = new int[size.x()][size.y()][size.z()];
 		for (int z = 0; z < size.z(); z++) {
 			for (int y = 0; y < size.y(); y++) {
 				for (int x = 0; x < size.x(); x++) {
-					id(new MapPos(x, y, z), (int) (levelData[z][y].charAt(x)));
+					int id = (int) (levelData[z][y].charAt(x));
+					id(new MapPos(x, y, z), tiles.containsKey(id) ? id : NO_ID);
 				}
 			}
 		}
@@ -135,7 +137,7 @@ public class TileMap extends Sprite {
 	public List<Entity> entities() {
 		return entities;
 	}
-	
+
 	/**
 	 * @return Größe des Spielfelds
 	 */
@@ -445,7 +447,7 @@ public class TileMap extends Sprite {
 					}
 				}
 				final int depth = d;
-				
+
 				drawEntities(g, entity -> entity.mapPos().z() == depth);
 			}
 			drawEntities(g, entity -> entity.mapPos().z() >= size.z());
@@ -473,7 +475,7 @@ public class TileMap extends Sprite {
 			g.restore();
 		});
 	}
-	
+
 	private void line(GraphicsContext g, Pos p0, Pos p1) {
 		Scr scr0 = transformation().t(p0);
 		Scr scr1 = transformation().t(p1);
