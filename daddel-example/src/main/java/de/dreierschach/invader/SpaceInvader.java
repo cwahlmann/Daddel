@@ -188,7 +188,7 @@ public class SpaceInvader extends Daddel {
 		Roll roll = roll().speed(4);
 		roll.text("SPACE INVADER\n").size(2.5).family("sans-serif").weight(FontWeight.EXTRA_BOLD).color(Color.YELLOW);
 		roll.sprite(3, Gfx.ROCKET);
-		roll.text("\nEin Spiel auf die guten alten Zeiten!\n\n\n").size(1).color(Color.WHITE);;
+		roll.text("\nEin Spiel auf die guten alten Zeiten!\n\n\n").size(1).color(Color.ORANGE);;
 		roll.text("* Grafik *").size(1.5).color(Color.WHITE);;
 		roll.text("\n\n" //
 				+ "Ufos - firestorm200 (openclipart.org)\n\n" //
