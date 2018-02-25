@@ -1,5 +1,10 @@
 package de.dreierschach.daddel.gfx.text;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.sun.javafx.tk.FontMetrics;
 import com.sun.javafx.tk.Toolkit;
 
@@ -84,25 +89,33 @@ public class TextSprite extends Sprite {
 
 	@Override
 	public void draw(GraphicsContext g) {
-		double newSize = transformation().zoom((double) size);
-		Font font = Font.font(family, fontWeight, newSize);
-		g.setTextAlign(align);
-		g.setTextBaseline(valign);
-		g.setFont(font);
-		g.setFill(color);
-		Scr scr = transformation().t(effektivePos());
-		Scr textSize = textSize(g, text());
+		Pos pos = effektivePos();
 		switch (valign) {
 		case TOP: break;
 		case BASELINE:
 		case BOTTOM:
-			scr.add(new Scr(0, -textSize.y()));
+			pos = pos.add(new Pos(0, -lineCount()*size));
 			break;
 		case CENTER:
-			scr.add(new Scr(0, -textSize.y()/2));			
+			pos = pos.add(new Pos(0, -lineCount()*size/2));
+			break;
+		}		
+		for (String line: lines()) {
+			drawLine(g, line, pos);
+			pos = pos.add(new Pos(0, size()));
 		}
+	}
+		
+	public void drawLine(GraphicsContext g, String line, Pos pos) {
+		double newSize = transformation().zoom((double) size);
+		Font font = Font.font(family, fontWeight, newSize);
+		g.setTextAlign(align);
+		g.setTextBaseline(VPos.TOP);
+		g.setFont(font);
+		g.setFill(color);
+		Scr scr = transformation().t(pos);
 		if (!debug().wireframe()) {
-			g.fillText(text, scr.x(), scr.y());
+			g.fillText(line, scr.x(), scr.y());
 		}
 		if (debug().info()) {
 			drawWireframe(g);
@@ -156,10 +169,15 @@ public class TextSprite extends Sprite {
 		g.fillText(String.format("(%.3f / %.3f)", effektivePos().x(), effektivePos().y()), scr.x(), scr.y());
 	}
 
-	public int lines() {
-		return text.split("\n").length;
+
+	public int lineCount() {
+		return lines().size();
 	}
-	
+
+	public List<String> lines() {
+		return Arrays.asList(StringUtils.splitPreserveAllTokens(text, "\n"));
+	}
+
 	private Scr textSize(GraphicsContext g, String text) {
 		FontMetrics fm = Toolkit.getToolkit().getFontLoader().getFontMetrics(g.getFont());
 		String[] lines = text.split("\n");
@@ -173,7 +191,7 @@ public class TextSprite extends Sprite {
 		double textHeight = fm.getLineHeight() * lines.length;
 		return new Scr((int) textWidth, (int) textHeight);
 	}
-
+	
 	@Override
 	public TextSprite onCollision(Sprite other) {
 		return this;
@@ -251,5 +269,9 @@ public class TextSprite extends Sprite {
 	public TextSprite parent(Sprite parent) {
 		super.parent(parent);
 		return this;
+	}
+	
+	public static void main(String[] args) {
+		Arrays.stream(StringUtils.splitPreserveAllTokens("\n\nHallo\nDu\n\n\n", "\n")).forEach(line -> System.out.println("["+line+"]"));
 	}
 }

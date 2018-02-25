@@ -7,6 +7,7 @@ import de.dreierschach.daddel.Screen;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.gfx.text.TextSprite;
+import de.dreierschach.daddel.listener.RollDiesListener;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Transformation;
 
@@ -18,28 +19,49 @@ public class Roll {
 	private Transformation transformation;
 	private long ticksNext = 0;
 	private long ticks;
-
+	private RollDiesListener rollDiesListener = roll -> {};
+	private int activeSprites = 0;
+	
 	public Roll(Screen screen, Transformation transformation) {
 		this.screen = screen;
 		this.transformation = transformation;
 	}
 
+	public double speed() {
+		return speed;
+	}
+	
+	public Roll speed(double speed) {
+		this.speed = speed;
+		return this;
+	}
+	
+	public Roll onFinished(RollDiesListener rollDiesListener) {
+		this.rollDiesListener = rollDiesListener;
+		return this;
+	}
+	
 	public void gameloop(long delta) {
 		ticks += delta;
 		if (!sprites.isEmpty()) {
 			if (ticks >= ticksNext) {
 				Sprite sprite = sprites.get(0);
+				activeSprites++;
 				double height = getHeight(sprite);
 				ticksNext = ticks + (long) ((height / speed) * 1000);
 				Pos startPos = new Pos(
 						(transformation.getRasterRightBottom().x() - transformation.getRasterLeftUpper().x()) / 2d
 								+ transformation.getRasterLeftUpper().x(),
-						transformation.getRasterRightBottom().y() + height / 2);
+						transformation.getRasterRightBottom().y() + height/2);
 				sprite.gameLoop((sp, t, d) -> {
 					double dy = speed * (double) d / 1000d;
 					sp.move(new Pos(0, -dy));
-					if (sp.effektivePos().y() < transformation.getRasterLeftUpper().y() - height / 2) {
+					if (sp.effektivePos().y() < transformation.getRasterLeftUpper().y() - height) {
 						sp.kill();
+						activeSprites--;
+						if (activeSprites == 0) {
+							rollDiesListener.onDeath(this);
+						}
 					}
 				}).pos(startPos);
 				screen.addSprite(sprite);
@@ -51,7 +73,7 @@ public class Roll {
 	private double getHeight(Sprite sprite) {
 		if (sprite instanceof TextSprite) {
 			TextSprite textSprite = (TextSprite) sprite;
-			return ((double) textSprite.lines()) * textSprite.size();
+			return ((double) textSprite.lineCount()) * textSprite.size();
 		}
 		if (sprite instanceof ImageSprite) {
 			ImageSprite imageSprite = (ImageSprite) sprite;

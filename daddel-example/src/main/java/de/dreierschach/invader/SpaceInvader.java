@@ -58,9 +58,9 @@ public class SpaceInvader extends Daddel {
 	private int leben = 5;
 
 	// ---------- Highscore --
-	
+
 	private Highscore highscore = new Highscore();
-	
+
 	// ---------- Titel-Bildschirm --
 
 	@Override
@@ -136,8 +136,8 @@ public class SpaceInvader extends Daddel {
 		grid(-16, 16, -10, 10);
 		erzeugeHochscrollendeSterne();
 		text("HIGHSCORE", "sans-serif", 2f, Color.YELLOW).pos(0, -8).weight(FontWeight.BLACK);
-		text(highscore.toString(), "monospaced", 1f, Color.WHITE)
-					.pos(0, - 4.5f).weight(FontWeight.BLACK).align(ALIGN_CENTER, VALIGN_TOP);
+		text(highscore.toString(), "monospaced", 1f, Color.WHITE).pos(0, -4.5f).weight(FontWeight.BLACK)
+				.align(ALIGN_CENTER, VALIGN_TOP);
 
 		key(KeyCode.ENTER, (keyCode) -> toMenu());
 		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
@@ -166,7 +166,7 @@ public class SpaceInvader extends Daddel {
 					.align(ALIGN_LEFT, VALIGN_CENTER);
 
 			input(20, input -> {
-				inputText.text(input.toUpperCase()+"_");
+				inputText.text(input.toUpperCase() + "_");
 			});
 
 			key(KeyCode.ENTER, (keyCode) -> {
@@ -182,17 +182,40 @@ public class SpaceInvader extends Daddel {
 
 	// ---------- Abspann-Bildschirm --
 
-	 public void abspann() {
-		 Roll roll = roll();
-		 roll.text("SPACE INVADER").size(2).family("sans-serif").color(Color.YELLOW);
-		 roll.sprite(3, Gfx.ROCKET);
-		 roll.text("Das was das tolle Spiel!\n"
-		 		+ "GFX by C.Wahlmann\n"
-		 		+ "based on Daddel"
-				 ).size(1).color(Color.GREEN)
-		 ;
-		 key(KeyCode.ESCAPE, (keyCode) -> exit());
-	 }
+	public void abspann() {
+		erzeugeHochscrollendeSterne();
+		erzeugeErdeUndMond();
+		Roll roll = roll().speed(4);
+		roll.text("SPACE INVADER\n").size(2.5).family("sans-serif").weight(FontWeight.EXTRA_BOLD).color(Color.YELLOW);
+		roll.sprite(3, Gfx.ROCKET);
+		roll.text("\nEin Spiel auf die guten alten Zeiten!\n\n\n").size(1).color(Color.WHITE);;
+		roll.text("* Grafik *").size(1.5).color(Color.WHITE);;
+		roll.text("\n\n" //
+				+ "Ufos - firestorm200 (openclipart.org)\n\n" //
+				+ "Rakete - rygle (openclipart.org)\n\n" //
+				+ "Explosionen - dominiquechappard (openclipart.org)\n\n" //
+				+ "Planet Erde - barretr (openclipart.org)\n\n" //
+				+ "Mond - rg1024 (openclipart.org)\n\n" //
+				+ "Stern, Laserstrahlen, Schutzschirm - Christian Wahlmann\n\n\n").size(1).color(Color.ORANGE);
+		roll.text("* Sound Effekte *").size(1.5).color(Color.WHITE);;
+		roll.text("\n\n" //
+				+ "mit bestem Dank von https://www.zapsplat.com\n\n\n").size(1).color(Color.ORANGE);
+		roll.sprite(2, Gfx.STERN);
+		roll.text("\n\n\nerstellt mit\n\n").size(1.5).color(Color.WHITE);
+		roll.text("DADDEL").size(4).color(Color.RED);
+		roll.text("\n\ndie easy-going 2D-game-API mit JavaFX\n\n\n\n\n").size(1).color(Color.RED);		
+		roll.text("(c) 2018 Christian Wahlmann").size(1.25).color(Color.ORANGE);		
+		roll.text("\nhttp://www.github.com/cwahlmann/daddel").size(1).color(Color.ORANGE);	
+		
+		roll.onFinished(r -> {
+			particle(0, 500, 30, Gfx.EXPLOSION).speedAnimation(8)
+			.onDeath(p -> {
+				killallSprites();
+				exit();
+			});
+		});
+		key(KeyCode.ESCAPE, (keyCode) -> exit());
+	}
 
 	// ---------- Level-Intro-Bildschirm --
 
