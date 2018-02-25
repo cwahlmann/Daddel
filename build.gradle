@@ -96,4 +96,37 @@ project (':daddel-example') {
 		
 		testCompile 'junit:junit:4.12'		
 	}
+	
+	task ('spaceinvader', type: Jar) {
+		group 'build'
+		description 'Creates a executable fat jat for SpaceInvader'
+	    manifest {
+	        attributes 'Main-Class': 'de.dreierschach.invader.SpaceInvader'
+	    }
+	    baseName = 'space-invader'
+	    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	    with jar
+	}
+
+	task ('pacman', type: Jar) {
+		group 'build'
+		description 'Creates a executable fat jat for Pacman'
+	    manifest {
+	        attributes 'Main-Class': 'de.dreierschach.pacman.Pacman'
+	    }
+	    baseName = 'pacman'
+	    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	    with jar
+	}
+
+	task ('losdaddeln2', type: Jar) {
+		group 'build'
+		description 'Creates a executable fat jat for Losdaddeln2'
+	    manifest {
+	        attributes 'Main-Class': 'de.dreierschach.tutorial.Losdaddeln2'
+	    }
+	    baseName = 'losdaddeln2'
+	    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	    with jar
+	}
 }
