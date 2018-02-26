@@ -188,8 +188,10 @@ public class SpaceInvader extends Daddel {
 		Roll roll = roll().speed(4);
 		roll.text("SPACE INVADER\n").size(2.5).family("sans-serif").weight(FontWeight.EXTRA_BOLD).color(Color.YELLOW);
 		roll.sprite(3, Gfx.ROCKET);
-		roll.text("\nEin Spiel auf die guten alten Zeiten!\n\n\n").size(1).color(Color.ORANGE);;
-		roll.text("* Grafik *").size(1.5).color(Color.WHITE);;
+		roll.text("\nEin Spiel auf die guten alten Zeiten!\n\n\n").size(1).color(Color.ORANGE);
+		;
+		roll.text("* Grafik *").size(1.5).color(Color.WHITE);
+		;
 		roll.text("\n\n" //
 				+ "Ufos - firestorm200 (openclipart.org)\n\n" //
 				+ "Rakete - rygle (openclipart.org)\n\n" //
@@ -197,21 +199,22 @@ public class SpaceInvader extends Daddel {
 				+ "Planet Erde - barretr (openclipart.org)\n\n" //
 				+ "Mond - rg1024 (openclipart.org)\n\n" //
 				+ "Stern, Laserstrahlen, Schutzschirm - Christian Wahlmann\n\n\n").size(1).color(Color.ORANGE);
-		roll.text("* Sound Effekte *").size(1.5).color(Color.WHITE);;
+		roll.text("* Sound Effekte *").size(1.5).color(Color.WHITE);
+		;
 		roll.text("\n\n" //
 				+ "mit bestem Dank von https://www.zapsplat.com\n\n\n").size(1).color(Color.ORANGE);
 		roll.sprite(2, Gfx.STERN);
 		roll.text("\n\n\nerstellt mit\n\n").size(1.5).color(Color.WHITE);
 		roll.text("DADDEL").size(4).color(Color.RED);
-		roll.text("\n\ndie easy-going 2D-game-API mit JavaFX\n\n\n\n\n").size(1).color(Color.RED);		
-		roll.text("(c) 2018 Christian Wahlmann").size(1.25).color(Color.ORANGE);		
-		roll.text("\nhttp://www.github.com/cwahlmann/daddel").size(1).color(Color.ORANGE);	
-		
+		roll.text("\n\ndie easy-going 2D-game-API mit JavaFX\n\n\n\n\n").size(1).color(Color.RED);
+		roll.text("(c) 2018 Christian Wahlmann").size(1.25).color(Color.ORANGE);
+		roll.text("\nhttp://www.github.com/cwahlmann/daddel").size(1).color(Color.ORANGE);
+
 		roll.onFinished(r -> {
-			particle(0, 500, 30, Gfx.EXPLOSION).speedAnimation(8)
-			.onDeath(p -> {
-				killallSprites();
-				exit();
+			particle(0, 1000, 30, Gfx.EXPLOSION).speedAnimation(4).onDeath(p -> {
+				erde.kill();
+				mond.kill();
+				timer(1000, () -> exit());
 			});
 		});
 		key(KeyCode.ESCAPE, (keyCode) -> exit());
@@ -338,9 +341,12 @@ public class SpaceInvader extends Daddel {
 
 	// ------------- Erde und Mond erzeugen --
 
+	private Sprite erde;
+	private Sprite mond;
+
 	public void erzeugeErdeUndMond() {
-		Sprite erde = sprite(TYP_STERN, 7, Gfx.ERDE).pos(0, -2);
-		particle(TYP_STERN, 0, 2, Gfx.MOND).parent(erde).gameLoop((me, gesamtZeit, deltaZeit) -> {
+		erde = sprite(TYP_STERN, 7, Gfx.ERDE).pos(0, -2);
+		mond = particle(TYP_STERN, 0, 2, Gfx.MOND).parent(erde).gameLoop((me, gesamtZeit, deltaZeit) -> {
 			Pos pos = circlePosition(gesamtZeit, 20000, new Pos(-10, -6), new Pos(10, 6));
 			me.pos(pos);
 		});
