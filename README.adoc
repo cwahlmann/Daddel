@@ -177,3 +177,7 @@ import de.dreierschach.daddel.gfx.sprite.Particle;
 Und so sieht es jetzt aus:
 
 image::screenshots/Losdaddeln2.jpg[Losdaddeln2,400,225]
+
+== Willst du mehr wissen?
+
+Dann lies weiter bei https://github.com/cwahlmann/Daddel/wiki/Daddel-API[Daddel-API]
