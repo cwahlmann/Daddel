@@ -1,16 +1,11 @@
 package de.dreierschach.daddel;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.dreierschach.daddel.Screen.Debug;
@@ -28,7 +23,6 @@ import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.listener.InputListener;
 import de.dreierschach.daddel.listener.KeyListener;
 import de.dreierschach.daddel.listener.TimeoutListener;
-import de.dreierschach.daddel.model.Highscore;
 import de.dreierschach.daddel.model.ParticleStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;

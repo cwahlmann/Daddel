@@ -211,11 +211,13 @@ public class SpaceInvader extends Daddel {
 		roll.text("\nhttp://www.github.com/cwahlmann/daddel").size(1).color(Color.ORANGE);
 
 		roll.onFinished(r -> {
+			sound(Audio.UFO_EXPLOSION);
 			particle(0, 1000, 30, Gfx.EXPLOSION).speedAnimation(4).onDeath(p -> {
-				erde.kill();
-				mond.kill();
-				timer(1000, () -> exit());
+				killallSprites();
+				timer(4000, () -> exit());
 			});
+			timer(200, () -> sound(Audio.ROCKET_EXPLOSION));
+			timer(400, () -> sound(Audio.UFO_EXPLOSION));
 		});
 		key(KeyCode.ESCAPE, (keyCode) -> exit());
 	}
@@ -341,12 +343,9 @@ public class SpaceInvader extends Daddel {
 
 	// ------------- Erde und Mond erzeugen --
 
-	private Sprite erde;
-	private Sprite mond;
-
 	public void erzeugeErdeUndMond() {
-		erde = sprite(TYP_STERN, 7, Gfx.ERDE).pos(0, -2);
-		mond = particle(TYP_STERN, 0, 2, Gfx.MOND).parent(erde).gameLoop((me, gesamtZeit, deltaZeit) -> {
+		Sprite erde = sprite(TYP_STERN, 7, Gfx.ERDE).pos(0, -2);
+		particle(TYP_STERN, 0, 2, Gfx.MOND).parent(erde).gameLoop((me, gesamtZeit, deltaZeit) -> {
 			Pos pos = circlePosition(gesamtZeit, 20000, new Pos(-10, -6), new Pos(10, 6));
 			me.pos(pos);
 		});
