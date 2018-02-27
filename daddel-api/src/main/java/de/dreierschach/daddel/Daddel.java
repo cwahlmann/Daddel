@@ -1,16 +1,11 @@
 package de.dreierschach.daddel;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.dreierschach.daddel.Screen.Debug;
@@ -27,11 +22,12 @@ import de.dreierschach.daddel.gfx.tilemap.Entity;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.listener.InputListener;
 import de.dreierschach.daddel.listener.KeyListener;
-import de.dreierschach.daddel.model.Highscore;
+import de.dreierschach.daddel.listener.TimeoutListener;
 import de.dreierschach.daddel.model.ParticleStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
+import de.dreierschach.daddel.model.Timer;
 import de.dreierschach.daddel.model.Transformation;
 import de.dreierschach.daddel.setup.Setup;
 import de.dreierschach.daddel.util.FileUtils;
@@ -82,6 +78,7 @@ public abstract class Daddel extends Application {
 	public final static String INI_WIDTH = "width";
 	public final static String INI_HEIGHT = "height";
 	public final static String INI_FULLSCREEN = "fullscreen";
+	public List<Timer> timers = new ArrayList<>();
 
 	// strategy constants
 
@@ -105,6 +102,12 @@ public abstract class Daddel extends Application {
 	public final static VPos VALIGN_BASELINE = VPos.BASELINE;
 
 	// ======================== API methods ==
+
+	public Timer timer(long timeout, TimeoutListener timeoutListener) {
+		Timer timer = new Timer(timeout, timeoutListener);
+		timers.add(timer);
+		return timer;
+	}
 
 	// ------------------------ game phase methods ==
 
@@ -535,8 +538,9 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
-	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert wird.
-	 * Erzeugt einen neuen Partikel und hängt ihn in die View-Hierarchie ein.
+	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch
+	 * animiert wird. Erzeugt einen neuen Partikel und hängt ihn in die
+	 * View-Hierarchie ein.
 	 *
 	 * @param pos
 	 *            Start-Position des Partikel
@@ -558,8 +562,9 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
-	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert wird.
-	 * Erzeugt einen neuen Partikel und hängt ihn in die View-Hierarchie ein.
+	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch
+	 * animiert wird. Erzeugt einen neuen Partikel und hängt ihn in die
+	 * View-Hierarchie ein.
 	 *
 	 * @param type
 	 *            Benutzerdefinierter Typ, ein Integer
@@ -579,9 +584,9 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
-	 * Erzeugt einen Partikel-Schwarm-Builder.
-	 * Ein Partikel-Schwarm ist ein Schwarm von Partikeln mit zufälliger Verteilung.
-	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert wird.
+	 * Erzeugt einen Partikel-Schwarm-Builder. Ein Partikel-Schwarm ist ein Schwarm
+	 * von Partikeln mit zufälliger Verteilung. Ein Partikel ist ein Sprite mit
+	 * begrenzter lebensdauer, der automatisch animiert wird.
 	 * 
 	 * @param count
 	 *            Anzahl zu erzeugender Partikel
@@ -702,9 +707,10 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
-
-	 * erzeugt ein Text-Partikel und fügt ihn der View-Hierarchie hinzu.
-	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert wird.
+	 * 
+	 * erzeugt ein Text-Partikel und fügt ihn der View-Hierarchie hinzu. Ein
+	 * Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert
+	 * wird.
 	 * 
 	 * @param text
 	 *            Der anzuzeigende Text
@@ -726,8 +732,8 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
-	 * Erzeugt einen Menu-Builder
-	 * Ein Menu ist eine Liste von Optionen. Wird eine Option ausgewählt, dann wird eine bestimmte Aktion ausgeführt. 
+	 * Erzeugt einen Menu-Builder Ein Menu ist eine Liste von Optionen. Wird eine
+	 * Option ausgewählt, dann wird eine bestimmte Aktion ausgeführt.
 	 * 
 	 * @return Eine Instanz der Klasse MenuBuilder. Mit der Methode create() wird
 	 *         eine Instanz der Klasse Menu erzeugt und in die View-Hierarchie
@@ -1038,6 +1044,7 @@ public abstract class Daddel extends Application {
 		runTexts(deltaZeit);
 		runTileMap(deltaZeit);
 		runRoll(deltaZeit);
+		runTimers(deltaZeit);
 	}
 
 	private void clear() {
@@ -1053,6 +1060,7 @@ public abstract class Daddel extends Application {
 		runSprites(deltaZeit);
 		runTexts(deltaZeit);
 		runTileMap(deltaZeit);
+		runTimers(deltaZeit);
 		gameLoop(gesamtZeit, deltaZeit);
 		checkCollisions();
 	}
@@ -1095,6 +1103,23 @@ public abstract class Daddel extends Application {
 		}
 	}
 
+	private void runTimers(long delta) {
+		List<Timer> timersCopy = new ArrayList<>(timers);
+		Iterator<Timer> it = timersCopy.iterator();
+		while (it.hasNext()) {
+			Timer timer = it.next();
+			timer.gameLoop(delta);
+		}
+
+		it = timers.iterator();
+		while (it.hasNext()) {
+			Timer timer = it.next();
+			if (timer.finished()) {
+				it.remove();
+			}
+		}
+	}
+
 	private void runTileMap(long delta) {
 		if (screen.getTileMap() == null) {
 			return;
@@ -1129,9 +1154,9 @@ public abstract class Daddel extends Application {
 	 * @return der Dateipfad der Setup-Datei
 	 */
 	public String getSetupFile() {
-		return this.getClass().getSimpleName().toLowerCase()+"/setup.properties";
+		return this.getClass().getSimpleName().toLowerCase() + "/setup.properties";
 	}
-	
+
 	/**
 	 * @return der Titel der Anwendung
 	 */
@@ -1146,7 +1171,7 @@ public abstract class Daddel extends Application {
 		setup.setIfNew(INI_FULLSCREEN, DEFAULT_FULLSCREEN);
 		setupSave();
 	}
-	
+
 	// ======================== Programmstart durch JavaFx ==
 
 	/*
