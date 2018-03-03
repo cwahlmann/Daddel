@@ -31,8 +31,8 @@ public class TextSprite extends Sprite {
 	private TextAlignment align = TextAlignment.CENTER;
 	private VPos valign = VPos.CENTER;
 
-	public TextSprite(Transformation transformation, String text) {
-		super(transformation, 0);
+	public TextSprite(Transformation transformation, String text, int layer) {
+		super(transformation, 0, layer);
 		this.text = text;
 	}
 
@@ -192,11 +192,6 @@ public class TextSprite extends Sprite {
 		return new Scr((int) textWidth, (int) textHeight);
 	}
 	
-	@Override
-	public TextSprite onCollision(Sprite other) {
-		return this;
-	}
-
 	// overwrite methods for correct return type
 
 	/*

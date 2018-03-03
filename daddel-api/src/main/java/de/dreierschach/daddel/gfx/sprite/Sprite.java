@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import de.dreierschach.daddel.Screen.Debug;
+import de.dreierschach.daddel.listener.CollisionListener;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
@@ -22,15 +23,9 @@ import javafx.scene.transform.Rotate;
  * @author Christian
  *
  */
-public abstract class Sprite {
+public abstract class Sprite implements Comparable<Sprite> {
 	public static final int NO_TYPE = -1;
-	public static final Sprite NONE = new Sprite(null, NO_TYPE) {
-
-		@Override
-		public Sprite onCollision(Sprite other) {
-			return null;
-		}
-
+	public static final Sprite NONE = new Sprite(null, NO_TYPE, 0) {
 		@Override
 		public void draw(GraphicsContext g) {
 		}
@@ -47,6 +42,10 @@ public abstract class Sprite {
 	private Sprite parent = null;
 	private Debug debug = Debug.off;
 	private boolean showPosOnDebug = true;
+	private CollisionListener collisionListener = (me, other) -> {
+	};
+	private int layer = 0;
+	private boolean layerChanged = false;
 
 	/**
 	 * Sprite mit vorgegebenen Radius erzeigen
@@ -59,10 +58,11 @@ public abstract class Sprite {
 	 * @param r
 	 *            Radius des Sprite, wird zur Kollisionserkennung verwendet
 	 */
-	public Sprite(Transformation transformation, int type, int r) {
+	public Sprite(Transformation transformation, int type, int layer, double r) {
 		this.r = r;
 		this.type = type;
 		this.transformation = transformation;
+		this.layer = layer;
 	}
 
 	/**
@@ -74,8 +74,8 @@ public abstract class Sprite {
 	 * @param type
 	 *            Benutzerdefinierter Typ, Integer
 	 */
-	public Sprite(Transformation transformation, int type) {
-		this(transformation, type, 1);
+	public Sprite(Transformation transformation, int type, int layer) {
+		this(transformation, type, layer, 1);
 	}
 
 	/**
@@ -267,6 +267,17 @@ public abstract class Sprite {
 	}
 
 	/**
+	 * wird im Falle eine Kollision aufgerufen; der Kollisions-Listener des
+	 * angegebenen Sprites wird aufgerufen
+	 * 
+	 * @param other
+	 *            der Sprite, mit dem die Kollision geschehen ist
+	 */
+	public void onCollision(Sprite other) {
+		this.collisionListener.onCollision(this, other);
+	}
+
+	/**
 	 * @return true, wenn der Sprite noch lebt
 	 */
 	public boolean alive() {
@@ -344,11 +355,89 @@ public abstract class Sprite {
 		return parent != null;
 	}
 
+	/**
+	 * setzt die Aktion, die bei einer Kollision mit anderen Sprites ausgeführt
+	 * werden soll
+	 * 
+	 * @param collisionListener
+	 *            die Aktion bei Kollisionen
+	 * @return this
+	 */
+	public Sprite collision(CollisionListener collisionListener) {
+		this.collisionListener = collisionListener;
+		return this;
+	}
+
+	/**
+	 * Bewegt den Sprite um den in Pos angegebenen Vektor
+	 * 
+	 * @param direction
+	 *            der Bewegungsvektor
+	 * @return this
+	 */
+	public Sprite move(Pos direction) {
+		this.pos = new Pos(pos.x() + direction.x(), pos.y() + direction.y());
+		return this;
+	}
+
+	/**
+	 * Bewegt den Sprite um die angegebene Strecke in die aktuelle Richtung
+	 * 
+	 * @param distance
+	 *            die Strecke in Spielraster-Punkten
+	 * @return this
+	 */
+	public Sprite move(double distance) {
+		Rotate r = new Rotate(direction);
+		Point2D v2d = r.transform(new Point2D(1, 0));
+		Pos v = new Pos((double) v2d.getX(), (double) v2d.getY());
+		this.pos = this.pos.add(v.mul(distance));
+		return this;
+	}
+
+	/**
+	 * gibt die Bildschirmebene des Sprite zurück
+	 * 
+	 * @return die Nummer der Bildschirmebene (kleinere Ebene = weiter hinten,
+	 *         größere = weiter vorne)
+	 */
+	public int layer() {
+		return layer;
+	}
+
+	/**
+	 * setzt die Bildschirmebene, auf der der Sprite angezeigt wird
+	 * 
+	 * @param layer
+	 *            die Nummer der Bildschirmebene (kleinere Ebene = weiter hinten,
+	 *            größere = weiter vorne)
+	 * 
+	 * @return this
+	 */
+	public Sprite layer(int layer) {
+		this.layer = layer;
+		this.layerChanged = true;
+		return this;
+	}
+	
 	// ------------- interne methoden
+
+	public boolean layerChanged() {
+		return layerChanged;
+	}
+	
+	public void clrLayerChanged() {
+		this.layerChanged = false;
+	}
 
 	protected static void rotate(GraphicsContext g, double angle, Scr middle) {
 		Rotate r = new Rotate(angle, middle.x(), middle.y());
 		g.setTransform(r.getMxx(), r.getMyx(), r.getMxy(), r.getMyy(), r.getTx(), r.getTy());
+	}
+
+	@Override
+	public int compareTo(Sprite other) {
+		return other.layer > this.layer ? -1 : 1;
 	}
 
 	protected long getTicks() {
@@ -364,20 +453,6 @@ public abstract class Sprite {
 		draw(g);
 	}
 
-	public Sprite move(Pos direction) {
-		this.pos = new Pos(pos.x() + direction.x(), pos.y() + direction.y());
-		return this;
-	}
-
-	public Sprite move(double distance) {
-		Rotate r = new Rotate(direction);
-		Point2D v2d = r.transform(new Point2D(1, 0));
-		Pos v = new Pos((double) v2d.getX(), (double) v2d.getY());
-		this.pos = this.pos.add(v.mul(distance));
-		return this;
-	}
-
-	public abstract Sprite onCollision(Sprite other);
-
 	public abstract void draw(GraphicsContext g);
+
 }

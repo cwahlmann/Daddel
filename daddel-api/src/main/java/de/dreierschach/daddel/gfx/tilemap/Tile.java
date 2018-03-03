@@ -28,7 +28,7 @@ public class Tile extends ImageSprite {
 	 *            die Bilder der Kachel
 	 */
 	public Tile(Transformation transformation, int type, double maxSize, String... imagefiles) {
-		super(transformation, type, maxSize, imagefiles);
+		super(transformation, type, 0, maxSize, imagefiles);
 	}
 
 	/**
@@ -133,15 +133,6 @@ public class Tile extends ImageSprite {
 	@Override
 	public Tile collision(CollisionListener collisionListener) {
 		super.collision(collisionListener);
-		return this;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#onCollision(de.dreierschach.daddel.gfx.sprite.Sprite)
-	 */
-	@Override
-	public Tile onCollision(Sprite other) {
-		super.onCollision(other);
 		return this;
 	}
 }

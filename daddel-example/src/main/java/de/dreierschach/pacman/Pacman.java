@@ -9,6 +9,8 @@ import de.dreierschach.daddel.gfx.tilemap.Entity.Dir;
 import de.dreierschach.daddel.gfx.tilemap.MoveFinishedListener;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.model.MapPos;
+import de.dreierschach.daddel.model.Pos;
+import de.dreierschach.daddel.validator.Validator;
 import javafx.scene.input.KeyCode;
 
 public class Pacman extends Daddel {
@@ -173,6 +175,7 @@ public class Pacman extends Daddel {
 
 	private void initMap() {
 		grid(-16, 16, -9f, 9f);
+		erzeugeSchraegScrollendeSterne();
 		map = tilemap(1f).tile(ID_WALL_ROUND_LO, TYPE_WALL, Gfx.PAC_WALL_ROUND_LO) //
 				.tile(ID_WALL_ROUND_RO, TYPE_WALL, Gfx.PAC_WALL_ROUND_RO) //
 				.tile(ID_WALL_ROUND_LU, TYPE_WALL, Gfx.PAC_WALL_ROUND_LU) //
@@ -189,10 +192,16 @@ public class Pacman extends Daddel {
 				.tile(ID_DEATEYES_D, TYPE_WALL, Gfx.PAC_DEADEYES_D, Gfx.PAC_DEADEYES_R, Gfx.PAC_DEADEYES_U,
 						Gfx.PAC_DEADEYES_L)
 				.pos(0, 0) //
-				.defaultTile(ID_DEATEYES_D)//
+				// .defaultTile(TileMap.NO_ID)
 				.initMap(LEVEL[level() - 1]);
 
 		map.tile(map.defaultTile()).gameLoop(animation(0, 3, false, 2f));
+	}
+	// ------------- schräg-scrollende Sterne erzeugen --
+
+	public void erzeugeSchraegScrollendeSterne() {
+		particleSwarmBuilder(200, -1, Gfx.STERN).initialPosRange(new Pos(-16, -10), new Pos(16, 10))
+				.sizeRange(0.02f, 0.4f, 4).direction(30).speedRange(1f, 5f).outsideGrid(PARTICLE_REAPPEAR).create();
 	}
 
 	private void initPacman() {
@@ -214,6 +223,9 @@ public class Pacman extends Daddel {
 		pacman.onFinishMove((me, map) -> pacmanGo());
 
 		pacman.collision((me, other) -> {
+			if (other.type() != TYPE_GHOST) {
+				return;
+			}
 			pacman.mapPos(pacmanLevelPos);
 			pacman.destMapPos(pacmanLevelPos);
 			pacmanState.dir = Dir.STOP;
@@ -228,6 +240,9 @@ public class Pacman extends Daddel {
 			pacmanGo();
 		}
 	}
+
+	private final Validator<Integer> isBlocked = type -> type == TYPE_WALL || type == TYPE_GATE;
+	private final Validator<Integer> isNotBlocked = intExpression().not(isBlocked).create();
 
 	private void pacmanGo() {
 
@@ -253,8 +268,8 @@ public class Pacman extends Daddel {
 
 		// check move:
 
-		if (pacman.checkType(pacmanState.nextDir, type -> type == TYPE_WALL || type == TYPE_GATE)) {
-			if (pacman.checkType(pacmanState.dir, type -> type == TYPE_WALL || type == TYPE_GATE)) {
+		if (pacman.checkType(pacmanState.nextDir, isBlocked)) {
+			if (pacman.checkType(pacmanState.dir, isBlocked)) {
 				pacmanState.dir = Dir.STOP;
 				pacmanState.nextDir = Dir.STOP;
 			}
@@ -290,8 +305,8 @@ public class Pacman extends Daddel {
 
 		for (int i = 0; i < 4; i++) {
 			ghosts[i] = entity(TYPE_GHOST, 2f, //
-					GFX_GHOSTS[i]).mapPos(homeGhosts[i]).moveSpeed(GHOST_SPEED)
-							.onFinishMove(ghostMoveFinischedListener).r(0.8);
+					GFX_GHOSTS[i]).mapPos(homeGhosts[i]).moveSpeed(GHOST_SPEED).onFinishMove(ghostMoveFinischedListener)
+							.r(0.8);
 			ghosts[i].animation().speed(GHOST_ANIMATION_SPEED);
 			// do first move
 			// TODO: automate
@@ -300,14 +315,16 @@ public class Pacman extends Daddel {
 	}
 
 	private final MoveFinishedListener ghostMoveFinischedListener = (ghost, map) -> {
+		Dir dir = ghost.lastMove();
 		if (ghost.checkType(Dir.UP, type -> type == TYPE_GATE)) {
-			ghost.move(Dir.UP);
-		} else if (ghost.checkType(ghost.lastMove(), type -> type == TYPE_WALL || type == TYPE_GATE || ( //
-		(ghost.checkType(ghost.lastMove().left(), type2 -> type2 != TYPE_WALL && type != TYPE_GATE)
-				|| ghost.checkType(ghost.lastMove().right(), type3 -> type3 != TYPE_WALL && type != TYPE_GATE)
-						&& random.nextBoolean())))) {
+			dir = Dir.UP;
+		} else if (dir == Dir.STOP || ghost.checkType(ghost.lastMove(), isBlocked)
+				|| ((ghost.checkType(ghost.lastMove().left(), isNotBlocked)
+						|| ghost.checkType(ghost.lastMove().right(), isNotBlocked)) && random.nextBoolean())) {
 			int count = 0;
-			Dir dir = ghost.lastMove() == Dir.STOP ? Dir.UP : ghost.lastMove();
+			if (dir == Dir.STOP) {
+				dir = Dir.UP;
+			}
 			if (random.nextBoolean()) {
 				dir = dir.left();
 			} else {
@@ -317,11 +334,15 @@ public class Pacman extends Daddel {
 				count++;
 				dir = dir.left();
 			}
+		}
+		MapPos newPos = ghost.mapPos().add(dir.p());
+		if (!tileMap().isValidPosition(newPos)) {
+			dir = Dir.STOP;
+		}
+		ghost.move(dir);
+		if (dir != Dir.STOP) {
 			int o = dir.ordinal();
-			ghost.move(dir);
 			ghost.animation().imageStart(o - 1).imageEnd(o).bounce(false).speed(GHOST_ANIMATION_SPEED);
-		} else {
-			ghost.move();
 		}
 	};
 

@@ -21,8 +21,10 @@ public class Roll {
 	private long ticks;
 	private RollDiesListener rollDiesListener = roll -> {};
 	private int activeSprites = 0;
+	private int layer;
 	
-	public Roll(Screen screen, Transformation transformation) {
+	public Roll(Screen screen, Transformation transformation, int layer) {
+		this.layer = layer;
 		this.screen = screen;
 		this.transformation = transformation;
 	}
@@ -83,13 +85,13 @@ public class Roll {
 	}
 
 	public ImageSprite sprite(int maxSize, String...imagefiles) {
-		ImageSprite sprite = new ImageSprite(transformation, -1, maxSize, imagefiles);
+		ImageSprite sprite = new ImageSprite(transformation, -1, layer, maxSize, imagefiles);
 		sprites.add(sprite);
 		return sprite;
 	}
 
 	public TextSprite text(String text) {
-		TextSprite textSprite = new TextSprite(transformation, text);
+		TextSprite textSprite = new TextSprite(transformation, text, layer);
 		sprites.add(textSprite);
 		return textSprite;
 	}

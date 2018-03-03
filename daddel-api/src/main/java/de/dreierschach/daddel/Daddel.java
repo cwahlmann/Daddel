@@ -13,6 +13,7 @@ import de.dreierschach.daddel.audio.AudioLib;
 import de.dreierschach.daddel.gfx.menu.MenuBuilder;
 import de.dreierschach.daddel.gfx.roll.Roll;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
+import de.dreierschach.daddel.gfx.sprite.InvisibleSprite;
 import de.dreierschach.daddel.gfx.sprite.Particle;
 import de.dreierschach.daddel.gfx.sprite.ParticleSwarmBuilder;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
@@ -31,6 +32,8 @@ import de.dreierschach.daddel.model.Timer;
 import de.dreierschach.daddel.model.Transformation;
 import de.dreierschach.daddel.setup.Setup;
 import de.dreierschach.daddel.util.FileUtils;
+import de.dreierschach.daddel.validator.Validator;
+import de.dreierschach.daddel.validator.Expression;
 import javafx.application.Application;
 import javafx.geometry.VPos;
 import javafx.scene.Cursor;
@@ -100,6 +103,11 @@ public abstract class Daddel extends Application {
 	public final static VPos VALIGN_BOTTOM = VPos.BOTTOM;
 	public final static VPos VALIGN_CENTER = VPos.CENTER;
 	public final static VPos VALIGN_BASELINE = VPos.BASELINE;
+
+	public final static int DEFAULT_BACKGROUND_LAYER = 0;
+	public final static int DEFAULT_SPRITE_LAYER = 100;
+	public final static int DEFAULT_TEXT_LAYER = 200;
+	public final static int DEFAULT_ROLL_LAYER = 300;
 
 	// ======================== API methods ==
 
@@ -520,6 +528,23 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
+	 * Erzeugt einen neuen unsichtbaren Sprite und hängt ihn in die View-Hierarchie
+	 * ein.
+	 * 
+	 * @param type
+	 *            Benutzerdefinierter Typ, ein Integer
+	 * @param r
+	 *            Der Radius des Sprite für die Kollisionskontrolle, in
+	 *            Spielrasterpunkten.
+	 * @return Eine neue Instanz der Klasse InvisibleSprite
+	 */
+	public InvisibleSprite invisibleSprite(int type, double r) {
+		InvisibleSprite sprite = new InvisibleSprite(transformation, type, DEFAULT_SPRITE_LAYER, r);
+		screen.addSprite(sprite);
+		return sprite;
+	}
+
+	/**
 	 * Erzeugt einen neuen Sprite und hängt ihn in die View-Hierarchie ein.
 	 * 
 	 * @param type
@@ -532,9 +557,7 @@ public abstract class Daddel extends Application {
 	 * @return Eine neue Instanz der Klasse ImageSprite
 	 */
 	public ImageSprite sprite(int type, double groesse, String... bilder) {
-		ImageSprite sprite = new ImageSprite(transformation, type, groesse, bilder);
-		screen.addSprite(sprite);
-		return sprite;
+		return sprite(type, DEFAULT_SPRITE_LAYER, groesse, bilder);
 	}
 
 	/**
@@ -556,9 +579,7 @@ public abstract class Daddel extends Application {
 	 * @return eine neue Instanz der Klasse Particle.
 	 */
 	public Particle particle(Pos pos, int type, long lebensdauerMS, double groesse, String... bilder) {
-		Particle particle = new Particle(transformation, type, groesse, lebensdauerMS, bilder).pos(pos);
-		screen.addSprite(particle);
-		return particle;
+		return particle(pos, type, DEFAULT_SPRITE_LAYER, lebensdauerMS, groesse, bilder);
 	}
 
 	/**
@@ -578,9 +599,7 @@ public abstract class Daddel extends Application {
 	 * @return eine neue Instanz der Klasse Particle.
 	 */
 	public Particle particle(int type, long lebensdauerMS, double groesse, String... bilder) {
-		Particle particle = new Particle(transformation, type, groesse, lebensdauerMS, bilder);
-		screen.addSprite(particle);
-		return particle;
+		return particle(type, DEFAULT_SPRITE_LAYER, lebensdauerMS, groesse, bilder);
 	}
 
 	/**
@@ -600,7 +619,99 @@ public abstract class Daddel extends Application {
 	 *         eingefügt.
 	 */
 	public ParticleSwarmBuilder particleSwarmBuilder(int count, int typ, String... images) {
-		ParticleSwarmBuilder builder = new ParticleSwarmBuilder(count, transformation, typ, images,
+		return particleSwarmBuilder(count, typ, DEFAULT_BACKGROUND_LAYER, images);
+	}
+
+	/**
+	 * Erzeugt einen neuen Sprite und hängt ihn in die View-Hierarchie ein.
+	 * 
+	 * @param type
+	 *            Benutzerdefinierter Typ, ein Integer
+	 * @param layer
+	 *            die Ebene, auf der der Sprite angezeigt wird
+	 * @param groesse
+	 *            Die maximale Breite und Höhe des Sprite, in Spielrasterpunkten.
+	 * @param bilder
+	 *            Die einzelnen Bilder (Frames) des Sprite. Diese können über die
+	 *            Methode animation() gesteuert werden.
+	 * @return Eine neue Instanz der Klasse ImageSprite
+	 */
+	public ImageSprite sprite(int type, int layer, double groesse, String... bilder) {
+		ImageSprite sprite = new ImageSprite(transformation, type, layer, groesse, bilder);
+		screen.addSprite(sprite);
+		return sprite;
+	}
+
+	/**
+	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch
+	 * animiert wird. Erzeugt einen neuen Partikel und hängt ihn in die
+	 * View-Hierarchie ein.
+	 *
+	 * @param pos
+	 *            Start-Position des Partikel
+	 * @param type
+	 *            Benutzerdefinierter Typ, ein Integer
+	 * @param layer
+	 *            die Ebene, auf der der Partikel angezeigt wird
+	 * @param lebensdauerMS
+	 *            Die Lebensdauer des Partikel in ms.
+	 * @param groesse
+	 *            Die maximale Breite und Höhe des Sprite, in Spielrasterpunkten. *
+	 * @param bilder
+	 *            Die einzelnen Bilder (Frames) des Sprite. Diese können über die
+	 *            Methode animation() gesteuert werden.
+	 * @return eine neue Instanz der Klasse Particle.
+	 */
+	public Particle particle(Pos pos, int type, int layer, long lebensdauerMS, double groesse, String... bilder) {
+		Particle particle = new Particle(transformation, type, layer, groesse, lebensdauerMS, bilder).pos(pos);
+		screen.addSprite(particle);
+		return particle;
+	}
+
+	/**
+	 * Ein Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch
+	 * animiert wird. Erzeugt einen neuen Partikel und hängt ihn in die
+	 * View-Hierarchie ein.
+	 *
+	 * @param type
+	 *            Benutzerdefinierter Typ, ein Integer
+	 * @param layer
+	 *            die Ebene, auf der der Partikel angezeigt wird
+	 * @param lebensdauerMS
+	 *            Die Lebensdauer des Partikel in ms.
+	 * @param groesse
+	 *            Die maximale Breite und Höhe des Sprite, in Spielrasterpunkten. *
+	 * @param bilder
+	 *            Die einzelnen Bilder (Frames) des Sprite. Diese können über die
+	 *            Methode animation() gesteuert werden.
+	 * @return eine neue Instanz der Klasse Particle.
+	 */
+	public Particle particle(int type, int layer, long lebensdauerMS, double groesse, String... bilder) {
+		Particle particle = new Particle(transformation, type, layer, groesse, lebensdauerMS, bilder);
+		screen.addSprite(particle);
+		return particle;
+	}
+
+	/**
+	 * Erzeugt einen Partikel-Schwarm-Builder. Ein Partikel-Schwarm ist ein Schwarm
+	 * von Partikeln mit zufälliger Verteilung. Ein Partikel ist ein Sprite mit
+	 * begrenzter lebensdauer, der automatisch animiert wird.
+	 * 
+	 * @param count
+	 *            Anzahl zu erzeugender Partikel
+	 * @param typ
+	 *            Benutzerdefinierter Typ, ein Integer
+	 * @param layer
+	 *            die Ebene, auf der der Partikelschwarm angezeigt wird
+	 * @param images
+	 *            Die einzelnen Bilder (Frames) des Sprite. Diese können über die
+	 *            Methode animation() gesteuert werden.
+	 * @return eine Instanz der Klasse ParticleSwarmBuilder. Über die Methode
+	 *         create() wird der Partikel erzeugt und in die View-Hierarchie
+	 *         eingefügt.
+	 */
+	public ParticleSwarmBuilder particleSwarmBuilder(int count, int typ, int layer, String... images) {
+		ParticleSwarmBuilder builder = new ParticleSwarmBuilder(count, transformation, typ, layer, images,
 				swarm -> swarm.getParticles().forEach(particle -> screen.addSprite(particle)));
 		return builder;
 	}
@@ -701,7 +812,50 @@ public abstract class Daddel extends Application {
 	 * @return eine Instanz der Klasse TextSprite
 	 */
 	public TextSprite text(String text, String family, double size, Color color) {
-		TextSprite textSprite = new TextSprite(transformation, text).family(family).color(color).size(size);
+		return text(text, family, DEFAULT_TEXT_LAYER, size, color);
+	}
+
+	/**
+	 * 
+	 * erzeugt ein Text-Partikel und fügt ihn der View-Hierarchie hinzu. Ein
+	 * Partikel ist ein Sprite mit begrenzter lebensdauer, der automatisch animiert
+	 * wird.
+	 * 
+	 * @param text
+	 *            Der anzuzeigende Text
+	 * @param lebensdauer
+	 *            Die Lebensdauer des Text-Partikels in ms
+	 * @param family
+	 *            Die Zeichensatz-Familie des Text-Sprites (z.B. sans-serif)
+	 * @param layer
+	 *            die Ebene, auf der der Textpartikel angezeigt wird
+	 * @param size
+	 *            Die Zeichensatz-Höhe des Texts
+	 * @param color
+	 *            Die Farbe des Texts
+	 * @return eine Instanz der Klasse TextParticle
+	 */
+	public TextParticle textParticle(String text, long lebensdauer, String family, double size, Color color) {
+		return textParticle(text, lebensdauer, family, DEFAULT_TEXT_LAYER, size, color);
+	}
+
+	/**
+	 * erzeugt ein Text-Sprite und fügt ihn der View-Hierarchie hinzu.
+	 * 
+	 * @param text
+	 *            Der anzuzeigende Text
+	 * @param family
+	 *            Die Zeichensatz-Familie des Text-Sprites (z.B. sans-serif)
+	 * @param layer
+	 *            die Ebene, auf der der Text angezeigt wird
+	 * @param size
+	 *            Die Zeichensatz-Höhe des Texts
+	 * @param color
+	 *            Die Farbe des Texts
+	 * @return eine Instanz der Klasse TextSprite
+	 */
+	public TextSprite text(String text, String family, int layer, double size, Color color) {
+		TextSprite textSprite = new TextSprite(transformation, text, layer).family(family).color(color).size(size);
 		screen.addText(textSprite);
 		return textSprite;
 	}
@@ -724,9 +878,10 @@ public abstract class Daddel extends Application {
 	 *            Die Farbe des Texts
 	 * @return eine Instanz der Klasse TextParticle
 	 */
-	public TextParticle textParticle(String text, long lebensdauer, String family, double size, Color color) {
-		TextParticle textParticle = new TextParticle(transformation, lebensdauer, text).family(family).color(color)
-				.size(size);
+	public TextParticle textParticle(String text, long lebensdauer, String family, int layer, double size,
+			Color color) {
+		TextParticle textParticle = new TextParticle(transformation, lebensdauer, text, layer).family(family)
+				.color(color).size(size);
 		screen.addText(textParticle);
 		return textParticle;
 	}
@@ -740,16 +895,16 @@ public abstract class Daddel extends Application {
 	 *         eingebunden.
 	 */
 	public MenuBuilder menu() {
-		return new MenuBuilder(transformation, screen);
+		return new MenuBuilder(transformation, screen).layer(DEFAULT_TEXT_LAYER);
 	}
 
 	/**
 	 * Markiert alle Text-Sprites als gestorben. Sie werden dann bei der nächsten
 	 * Gelegenheit aus der View-Hierarchie entfernt.
 	 */
-	public void killallText() {
-		screen.getTexts().stream().forEach(text -> text.kill());
-	}
+	// public void killallText() {
+	// screen.getTexts().stream().forEach(text -> text.kill());
+	// }
 
 	// ------------------------ tilemap methods --
 
@@ -765,6 +920,13 @@ public abstract class Daddel extends Application {
 		TileMap tileMap = new TileMap(transformation, tileSize);
 		screen.setTileMap(tileMap);
 		return tileMap;
+	}
+
+	/**
+	 * @return aktuelles Spielfeld, das aus Kacheln zusammengesetzt ist
+	 */
+	public TileMap tileMap() {
+		return screen.getTileMap();
 	}
 
 	/**
@@ -873,6 +1035,16 @@ public abstract class Daddel extends Application {
 	public boolean onGrid(Pos pos, double padding) {
 		return pos.x() - padding >= gridLeft() && pos.x() + padding <= gridRight() && pos.y() - padding >= gridTop()
 				&& pos.y() + padding <= gridBottom();
+	}
+
+	/**
+	 * Erzeugt eine Integer-Expression, mit dem ein Validator für Integer-Werte zusammengesetzt werden
+	 * kann. create() gibt dann den Validator zurück.
+	 * 
+	 * @return der ValidatorBuilder, mit dem weitere Bedingungen hinzugefügt werden
+	 */
+	public <T> Expression<Integer> intExpression() {
+		return Expression.instance(Integer.class);
 	}
 
 	// ------------------------ utility methods --
@@ -998,7 +1170,11 @@ public abstract class Daddel extends Application {
 	// Abspann
 
 	public Roll roll() {
-		this.roll = new Roll(getScreen(), transformation);
+		return roll(DEFAULT_ROLL_LAYER);
+	}
+
+	public Roll roll(int layer) {
+		this.roll = new Roll(getScreen(), transformation, layer);
 		return this.roll;
 	}
 
@@ -1041,8 +1217,7 @@ public abstract class Daddel extends Application {
 	// screen loop
 	private void basicScreenLoop(long gesamtZeit, long deltaZeit) {
 		runSprites(deltaZeit);
-		runTexts(deltaZeit);
-		runTileMap(deltaZeit);
+//		runTileMap(deltaZeit);
 		runRoll(deltaZeit);
 		runTimers(deltaZeit);
 	}
@@ -1051,15 +1226,13 @@ public abstract class Daddel extends Application {
 		removeKeys();
 		key(KeyCode.F3, keyCode -> debug(debug().next()));
 		killallSprites();
-		killallText();
 	}
 
 	// game loop
 
 	private void basicGameLoop(long gesamtZeit, long deltaZeit) {
 		runSprites(deltaZeit);
-		runTexts(deltaZeit);
-		runTileMap(deltaZeit);
+//		runTileMap(deltaZeit);
 		runTimers(deltaZeit);
 		gameLoop(gesamtZeit, deltaZeit);
 		checkCollisions();
@@ -1076,31 +1249,17 @@ public abstract class Daddel extends Application {
 		}
 
 		it = screen.getSprites().iterator();
+		List<Sprite> spritesWithLayerChanged = new ArrayList<>();
 		while (it.hasNext()) {
 			Sprite sprite = it.next();
 			if (!sprite.alive()) {
 				it.remove();
-			}
-		}
-	}
-
-	private void runTexts(long delta) {
-		List<TextSprite> textCopy = new ArrayList<>(screen.getTexts());
-		Iterator<TextSprite> it = textCopy.iterator();
-		while (it.hasNext()) {
-			TextSprite textSprite = it.next();
-			if (textSprite.alive()) {
-				textSprite.gameLoop(delta);
-			}
-		}
-
-		it = screen.getTexts().iterator();
-		while (it.hasNext()) {
-			TextSprite textSprite = it.next();
-			if (!textSprite.alive()) {
+			} else if (sprite.layerChanged()) {
+				spritesWithLayerChanged.add(sprite);
 				it.remove();
 			}
 		}
+		screen.getSprites().addAll(spritesWithLayerChanged);
 	}
 
 	private void runTimers(long delta) {
@@ -1192,7 +1351,7 @@ public abstract class Daddel extends Application {
 
 		this.transformation = new Transformation(this.witdh, this.height);
 		screen = new Screen(this.witdh, this.height, new Font(12));
-		screen.setDebugInfo(new TextSprite(transformation, "DEBUG").size(1f).color(Color.WHITE)
+		screen.setDebugInfo(new TextSprite(transformation, "DEBUG", 9999).size(1f).color(Color.WHITE)
 				.pos(transformation.getRasterLeftUpper()).align(TextAlignment.LEFT, VPos.TOP));
 		screen.setTransformation(transformation);
 		Scene scene = new Scene(screen.getPane(), witdh, height);

@@ -7,7 +7,7 @@ import de.dreierschach.daddel.model.MapPos;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
 import de.dreierschach.daddel.model.Transformation;
-import de.dreierschach.daddel.model.Validator;
+import de.dreierschach.daddel.validator.Validator;
 
 /**
  * eine Entity ist eine selbständige Einheit, die sich auf einem gekachelten
@@ -127,7 +127,7 @@ public class Entity extends ImageSprite {
 	 *            die Bilder der Entity
 	 */
 	public Entity(Transformation transformation, TileMap tileMap, int type, double maxSize, String... imagefiles) {
-		super(transformation, type, maxSize, imagefiles);
+		super(transformation, type, 0, maxSize, imagefiles);
 		this.animation = new Animation();
 		gameLoop((me, total, deltatime) -> {
 

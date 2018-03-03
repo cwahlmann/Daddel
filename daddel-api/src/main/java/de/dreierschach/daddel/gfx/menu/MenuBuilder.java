@@ -20,6 +20,7 @@ public class MenuBuilder {
 	private Menu menu;
 	private Screen screen;
 	private Transformation transformation;
+	private int layer = 0;
 
 	private Pos pos = new Pos(0, 0);
 	private double lineHeight = 1f;
@@ -69,13 +70,13 @@ public class MenuBuilder {
 	 */
 	public MenuBuilder item(String text, KeyListener action) {
 		if (menu.size() == 0) {
-			TextSprite textSprite = new TextSprite(transformation, text).align(align, valign).color(colorOn)
+			TextSprite textSprite = new TextSprite(transformation, text, layer).align(align, valign).color(colorOn)
 					.family(familyOn).size(sizeOn).weight(fontWeightOn).type(-1).pos(pos);
 			menu.addItem(textSprite, action);
 			screen.addSprite(textSprite);
 			return this;
 		}
-		TextSprite textSprite = new TextSprite(transformation, text).align(align, valign).color(colorOff)
+		TextSprite textSprite = new TextSprite(transformation, text, layer).align(align, valign).color(colorOff)
 				.family(familyOff).size(sizeOff).weight(fontWeightOff).type(-1)
 				.pos(new Pos(pos.x(), pos.y() + lineHeight * (double) (menu.size())));
 		menu.addItem(textSprite, action);
@@ -200,6 +201,11 @@ public class MenuBuilder {
 		menu.fontWeight(fontWeightOn, fontWeightOff);
 		this.fontWeightOn = fontWeightOn;
 		this.fontWeightOff = fontWeightOff;
+		return this;
+	}
+	
+	public MenuBuilder layer(int layer) {
+		this.layer = layer;
 		return this;
 	}
 }
