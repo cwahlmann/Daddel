@@ -1,5 +1,6 @@
 package de.dreierschach.invader;
 
+import java.rmi.dgc.Lease;
 import java.util.Random;
 
 import de.dreierschach.daddel.Daddel;
@@ -46,10 +47,11 @@ public class SpaceInvader extends Daddel {
 
 	private static int TYP_STERN = 0;
 	private static int TYP_SPIELER = 1;
-	private static int TYP_FEIND = 2;
-	private static int TYP_LASER = 3;
-	private static int TYP_GEGNERISCHER_LASER = 4;
-	private static int TYP_EXPLOSION = 5;
+	private static int TYP_FLOTTE = 2;
+	private static int TYP_FEIND = 3;
+	private static int TYP_LASER = 4;
+	private static int TYP_GEGNERISCHER_LASER = 5;
+	private static int TYP_EXPLOSION = 6;
 
 	// ---------- Spielvariablen --
 
@@ -60,11 +62,17 @@ public class SpaceInvader extends Daddel {
 	// ---------- Highscore --
 
 	private Highscore highscore = new Highscore();
-
+	
+	// ---------- Level Builder --
+	
+	private SpaceInvaderLevelBuilder levelBuilder;
+	
 	// ---------- Titel-Bildschirm --
 
 	@Override
 	public void initGame() {
+		levelBuilder = new SpaceInvaderLevelBuilder(this);
+		
 		toTitle(() -> titel());
 		// toIntro(() -> intro());
 		toMenu(() -> hauptmenu());
@@ -84,11 +92,11 @@ public class SpaceInvader extends Daddel {
 		grid(-16, 16, -10, 10);
 		erzeugeFrontalScrollendeSterne();
 
-		textParticle("SPACE", 4000, "sans-serif", 3f, Color.YELLOW).pos(0, -3.5f).weight(FontWeight.BLACK).size(30f, 7f)
-				.endOfLifeStrategy(PARTICLE_STOP);
-
 		textParticle("I N V A D E R", 4000, "sans-serif", 1.5f, Color.RED).pos(0, 2f).weight(FontWeight.BOLD)
 				.size(0.01f, 1.5f).endOfLifeStrategy(PARTICLE_STOP);
+
+		textParticle("SPACE", 4000, "sans-serif", 3f, Color.YELLOW).pos(0, -3.5f).weight(FontWeight.BLACK).size(30f, 7f)
+		.endOfLifeStrategy(PARTICLE_STOP);
 
 		particle(TYP_FEIND, 10000, 3, Gfx.UFO_1).rotation(0, 360).pos(-7f, 2f).endOfLife(PARTICLE_RESTART).alpha(0.5f,
 				1f);
@@ -183,8 +191,8 @@ public class SpaceInvader extends Daddel {
 	// ---------- Abspann-Bildschirm --
 
 	public void abspann() {
-		erzeugeHochscrollendeSterne();
-		erzeugeErdeUndMond();
+		erzeugeSchraegScrollendeSterne();
+		erzeugeSaturn();
 		Roll roll = roll().speed(4);
 		roll.text("SPACE INVADER\n").size(2.5).family("sans-serif").weight(FontWeight.EXTRA_BOLD).color(Color.YELLOW);
 		roll.sprite(3, Gfx.ROCKET);
@@ -245,6 +253,8 @@ public class SpaceInvader extends Daddel {
 		grid(-16, 16, -10, 10);
 
 		// Sprites erzeugen
+		
+//		levelBuilder.erzeugeLevel();
 
 		erzeugeHochscrollendeSterne();
 		erzeugeErdeUndMond();
@@ -341,6 +351,13 @@ public class SpaceInvader extends Daddel {
 				.sizeRange(0.01f, 0.2f, 4).direction(90).speedRange(1f, 5f).outsideGrid(PARTICLE_REAPPEAR).create();
 	}
 
+	// ------------- schräg-scrollende Sterne erzeugen --
+
+	public void erzeugeSchraegScrollendeSterne() {
+		particleSwarmBuilder(200, TYP_STERN, Gfx.STERN).initialPosRange(new Pos(-16, -10), new Pos(16, 10))
+				.sizeRange(0.01f, 0.2f, 4).direction(30).speedRange(1f, 5f).outsideGrid(PARTICLE_REAPPEAR).create();
+	}
+
 	// ------------- Erde und Mond erzeugen --
 
 	public void erzeugeErdeUndMond() {
@@ -349,6 +366,12 @@ public class SpaceInvader extends Daddel {
 			Pos pos = circlePosition(gesamtZeit, 20000, new Pos(-10, -6), new Pos(10, 6));
 			me.pos(pos);
 		});
+	}
+
+	// ------------- Saturn erzeugen --
+
+	public void erzeugeSaturn() {
+		sprite(TYP_STERN, 1, 10, Gfx.SATURN).pos(0, -2);
 	}
 
 	// ------------- frontal-scrollende Sterne erzeugen --
@@ -386,34 +409,58 @@ public class SpaceInvader extends Daddel {
 
 	// ------------- Gegner erzeugen --
 
-	public void erzeugeFeinde() {
-		Random random = new Random();
+	private SpriteGameLoop flotteKreisen = (me, total, delta) -> {
+		me.pos(circlePosition(total + 5000, 10000, new Pos(-10, -7), new Pos(10, 1)));
+	};
+
+	private SpriteGameLoop flotteIntervallKreisen = (me, total, delta) -> {
+		int phase = (int) ((total / 10000) % 4);
+		switch (phase) {
+		case 0:
+			me.pos(circlePosition(total + 5000, 10000, new Pos(-10, -4), new Pos(10, 4)));
+			break;
+		case 1:
+			break;
+		case 2:
+			me.pos(circlePosition(1000 - total, 2000, new Pos(-6, -2), new Pos(6, 2)));
+			break;
+		case 3:
+			break;
+		default:
+		}
+	};
+
+	private SpriteGameLoop ufoKreisen = (me, total, delta) -> {
+		double strecke = strecke(delta, 6);
+		me.direction(me.direction() + 5);
+		me.move(strecke);
+	};
+
+	private void erzeugeFeinde() {
+		switch (level()) {
+		case 1:
+		default:
+			erzeugeFeindeLevel1();
+		}
+	}
+
+	private void erzeugeFeindeLevel1() {
 		anzahlFeinde = 0;
-		for (int i = -4; i <= 4; i++) {
-			for (int j = -3; j <= -1; j++) {
-				String enimy;
-				double rotation;
-				switch (random.nextInt(2)) {
-				case 0:
-					enimy = Gfx.UFO_1;
-					rotation = 6 * Math.random() - 3;
-					break;
-				default:
-				case 1:
-					enimy = Gfx.UFO_2;
-					rotation = 3 * Math.random() - 1.5;
-					break;
-				}
+		Sprite parent = invisibleSprite(TYP_FLOTTE, 0.5).pos(new Pos(0, -2));
+		erzeugeFlotte(new int[] { 9, 9, 9 }, flotteIntervallKreisen, parent);
+	}
 
-				// Gegner erzeugen und animieren
-
-				sprite(TYP_FEIND, 2.5f, enimy).pos(((double) i) * 3f, ((double) j) * 3f)
+	private void erzeugeFlotte(int[] ufos, SpriteGameLoop steuerung, Sprite parent) {
+		Sprite flotte = invisibleSprite(TYP_FLOTTE, 0.5).parent(parent).gameLoop(steuerung);
+		Random random = new Random();
+		for (int zeile = 0; zeile < ufos.length; zeile++) {
+			double y = zeile - ufos.length / 2;
+			for (int spalte = 0; spalte < ufos[zeile]; spalte++) {
+				double x = (double) spalte - (double) (ufos[zeile] - 1) / 2d;
+				sprite(TYP_FEIND, 2.5f, random.nextBoolean() ? Gfx.UFO_1 : Gfx.UFO_2).pos(x * 3f, y * 3f).parent(flotte)
 						.gameLoop((spr, ticks, deltatime) -> {
-							spr.rotate(-rotation);
-							spr.direction(-spr.rotation());
-							spr.move((double) (rotation / 20));
 							if (Math.random() < 0.004) {
-								gegnerischenLaserAbfeuern(spr.pos().add(new Pos(0, 1.5f)));
+								gegnerischenLaserAbfeuern(spr.effektivePos().add(new Pos(0, 1.5f)));
 							}
 						});
 				anzahlFeinde++;
