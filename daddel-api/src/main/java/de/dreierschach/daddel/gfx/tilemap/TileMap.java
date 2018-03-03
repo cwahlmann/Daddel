@@ -46,7 +46,7 @@ public class TileMap extends Sprite {
 	 *            die maximale Breite und Höhe einer Kachel in Spielraster-Punkten
 	 */
 	public TileMap(Transformation transformation, double tileSize) {
-		super(transformation, -1);
+		super(transformation, -1, 0);
 		this.tileSize = tileSize;
 		this.transformation = transformation;
 		clear(new MapPos(8, 8, 1));
@@ -393,18 +393,6 @@ public class TileMap extends Sprite {
 	 */
 	public Pos toPos(int x, int y) {
 		return new Pos(((double) x) * tileSize, ((double) y) * tileSize);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.dreierschach.daddel.gfx.sprite.Sprite#onCollision(de.dreierschach.daddel.
-	 * gfx.sprite.Sprite)
-	 */
-	@Override
-	public TileMap onCollision(Sprite other) {
-		return this;
 	}
 
 	// private methods

@@ -47,8 +47,8 @@ public class Particle extends ImageSprite {
 	 * @param bilder
 	 *            Die Pfade der Bilder des Sprites
 	 */
-	public Particle(Transformation transformation, int typ, double groesse, long lifespan, String... bilder) {
-		super(transformation, typ, groesse, bilder);
+	public Particle(Transformation transformation, int typ, int layer, double groesse, long lifespan, String... bilder) {
+		super(transformation, typ, layer, groesse, bilder);
 		this.lifespan = lifespan;
 		this.rotationStart = rotation();
 		this.rotationEnd = rotation();
@@ -417,19 +417,6 @@ public class Particle extends ImageSprite {
 	@Override
 	public Particle collision(CollisionListener collisionListener) {
 		super.collision(collisionListener);
-		return this;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.dreierschach.daddel.gfx.sprite.ImageSprite#onCollision(de.dreierschach.
-	 * daddel.gfx.sprite.Sprite)
-	 */
-	@Override
-	public Particle onCollision(Sprite other) {
-		super.onCollision(other);
 		return this;
 	}
 

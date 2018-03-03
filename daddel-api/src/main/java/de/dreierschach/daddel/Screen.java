@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.gfx.text.TextSprite;
@@ -50,8 +53,8 @@ public class Screen {
 	private String inputString = "";
 	private boolean enableInput = false;
 	private int inputLaenge = 0;
-	private List<Sprite> sprites = new ArrayList<>();
-	private List<TextSprite> texts = new ArrayList<>();
+	private SortedSet<Sprite> sprites = new TreeSet<>();
+//	private SortedSet<TextSprite> texts = new TreeSet<>();
 	private TileMap tileMap = null;
 	private Color foreground = Color.WHITE;
 	private Color background = Color.BLACK;
@@ -359,7 +362,7 @@ public class Screen {
 	/**
 	 * @return die Liste mit allen Sprites
 	 */
-	public List<Sprite> getSprites() {
+	public SortedSet<Sprite> getSprites() {
 		return sprites;
 	}
 
@@ -370,7 +373,8 @@ public class Screen {
 	 *            der Text-Sprite
 	 */
 	public void addText(TextSprite text) {
-		this.texts.add(text);
+		this.sprites.add(text);
+//		this.texts.add(text);
 	}
 
 	/**
@@ -381,19 +385,20 @@ public class Screen {
 	 * @return false: Text-Sprite existiert nicht in der Liste
 	 */
 	public boolean deleteText(TextSprite text) {
-		if (!texts.contains(text)) {
+		if (!sprites.contains(text)) {
+//		if (!texts.contains(text)) {
 			return false;
 		}
 		this.sprites.remove(text);
 		return true;
 	}
 
-	/**
-	 * @return einen Liste mit allen Text-Sprites
-	 */
-	public List<TextSprite> getTexts() {
-		return texts;
-	}
+//	/**
+//	 * @return einen Liste mit allen Text-Sprites
+//	 */
+//	public SortedSet<TextSprite> getTexts() {
+//		return texts;
+//	}
 
 	/**
 	 * Legt das anzuzeigende gekachelte Spielfeld fest; ist es null, wird kein
@@ -404,6 +409,7 @@ public class Screen {
 	 */
 	public void setTileMap(TileMap tileMap) {
 		this.tileMap = tileMap;
+		sprites.add(tileMap);
 	}
 
 	/**
@@ -429,10 +435,7 @@ public class Screen {
 				GraphicsContext g = output.getGraphicsContext2D();
 				g.setFill(background);
 				g.fillRect(0, 0, output.getWidth(), output.getHeight());
-				if (tileMap != null) {
-					tileMap.debug(getDebug());
-					tileMap.draw(g);
-				} else {
+				if (tileMap == null) {
 					if (debug.info()) {
 						drawGrid(g);
 					}
@@ -445,12 +448,6 @@ public class Screen {
 					g.save();
 					sprite.debug(getDebug());
 					sprite.drawSprite(g);
-					g.restore();
-				});
-				texts.forEach(text -> {
-					g.save();
-					text.debug(getDebug());
-					text.draw(g);
 					g.restore();
 				});
 				if (debug.info()) {

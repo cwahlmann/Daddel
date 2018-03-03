@@ -45,8 +45,8 @@ public class TextParticle extends TextSprite {
 	 * @param text
 	 *            der anzuzeigende Text
 	 */
-	public TextParticle(Transformation transformation, long lifespan, String text) {
-		super(transformation, text);
+	public TextParticle(Transformation transformation, long lifespan, String text, int layer) {
+		super(transformation, text, layer);
 		this.lifespan = lifespan;
 		this.rotationStart = rotation();
 		this.rotationEnd = rotation();
@@ -381,15 +381,6 @@ public class TextParticle extends TextSprite {
 	@Override
 	public TextParticle weight(FontWeight fontWeight) {
 		super.weight(fontWeight);
-		return this;
-	}
-
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.text.TextSprite#onCollision(de.dreierschach.daddel.gfx.sprite.Sprite)
-	 */
-	@Override
-	public TextParticle onCollision(Sprite other) {
-		super.onCollision(other);
 		return this;
 	}
 

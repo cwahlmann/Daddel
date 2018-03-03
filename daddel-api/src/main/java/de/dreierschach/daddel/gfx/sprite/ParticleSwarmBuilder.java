@@ -54,6 +54,7 @@ public class ParticleSwarmBuilder {
 	};
 	private ParticleDiesListener particleDiesListener = particle -> {
 	};
+	private int layer; 
 	private Sprite parent = null;
 
 	//
@@ -74,13 +75,14 @@ public class ParticleSwarmBuilder {
 	 *            Dieser wird aufgerufen, wenn der Partikelschwarm erzeugt wird, und
 	 *            bekommt diesen als Parameter mitgegeben
 	 */
-	public ParticleSwarmBuilder(int count, Transformation transformation, int typ, String[] images,
+	public ParticleSwarmBuilder(int count, Transformation transformation, int typ, int layer, String[] images,
 			CreateSwarmHandler createSwarmHandler) {
 		this.count = count;
 		this.transformation = transformation;
 		this.typ = typ;
 		this.images = images;
 		this.createSwarmHandler = createSwarmHandler;
+		this.layer = layer;
 	}
 
 	/**
@@ -104,7 +106,7 @@ public class ParticleSwarmBuilder {
 			double alphaStart = random(alphaStartRange);
 			double alphaEnd = alphaEndRange != null ? random(alphaEndRange) : alphaStart;
 
-			Particle particle = new Particle(transformation, typ, random(sizeRange, sizeSteps), random(lifeSpanRange),
+			Particle particle = new Particle(transformation, typ, layer, random(sizeRange, sizeSteps), random(lifeSpanRange),
 					images).speedAnimation(random(speedAnimationRange));
 			particle.pos(random(initialPosRange)).speed(speedStart, speedEnd)
 					.direction(directionStart, directionEnd).rotation(rotationStart, rotationEnd)
