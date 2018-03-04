@@ -2,7 +2,6 @@ package de.dreierschach.tutorial;
 
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.Gfx;
-import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 

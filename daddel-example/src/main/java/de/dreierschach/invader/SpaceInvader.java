@@ -1,8 +1,5 @@
 package de.dreierschach.invader;
 
-import java.rmi.dgc.Lease;
-import java.util.Random;
-
 import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.audio.Audio;
 import de.dreierschach.daddel.gfx.Gfx;
@@ -30,7 +27,7 @@ public class SpaceInvader extends Daddel {
 	private long raketeLaserVerbleibendeWartezeit = 0; // ms
 
 	private static long raketeSchutzschirmDauer = 2000;
-	private long raketeSchutzschirm = raketeSchutzschirmDauer;
+	public long raketeSchutzschirm = raketeSchutzschirmDauer;
 
 	private static long neueRaketeVerzoegerungDauer = 2000;
 	private long neueRaketeVerzoegerung = 0;
@@ -45,34 +42,34 @@ public class SpaceInvader extends Daddel {
 	private TextSprite punkteAnzeige;
 	private TextSprite lebenAnzeige;
 
-	private static int TYP_STERN = 0;
-	private static int TYP_SPIELER = 1;
-	private static int TYP_FLOTTE = 2;
-	private static int TYP_FEIND = 3;
-	private static int TYP_LASER = 4;
-	private static int TYP_GEGNERISCHER_LASER = 5;
-	private static int TYP_EXPLOSION = 6;
+	protected static int TYP_STERN = 0;
+	protected static int TYP_SPIELER = 1;
+	protected static int TYP_FLOTTE = 2;
+	protected static int TYP_FEIND = 3;
+	protected static int TYP_LASER = 4;
+	protected static int TYP_GEGNERISCHER_LASER = 5;
+	protected static int TYP_EXPLOSION = 6;
 
 	// ---------- Spielvariablen --
 
-	private int anzahlFeinde;
-	private int punkte = 0;
-	private int leben = 5;
+	protected int anzahlFeinde;
+	protected int punkte = 0;
+	protected int leben = 5;
 
 	// ---------- Highscore --
 
 	private Highscore highscore = new Highscore();
-	
+
 	// ---------- Level Builder --
-	
+
 	private SpaceInvaderLevelBuilder levelBuilder;
-	
+
 	// ---------- Titel-Bildschirm --
 
 	@Override
 	public void initGame() {
 		levelBuilder = new SpaceInvaderLevelBuilder(this);
-		
+
 		toTitle(() -> titel());
 		// toIntro(() -> intro());
 		toMenu(() -> hauptmenu());
@@ -96,7 +93,7 @@ public class SpaceInvader extends Daddel {
 				.size(0.01f, 1.5f).endOfLifeStrategy(PARTICLE_STOP);
 
 		textParticle("SPACE", 4000, "sans-serif", 3f, Color.YELLOW).pos(0, -3.5f).weight(FontWeight.BLACK).size(30f, 7f)
-		.endOfLifeStrategy(PARTICLE_STOP);
+				.endOfLifeStrategy(PARTICLE_STOP);
 
 		particle(TYP_FEIND, 10000, 3, Gfx.UFO_1).rotation(0, 360).pos(-7f, 2f).endOfLife(PARTICLE_RESTART).alpha(0.5f,
 				1f);
@@ -126,9 +123,13 @@ public class SpaceInvader extends Daddel {
 		text("INVADER", "sans-serif", 1.7f, Color.RED).pos(0, -4.5f).weight(FontWeight.BLACK);
 
 		menu().pos(0, 0).color(Color.GREEN, Color.WHITE).weight(FontWeight.BLACK, FontWeight.BLACK).size(1.5f, 1.5f)
-				.lineHeight(2).family("sans-serif", "sans-serif").item("new game", (keyCode) -> toLevelIntro())
-				.item("highscore", (keyCode) -> toHighscore()).item("setup", (keyCode) -> toSetup())
-				.item("title", (keyCode) -> toTitle()).item("exit", (keyCode) -> toCredits()).create();
+				.lineHeight(2).family("sans-serif", "sans-serif") //
+				.item("new game", (keyCode) -> toLevelIntro()) //
+				.item("highscore", (keyCode) -> toHighscore()) //
+				.item("setup", (keyCode) -> toSetup()) //
+				.item("title", (keyCode) -> toTitle()) //
+				.item("exit", (keyCode) -> toCredits()) //
+				.create();
 		key(KeyCode.ESCAPE, (keyCode) -> toCredits());
 	}
 
@@ -253,13 +254,10 @@ public class SpaceInvader extends Daddel {
 		grid(-16, 16, -10, 10);
 
 		// Sprites erzeugen
-		
-//		levelBuilder.erzeugeLevel();
 
 		erzeugeHochscrollendeSterne();
-		erzeugeErdeUndMond();
+		levelBuilder.erzeugeLevel();
 		erzeugeRakete(0f, 7.5f);
-		erzeugeFeinde();
 
 		punkteAnzeige = text("SCORE:     ", "sans-serif", 1.0f, Color.YELLOW).pos(-16f, 9.5f)
 				.align(ALIGN_LEFT, VALIGN_CENTER).weight(FontWeight.BLACK);
@@ -407,67 +405,6 @@ public class SpaceInvader extends Daddel {
 				.actualImage(raketeSchutzschirm > 0 ? 1 : 0);
 	};
 
-	// ------------- Gegner erzeugen --
-
-	private SpriteGameLoop flotteKreisen = (me, total, delta) -> {
-		me.pos(circlePosition(total + 5000, 10000, new Pos(-10, -7), new Pos(10, 1)));
-	};
-
-	private SpriteGameLoop flotteIntervallKreisen = (me, total, delta) -> {
-		int phase = (int) ((total / 10000) % 4);
-		switch (phase) {
-		case 0:
-			me.pos(circlePosition(total + 5000, 10000, new Pos(-10, -4), new Pos(10, 4)));
-			break;
-		case 1:
-			break;
-		case 2:
-			me.pos(circlePosition(1000 - total, 2000, new Pos(-6, -2), new Pos(6, 2)));
-			break;
-		case 3:
-			break;
-		default:
-		}
-	};
-
-	private SpriteGameLoop ufoKreisen = (me, total, delta) -> {
-		double strecke = strecke(delta, 6);
-		me.direction(me.direction() + 5);
-		me.move(strecke);
-	};
-
-	private void erzeugeFeinde() {
-		switch (level()) {
-		case 1:
-		default:
-			erzeugeFeindeLevel1();
-		}
-	}
-
-	private void erzeugeFeindeLevel1() {
-		anzahlFeinde = 0;
-		Sprite parent = invisibleSprite(TYP_FLOTTE, 0.5).pos(new Pos(0, -2));
-		erzeugeFlotte(new int[] { 9, 9, 9 }, flotteIntervallKreisen, parent);
-	}
-
-	private void erzeugeFlotte(int[] ufos, SpriteGameLoop steuerung, Sprite parent) {
-		Sprite flotte = invisibleSprite(TYP_FLOTTE, 0.5).parent(parent).gameLoop(steuerung);
-		Random random = new Random();
-		for (int zeile = 0; zeile < ufos.length; zeile++) {
-			double y = zeile - ufos.length / 2;
-			for (int spalte = 0; spalte < ufos[zeile]; spalte++) {
-				double x = (double) spalte - (double) (ufos[zeile] - 1) / 2d;
-				sprite(TYP_FEIND, 2.5f, random.nextBoolean() ? Gfx.UFO_1 : Gfx.UFO_2).pos(x * 3f, y * 3f).parent(flotte)
-						.gameLoop((spr, ticks, deltatime) -> {
-							if (Math.random() < 0.004) {
-								gegnerischenLaserAbfeuern(spr.effektivePos().add(new Pos(0, 1.5f)));
-							}
-						});
-				anzahlFeinde++;
-			}
-		}
-	}
-
 	// ------------- Rakete Steuerung --
 
 	public void left() {
@@ -528,7 +465,7 @@ public class SpaceInvader extends Daddel {
 
 	// ------------- gegnerische Treffer behandeln --
 
-	private CollisionListener gegnerischeTrefferBehandeln = (laserSprite, getroffenerSprite) -> {
+	protected CollisionListener gegnerischeTrefferBehandeln = (laserSprite, getroffenerSprite) -> {
 		if (getroffenerSprite.type() == TYP_SPIELER) {
 
 			if (getroffenerSprite.alive() && raketeSchutzschirm <= 0) {
