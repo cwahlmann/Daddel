@@ -29,6 +29,8 @@ public class InvisibleSprite extends Sprite {
 	 *            Bildschirmpixel
 	 * @param type
 	 *            Benutzerdefinierter Typ, Integer
+	 * @param layer
+	 *            Die Ebene, auf der der Sprite angezeigt wird
 	 * @param r
 	 *            Der Radius des Sprites für die Kollisionskontrolle
 	 */

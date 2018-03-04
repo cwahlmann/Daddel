@@ -32,7 +32,6 @@ import de.dreierschach.daddel.model.Timer;
 import de.dreierschach.daddel.model.Transformation;
 import de.dreierschach.daddel.setup.Setup;
 import de.dreierschach.daddel.util.FileUtils;
-import de.dreierschach.daddel.validator.Validator;
 import de.dreierschach.daddel.validator.Expression;
 import javafx.application.Application;
 import javafx.geometry.VPos;
@@ -827,8 +826,6 @@ public abstract class Daddel extends Application {
 	 *            Die Lebensdauer des Text-Partikels in ms
 	 * @param family
 	 *            Die Zeichensatz-Familie des Text-Sprites (z.B. sans-serif)
-	 * @param layer
-	 *            die Ebene, auf der der Textpartikel angezeigt wird
 	 * @param size
 	 *            Die Zeichensatz-Höhe des Texts
 	 * @param color
@@ -872,6 +869,8 @@ public abstract class Daddel extends Application {
 	 *            Die Lebensdauer des Text-Partikels in ms
 	 * @param family
 	 *            Die Zeichensatz-Familie des Text-Sprites (z.B. sans-serif)
+	 * @param layer
+	 *            Die Ebene, auf der der TextPartikel angezeigt wird
 	 * @param size
 	 *            Die Zeichensatz-Höhe des Texts
 	 * @param color
@@ -1041,9 +1040,10 @@ public abstract class Daddel extends Application {
 	 * Erzeugt eine Integer-Expression, mit dem ein Validator für Integer-Werte zusammengesetzt werden
 	 * kann. create() gibt dann den Validator zurück.
 	 * 
+	 * der Typ des Ausdrucks
 	 * @return der ValidatorBuilder, mit dem weitere Bedingungen hinzugefügt werden
 	 */
-	public <T> Expression<Integer> intExpression() {
+	public Expression<Integer> intExpression() {
 		return Expression.instance(Integer.class);
 	}
 

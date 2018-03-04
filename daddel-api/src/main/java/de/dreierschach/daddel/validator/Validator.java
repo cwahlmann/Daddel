@@ -2,7 +2,7 @@ package de.dreierschach.daddel.validator;
 
 /**
  * Interface für eine Lambda-Funktion, die Werte prüft,
- * z.B. wert -> wert > 2
+ * z.B. wert == 2
  * 
  * @author Christian
  *

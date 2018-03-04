@@ -91,7 +91,7 @@ image::screenshots/Losdaddeln_Raster.jpg[Losdaddeln_Raster,400,200]
 Das Programm dazu ist schnell erstellt.
 
 .Losdaddeln.java
-[source,java]
+[source,java,linenums]
 ----
 package de.dreierschach.tutorial;
 

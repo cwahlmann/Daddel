@@ -3,7 +3,6 @@ package de.dreierschach.daddel.gfx;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.util.FileUtils;
 import javafx.scene.image.Image;
 
