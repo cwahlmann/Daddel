@@ -148,17 +148,17 @@ import de.dreierschach.daddel.gfx.sprite.Particle;
 		toLevel(() -> {
 			sprite(1, 4, Gfx.ROCKET);
 
-			Particle pacman = // <1>
-				particle(1, 8000, 1.5, Gfx.PAC_PACMAN_L0, Gfx.PAC_PACMAN_L1, Gfx.PAC_PACMAN_L2, Gfx.PAC_PACMAN_L3) // <2>
-				.pos(-11, 3) // <3>
-				.rotation(180) // <4>
-				.speed(4) // <5>
-				.endOfLife(PARTICLE_RESTART) // <6>
-				.outsideGrid(PARTICLE_IGNORE); // <7>
+			Particle pacman = // 1)
+				particle(1, 8000, 1.5, Gfx.PAC_PACMAN_L0, Gfx.PAC_PACMAN_L1, Gfx.PAC_PACMAN_L2, Gfx.PAC_PACMAN_L3) // 2)
+				.pos(-11, 3) // 3)
+				.rotation(180) // 4)
+				.speed(4) // 5)
+				.endOfLife(PARTICLE_RESTART) // 6)
+				.outsideGrid(PARTICLE_IGNORE); // 7)
 
-			text(". . . los-daddeln", "sans-serif", 1, Color.WHITE) // <8>
-				.parent(pacman).pos(-1.5, 0) // <9>
-				.align(ALIGN_RIGHT, VALIGN_CENTER); // <10>
+			text(". . . los-daddeln", "sans-serif", 1, Color.WHITE) // 8)
+				.parent(pacman).pos(-1.5, 0) // 9)
+				.align(ALIGN_RIGHT, VALIGN_CENTER); // 10)
 
 			key(KeyCode.ESCAPE, keyCode -> exit());
 		});
