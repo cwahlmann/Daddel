@@ -57,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    compile 'de.dreierschach.daddel:daddel-api:0.5'
+    compile 'de.dreierschach.daddel:daddel-api:0.6'
 }
 ----
 
@@ -162,7 +162,7 @@ import de.dreierschach.daddel.gfx.sprite.Particle;
 
 			key(KeyCode.ESCAPE, keyCode -> exit());
 		});
-...
+...	
 ----
 
 <1> Pacman ist ein Partikel, d.i. ein Sprite, der automatisch animiert wird.
