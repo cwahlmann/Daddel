@@ -1,3 +1,5 @@
+:icons: font
+
 = Daddel - eine JavaFX-basierte 2D-Spieleengine
 
 == Am Anfang ist der Berg immer höher als man nachher denkt...
@@ -55,7 +57,7 @@ repositories {
 }
 
 dependencies {
-    compile 'de.dreierschach.daddel:daddel-api:0.5'
+    compile 'de.dreierschach.daddel:daddel-api:0.6'
 }
 ----
 
@@ -75,7 +77,7 @@ dependencies {
 <dependency>
     <groupId>de.dreierschach.daddel</groupId>
     <artifactId>daddel-api</artifactId>
-    <version>0.5</version>
+    <version>0.6</version>
     <type>pom</type>
 </dependency>
 ----
@@ -104,15 +106,15 @@ public class Losdaddeln extends Daddel {
 
 	@Override
 	public void initGame() {
-		grid(-10, 10, -5, 5); // <1>
-		background(Color.rgb(0, 64, 255)); // <2>
-		toLevel(() -> { // <3>
-			sprite(1, 4, Gfx.ROCKET); // <4>
-			key(KeyCode.ESCAPE, keyCode -> exit()); // <5>
+		grid(-10, 10, -5, 5); // 1)
+		background(Color.rgb(0, 64, 255)); // 2)
+		toLevel(() -> { // 3)
+			sprite(1, 4, Gfx.ROCKET); // 4)
+			key(KeyCode.ESCAPE, keyCode -> exit()); // 5)
 		});
 	}
 
-	public static void main(String[] args) { // <6>
+	public static void main(String[] args) { // 6)
 		launch(args);
 	}
 }
@@ -146,21 +148,21 @@ import de.dreierschach.daddel.gfx.sprite.Particle;
 		toLevel(() -> {
 			sprite(1, 4, Gfx.ROCKET);
 
-			Particle pacman = // <1>
-				particle(1, 8000, 1.5, Gfx.PAC_PACMAN_L0, Gfx.PAC_PACMAN_L1, Gfx.PAC_PACMAN_L2, Gfx.PAC_PACMAN_L3) // <2>
-				.pos(-11, 3) // <3>
-				.rotation(180) // <4>
-				.speed(4) // <5>
-				.endOfLife(PARTICLE_RESTART) // <6>
-				.outsideGrid(PARTICLE_IGNORE); // <7>
+			Particle pacman = // 1)
+				particle(1, 8000, 1.5, Gfx.PAC_PACMAN_L0, Gfx.PAC_PACMAN_L1, Gfx.PAC_PACMAN_L2, Gfx.PAC_PACMAN_L3) // 2)
+				.pos(-11, 3) // 3)
+				.rotation(180) // 4)
+				.speed(4) // 5)
+				.endOfLife(PARTICLE_RESTART) // 6)
+				.outsideGrid(PARTICLE_IGNORE); // 7)
 
-			text(". . . los-daddeln", "sans-serif", 1, Color.WHITE) // <8>
-				.parent(pacman).pos(-1.5, 0) // <9>
-				.align(ALIGN_RIGHT, VALIGN_CENTER); // <10>
+			text(". . . los-daddeln", "sans-serif", 1, Color.WHITE) // 8)
+				.parent(pacman).pos(-1.5, 0) // 9)
+				.align(ALIGN_RIGHT, VALIGN_CENTER); // 10)
 
 			key(KeyCode.ESCAPE, keyCode -> exit());
 		});
-...
+...	
 ----
 
 <1> Pacman ist ein Partikel, d.i. ein Sprite, der automatisch animiert wird.

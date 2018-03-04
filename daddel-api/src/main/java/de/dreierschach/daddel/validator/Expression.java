@@ -24,6 +24,8 @@ public class Expression<T> {
 	 * 
 	 * @param clazz
 	 *            gibt den Typ der zu prüfenden Werte an
+	 * @param <T>
+	 *            Typ der zu prüfenden Werte
 	 * @return die neue Instanz
 	 */
 	public static <T> Expression<T> instance(Class<T> clazz) {
@@ -31,7 +33,7 @@ public class Expression<T> {
 	}
 
 	/**
-	 * legt die initiale Validator-Funktion fest, z.B. x -> x == 10
+	 * legt die initiale Validator-Funktion fest, z.B. x == 10
 	 * 
 	 * @param validator
 	 *            die initiale Validator-Funktion
@@ -43,8 +45,8 @@ public class Expression<T> {
 	}
 
 	/**
-	 * legt die initiale Validator-Funktion als Negation fest, z.B. x -> x == 10
-	 * ergibt dann x -> x != 10
+	 * legt die initiale Validator-Funktion als Negation fest, z.B. x == 10 ergibt
+	 * dann x != 10
 	 * 
 	 * @param validator
 	 *            die initiale Validator-Funktion

@@ -44,6 +44,8 @@ public class TextParticle extends TextSprite {
 	 *            Lebensdauer des Patikel in ms
 	 * @param text
 	 *            der anzuzeigende Text
+	 * @param layer
+	 *            Die Ebene, auf der der TextPartikel angezeigt wird
 	 */
 	public TextParticle(Transformation transformation, long lifespan, String text, int layer) {
 		super(transformation, text, layer);

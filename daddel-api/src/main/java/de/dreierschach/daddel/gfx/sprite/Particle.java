@@ -40,6 +40,8 @@ public class Particle extends ImageSprite {
 	 *            Bildschirmpixel
 	 * @param typ
 	 *            Benutzerdefinierter Typ, Integer
+	 * @param layer
+	 *            Die Ebene, auf der der Partikel angezeigt wird
 	 * @param groesse
 	 *            maximale Breite und Höhe in Spielraster-Punkten
 	 * @param lifespan

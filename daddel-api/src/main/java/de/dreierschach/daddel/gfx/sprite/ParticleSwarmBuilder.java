@@ -69,8 +69,10 @@ public class ParticleSwarmBuilder {
 	 *            Bildschirmpixel
 	 * @param typ
 	 *            Benutzerdefinierter Typ, Integer
+	 * @param layer
+	 *            Die Ebene, auf der die Partikel angezeigt wird
 	 * @param images
-	 *            Die Pfade der Bilder des Partikels
+	 *            Die Pfade der Bilder der Partikels
 	 * @param createSwarmHandler
 	 *            Dieser wird aufgerufen, wenn der Partikelschwarm erzeugt wird, und
 	 *            bekommt diesen als Parameter mitgegeben

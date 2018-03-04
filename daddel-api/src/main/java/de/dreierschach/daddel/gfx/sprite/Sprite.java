@@ -55,6 +55,8 @@ public abstract class Sprite implements Comparable<Sprite> {
 	 *            Bildschirmpixel
 	 * @param type
 	 *            Benutzerdefinierter Typ, Integer
+	 * @param layer
+	 *            Die Ebene, auf der der Sprite angezeigt wird
 	 * @param r
 	 *            Radius des Sprite, wird zur Kollisionserkennung verwendet
 	 */
@@ -73,6 +75,8 @@ public abstract class Sprite implements Comparable<Sprite> {
 	 *            Bildschirmpixel
 	 * @param type
 	 *            Benutzerdefinierter Typ, Integer
+	 * @param layer
+	 *            Die Ebene, auf der der Sprite angezeigt wird
 	 */
 	public Sprite(Transformation transformation, int type, int layer) {
 		this(transformation, type, layer, 1);

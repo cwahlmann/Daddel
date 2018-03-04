@@ -17,7 +17,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Affine;
-import javafx.scene.transform.Rotate;
 
 /**
  * ein Sprite in Form eines Bildes; kann animiert sein
@@ -42,6 +41,8 @@ public class ImageSprite extends Sprite {
 	 *            Bildschirmpixel
 	 * @param type
 	 *            Benutzerdefinierter Typ, Integer
+	 * @param layer
+	 *            Die Ebene, auf der der Sprite angezeigt wird
 	 * @param maxSize
 	 *            maximale Breite und Höhe in Spielraster-Punkten
 	 * @param imagefiles
@@ -142,8 +143,12 @@ public class ImageSprite extends Sprite {
 
 	// -------------- interne Methoden --
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.Sprite#collision(de.dreierschach.daddel.listener.CollisionListener)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.Sprite#collision(de.dreierschach.daddel.
+	 * listener.CollisionListener)
 	 */
 	public ImageSprite collision(CollisionListener collisionListener) {
 		super.collision(collisionListener);
