@@ -1,3 +1,5 @@
+:icons: font
+
 = Daddel - eine JavaFX-basierte 2D-Spieleengine
 
 == Am Anfang ist der Berg immer höher als man nachher denkt...
@@ -91,7 +93,7 @@ image::screenshots/Losdaddeln_Raster.jpg[Losdaddeln_Raster,400,200]
 Das Programm dazu ist schnell erstellt.
 
 .Losdaddeln.java
-[source,java,linenums]
+[source,java]
 ----
 package de.dreierschach.tutorial;
 
