@@ -6,6 +6,7 @@ import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
+import de.dreierschach.daddel.model.TimelineItem;
 
 public class SpaceInvaderLevelBuilder {
 	private SpaceInvader invader;
@@ -16,7 +17,7 @@ public class SpaceInvaderLevelBuilder {
 
 	public void erzeugeLevel() {
 		invader.anzahlFeinde = 0;
-		switch ((invader.level()-1) % 4) {
+		switch ((invader.level() - 1) % 4) {
 		case 0:
 			erzeugeFeindeLevel1();
 			break;
@@ -45,18 +46,21 @@ public class SpaceInvaderLevelBuilder {
 	private void erzeugeFeindeLevel3() {
 		invader.erzeugeSaturn();
 		Sprite parent = invader.invisibleSprite(SpaceInvader.TYP_FLOTTE, 0.5).pos(1.5, 0).gameLoop(//
-				befehlskette(//
-						new Steuerbefehl(move(180, 1), 3000), new Steuerbefehl(move(270, 1), 1000),
-						new Steuerbefehl(move(0, 1), 3000), new Steuerbefehl(move(90, 1), 1000)));
-		erzeugeFlotte(new int[] { 4, 4, 4 }, parent, new Pos(-6, -4), befehlskette( //
-				new Steuerbefehl(doNothing, 10000), //
-				new Steuerbefehl(kreisen(10, 2000), 2000) //
-		));
-		erzeugeFlotte(new int[] { 4, 4, 4 }, parent, new Pos(6, -4), befehlskette( //
-				new Steuerbefehl(doNothing, 5000), //
-				new Steuerbefehl(kreisen(10, 2000), 2000), //
-				new Steuerbefehl(doNothing, 5000) //
-		));
+				invader.timeline()//
+						.with(move(180, 1), 3000) //
+						.with(move(270, 1), 1000) //
+						.with(move(0, 1), 3000) //
+						.with(move(90, 1), 1000) //
+						.cycle());
+		erzeugeFlotte(new int[] { 4, 4, 4 }, parent, new Pos(-6, -4), invader.timeline() //
+				.with(doNothing, 10000) //
+				.with(kreisen(10, 2000), 2000) //
+				.cycle());
+		erzeugeFlotte(new int[] { 4, 4, 4 }, parent, new Pos(6, -4), invader.timeline() //
+				.with(doNothing, 5000) //
+				.with(kreisen(10, 2000), 2000) //
+				.with(doNothing, 5000) //
+				.cycle());
 	}
 
 	private void erzeugeFeindeLevel4() {
@@ -84,7 +88,7 @@ public class SpaceInvaderLevelBuilder {
 				double x = (double) spalte - (double) (ufos[zeile] - 1) / 2d;
 				invader.sprite(SpaceInvader.TYP_FEIND, 2.5f, random.nextBoolean() ? Gfx.UFO_1 : Gfx.UFO_2)
 						.pos(x * 3f, y * 3f).parent(flotte).gameLoop((spr, ticks, deltatime) -> {
-							if (Math.random() < 0.0005 * (double)invader.level()) {
+							if (Math.random() < 0.0005 * (double) invader.level()) {
 								invader.gegnerischenLaserAbfeuern(spr.effektivePos().add(new Pos(0, 1.5f)));
 							}
 						}).collision((me, other) -> {
@@ -116,36 +120,6 @@ public class SpaceInvaderLevelBuilder {
 			double s = invader.strecke(delta, speed);
 			me.direction(direction);
 			me.move(s);
-		};
-	}
-
-	class Steuerbefehl {
-		SpriteGameLoop spriteGameLoop;
-		long duration;
-
-		public Steuerbefehl(SpriteGameLoop spriteGameLoop, long duration) {
-			this.spriteGameLoop = spriteGameLoop;
-			this.duration = duration;
-		}
-
-	}
-
-	private SpriteGameLoop befehlskette(Steuerbefehl... steuerbefehle) {
-		return new SpriteGameLoop() {
-			private long offset = 0;
-			private int befehlId = 0;
-
-			@Override
-			public void run(Sprite sprite, long ticks, long deltatime) {
-				if (ticks - offset >= steuerbefehle[befehlId].duration) {
-					befehlId++;
-					if (befehlId >= steuerbefehle.length) {
-						befehlId = 0;
-					}
-					offset = ticks;
-				}
-				steuerbefehle[befehlId].spriteGameLoop.run(sprite, ticks - offset, deltatime);
-			}
 		};
 	}
 }
