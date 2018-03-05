@@ -28,6 +28,7 @@ import de.dreierschach.daddel.model.ParticleStrategy;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
+import de.dreierschach.daddel.model.Timeline;
 import de.dreierschach.daddel.model.Timer;
 import de.dreierschach.daddel.model.Transformation;
 import de.dreierschach.daddel.setup.Setup;
@@ -1037,10 +1038,11 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
-	 * Erzeugt eine Integer-Expression, mit dem ein Validator für Integer-Werte zusammengesetzt werden
-	 * kann. create() gibt dann den Validator zurück.
+	 * Erzeugt eine Integer-Expression, mit dem ein Validator für Integer-Werte
+	 * zusammengesetzt werden kann. create() gibt dann den Validator zurück.
 	 * 
 	 * der Typ des Ausdrucks
+	 * 
 	 * @return der ValidatorBuilder, mit dem weitere Bedingungen hinzugefügt werden
 	 */
 	public Expression<Integer> intExpression() {
@@ -1167,6 +1169,18 @@ public abstract class Daddel extends Application {
 		// nichts zu tun
 	}
 
+	/**
+	 * Eine Timeline ist Spielschleife für Sprites, die wiederum aus mehreren
+	 * Sprite-Spielschleifen besteht. Letztere sind nacheinander für eine jeweils
+	 * angegebene Dauer aktiv. Die Timeline kann einmalig laufen oder immer wieder
+	 * von vorne bis hinten wiederholt werden.
+	 * 
+	 * @return die Timeline
+	 */
+	public Timeline timeline() {
+		return new Timeline();
+	}
+
 	// Abspann
 
 	public Roll roll() {
@@ -1217,7 +1231,7 @@ public abstract class Daddel extends Application {
 	// screen loop
 	private void basicScreenLoop(long gesamtZeit, long deltaZeit) {
 		runSprites(deltaZeit);
-//		runTileMap(deltaZeit);
+		// runTileMap(deltaZeit);
 		runRoll(deltaZeit);
 		runTimers(deltaZeit);
 	}
@@ -1232,7 +1246,7 @@ public abstract class Daddel extends Application {
 
 	private void basicGameLoop(long gesamtZeit, long deltaZeit) {
 		runSprites(deltaZeit);
-//		runTileMap(deltaZeit);
+		// runTileMap(deltaZeit);
 		runTimers(deltaZeit);
 		gameLoop(gesamtZeit, deltaZeit);
 		checkCollisions();
