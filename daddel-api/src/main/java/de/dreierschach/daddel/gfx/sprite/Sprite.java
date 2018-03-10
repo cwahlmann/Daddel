@@ -6,6 +6,7 @@ import java.util.List;
 
 import de.dreierschach.daddel.Screen.Debug;
 import de.dreierschach.daddel.listener.CollisionListener;
+import de.dreierschach.daddel.listener.SpriteMoveFinishedListener;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
 import de.dreierschach.daddel.model.SpriteGameLoop;
@@ -47,6 +48,15 @@ public abstract class Sprite implements Comparable<Sprite> {
 	private int layer = 0;
 	private boolean layerChanged = false;
 
+	private boolean moving = false;
+	private boolean startMoving = false;
+	private Pos moveStartPos = new Pos(0, 0);
+	private Pos moveEndPos = new Pos(0, 0);
+	private long moveStartTime;
+	private long moveDeltaTime;
+	private SpriteMoveFinishedListener moveFinishedListener = me -> {
+	};
+
 	/**
 	 * Sprite mit vorgegebenen Radius erzeigen
 	 * 
@@ -65,6 +75,7 @@ public abstract class Sprite implements Comparable<Sprite> {
 		this.type = type;
 		this.transformation = transformation;
 		this.layer = layer;
+		this.gameLoops.add(movingGameLoop);
 	}
 
 	/**
@@ -295,6 +306,18 @@ public abstract class Sprite implements Comparable<Sprite> {
 	public void kill() {
 		this.alive = false;
 	}
+	
+	public void moveTo(Pos endPos, double speed, SpriteMoveFinishedListener moveFinishedListener) {
+		moveTo(endPos, (long)(1000d / speed), moveFinishedListener);
+	}
+	
+	public void moveTo(Pos endPos, long deltaTime, SpriteMoveFinishedListener moveFinishedListener) {
+		this.moveStartPos = this.pos;
+		this.moveEndPos = endPos;
+		this.moveDeltaTime = deltaTime;
+		this.moveFinishedListener = moveFinishedListener;
+		this.startMoving = true;
+	}
 
 	/**
 	 * Fügt die angegebenen Aktionen zur Spielschleife des Sprite hinzu
@@ -423,13 +446,13 @@ public abstract class Sprite implements Comparable<Sprite> {
 		this.layerChanged = true;
 		return this;
 	}
-	
+
 	// ------------- interne methoden
 
 	public boolean layerChanged() {
 		return layerChanged;
 	}
-	
+
 	public void clrLayerChanged() {
 		this.layerChanged = false;
 	}
@@ -459,4 +482,24 @@ public abstract class Sprite implements Comparable<Sprite> {
 
 	public abstract void draw(GraphicsContext g);
 
+	private SpriteGameLoop movingGameLoop = (sprite, total, delta) -> {
+		if (startMoving) {
+			moveStartTime = total;
+			startMoving = false;
+			moving = true;
+		}
+		if (moving) {
+			long endTime = moveStartTime + moveDeltaTime;
+			if (total >= endTime) {
+				moving = false;
+				this.pos = moveEndPos;
+				moveFinishedListener.onDestinationReached(this);
+			} else {
+				double d = ((double) (total - moveStartTime)) / (double) (endTime - moveStartTime);
+				Pos p = new Pos(d * (moveEndPos.x() - moveStartPos.x()) + moveStartPos.x(),
+						d * (moveEndPos.y() - moveStartPos.y()) + moveStartPos.y());
+				sprite.pos(p);
+			}
+		}
+	};
 }

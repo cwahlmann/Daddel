@@ -6,7 +6,7 @@ import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.tilemap.Entity;
 import de.dreierschach.daddel.gfx.tilemap.Entity.Dir;
-import de.dreierschach.daddel.gfx.tilemap.MoveFinishedListener;
+import de.dreierschach.daddel.listener.EntityMoveFinishedListener;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.model.MapPos;
 import de.dreierschach.daddel.model.Pos;
@@ -314,7 +314,7 @@ public class Pacman extends Daddel {
 		}
 	}
 
-	private final MoveFinishedListener ghostMoveFinischedListener = (ghost, map) -> {
+	private final EntityMoveFinishedListener ghostMoveFinischedListener = (ghost, map) -> {
 		Dir dir = ghost.lastMove();
 		if (ghost.checkType(Dir.UP, type -> type == TYPE_GATE)) {
 			dir = Dir.UP;
