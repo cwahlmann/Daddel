@@ -3,6 +3,7 @@ package de.dreierschach.daddel.gfx.tilemap;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.listener.CollisionListener;
+import de.dreierschach.daddel.listener.EntityMoveFinishedListener;
 import de.dreierschach.daddel.model.MapPos;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
@@ -100,7 +101,7 @@ public class Entity extends ImageSprite {
 	}
 
 	private TileMap tileMap;
-	private MoveFinishedListener moveFinishedListener = (me, tilemap) -> {
+	private EntityMoveFinishedListener moveFinishedListener = (me, tilemap) -> {
 	};
 	private MapPos mapPos = new MapPos(0, 0, 0);
 	private MapPos destMapPos = new MapPos(0, 0, 0);
@@ -444,7 +445,7 @@ public class Entity extends ImageSprite {
 	 *            die Aktion
 	 * @return this
 	 */
-	public Entity onFinishMove(MoveFinishedListener moveFinishedListener) {
+	public Entity onFinishMove(EntityMoveFinishedListener moveFinishedListener) {
 		this.moveFinishedListener = moveFinishedListener;
 		this.moveFinishedListener.onDestinationReached(this, tileMap);
 		return this;
