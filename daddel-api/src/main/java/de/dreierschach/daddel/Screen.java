@@ -98,8 +98,10 @@ public class Screen {
 				elapsedTime.set(nano);
 			}
 			long delta = nano - elapsedTime.get();
+			elapsedTime.set(nano);
+			framesTotal.set(framesTotal.get() + 1);
+			elapsedTimeTotal.set(elapsedTimeTotal.get() + delta);
 			if (debug.info()) {
-				// double fps = 1000d / ((double)delta / 1000000d);
 				double fps = 1000000000d / ((double) delta);
 				if (fps < framerateMin) {
 					framerateMin = fps;
@@ -113,10 +115,7 @@ public class Screen {
 						framerateMax, fpsAvg)).color(foreground);
 			}
 			gameLoop.run(nano / 1000000, delta / 1000000);
-			elapsedTime.set(nano);
 			refresh();
-			framesTotal.set(framesTotal.get() + 1);
-			elapsedTimeTotal.set(elapsedTimeTotal.get() + delta);
 		}
 	};
 

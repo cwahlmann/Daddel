@@ -3,7 +3,7 @@ package de.dreierschach.daddel.gfx.tilemap;
 import de.dreierschach.daddel.gfx.sprite.ImageSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.listener.CollisionListener;
-import de.dreierschach.daddel.listener.EntityMoveFinishedListener;
+import de.dreierschach.daddel.listener.SpriteMoveFinishedListener;
 import de.dreierschach.daddel.model.MapPos;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.SpriteGameLoop;
@@ -101,16 +101,11 @@ public class Entity extends ImageSprite {
 	}
 
 	private TileMap tileMap;
-	private EntityMoveFinishedListener moveFinishedListener = (me, tilemap) -> {
+	private SpriteMoveFinishedListener moveFinishedListener = me -> {
 	};
 	private MapPos mapPos = new MapPos(0, 0, 0);
 	private MapPos destMapPos = new MapPos(0, 0, 0);
-	private long moveTimeDelta = 0;
-	private long moveStartTime = 0;
 	private double moveSpeed = 1f;
-	private boolean startMove = false;
-	private boolean neatlessMove = false;
-	private boolean moving = false;
 	private Dir lastMove = Dir.STOP;
 	private Animation animation;
 
@@ -130,38 +125,8 @@ public class Entity extends ImageSprite {
 	public Entity(Transformation transformation, TileMap tileMap, int type, double maxSize, String... imagefiles) {
 		super(transformation, type, 0, maxSize, imagefiles);
 		this.animation = new Animation();
-		gameLoop((me, total, deltatime) -> {
-
-			if (startMove) {
-				startMove = false;
-				moving = true;
-				if (neatlessMove) {
-					moveStartTime += moveTimeDelta;
-				} else {
-					moveStartTime = total;
-				}
-				moveTimeDelta = (long) (1000f / moveSpeed);
-			}
-			if (moving) {
-				if (total >= moveStartTime + moveTimeDelta) {
-					moving = false;
-					mapPos(destMapPos);
-					moveFinishedListener.onDestinationReached(this, tileMap);
-				} else {
-					Pos start = tileMap.toPos(mapPos.x(), mapPos.y());
-					Pos dest = tileMap.toPos(destMapPos.x(), destMapPos.y());
-					double d = ((double) (total - moveStartTime)) / (double) moveTimeDelta;
-					Pos p = new Pos(d * (dest.x() - start.x()) + start.x(), d * (dest.y() - start.y()) + start.y());
-					me.pos(p);
-				}
-			}
-			if (!moving) {
-				me.pos(tileMap.toPos(mapPos.x(), mapPos.y()));
-			}
-		}, animation);
+		gameLoop(animation);
 		this.tileMap = tileMap;
-//		tileMap.entity(this);
-//		parent(tileMap);
 	}
 
 	/**
@@ -346,7 +311,8 @@ public class Entity extends ImageSprite {
 	 */
 	public Entity move(Dir dir) {
 		destMapPos(mapPos.add(dir.p()));
-		startMove(lastMove != Dir.STOP);
+
+		moveTo(tileMap.toPos(destMapPos.x(), destMapPos.y()), moveSpeed(), moveFinishedListener);
 		this.lastMove = dir;
 		return this;
 	}
@@ -386,7 +352,7 @@ public class Entity extends ImageSprite {
 	 */
 	public Entity mapPos(MapPos mapPos) {
 		this.mapPos = mapPos;
-		// this.destMapPos = mapPos;
+		pos(tileMap.toPos(mapPos.x(), mapPos.y()));
 		return this;
 	}
 
@@ -406,20 +372,6 @@ public class Entity extends ImageSprite {
 	 */
 	public Entity destMapPos(MapPos destMapPos) {
 		this.destMapPos = destMapPos;
-		return this;
-	}
-
-	/**
-	 * Startet die Bewegung zur Zielposition
-	 * 
-	 * @param neatless
-	 *            true: Legt fest, ob das Timing der Bewegungen nahtlos an die
-	 *            vorherige anschließen soll
-	 * @return this
-	 */
-	public Entity startMove(boolean neatless) {
-		this.startMove = true;
-		this.neatlessMove = neatless;
 		return this;
 	}
 
@@ -445,9 +397,12 @@ public class Entity extends ImageSprite {
 	 *            die Aktion
 	 * @return this
 	 */
-	public Entity onFinishMove(EntityMoveFinishedListener moveFinishedListener) {
-		this.moveFinishedListener = moveFinishedListener;
-		this.moveFinishedListener.onDestinationReached(this, tileMap);
+	public Entity onFinishMove(SpriteMoveFinishedListener moveFinishedListener) {
+		this.moveFinishedListener = me -> {
+			mapPos(destMapPos);
+			moveFinishedListener.onDestinationReached(this);
+		};
+		moveFinishedListener.onDestinationReached(this);
 		return this;
 	}
 
@@ -460,7 +415,9 @@ public class Entity extends ImageSprite {
 
 	// -------------- override methods to return correct type --
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#actualImage(int)
 	 */
 	@Override
@@ -469,7 +426,9 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#alpha(double)
 	 */
 	@Override
@@ -478,8 +437,11 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#collisionListener(de.dreierschach.daddel.listener.CollisionListener)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#collisionListener(de.
+	 * dreierschach.daddel.listener.CollisionListener)
 	 */
 	@Override
 	public Entity collision(CollisionListener collisionListener) {
@@ -487,7 +449,9 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#rotation(double)
 	 */
 	@Override
@@ -496,7 +460,9 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#rotate(double)
 	 */
 	@Override
@@ -505,7 +471,9 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#direction(double)
 	 */
 	@Override
@@ -514,7 +482,9 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#r(double)
 	 */
 	@Override
@@ -523,7 +493,9 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#type(int)
 	 */
 	@Override
@@ -532,8 +504,12 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#gameLoop(de.dreierschach.daddel.model.SpriteGameLoop[])
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.ImageSprite#gameLoop(de.dreierschach.daddel
+	 * .model.SpriteGameLoop[])
 	 */
 	@Override
 	public Entity gameLoop(SpriteGameLoop... gameLoops) {
@@ -541,8 +517,12 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#parent(de.dreierschach.daddel.gfx.sprite.Sprite)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.ImageSprite#parent(de.dreierschach.daddel.
+	 * gfx.sprite.Sprite)
 	 */
 	@Override
 	public Entity parent(Sprite parent) {
@@ -550,8 +530,12 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
-	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(de.dreierschach.daddel.model.Pos)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * de.dreierschach.daddel.gfx.sprite.ImageSprite#move(de.dreierschach.daddel.
+	 * model.Pos)
 	 */
 	@Override
 	public Entity move(Pos direction) {
@@ -559,7 +543,9 @@ public class Entity extends ImageSprite {
 		return this;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see de.dreierschach.daddel.gfx.sprite.ImageSprite#move(double)
 	 */
 	@Override

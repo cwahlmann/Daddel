@@ -6,8 +6,8 @@ import de.dreierschach.daddel.Daddel;
 import de.dreierschach.daddel.gfx.Gfx;
 import de.dreierschach.daddel.gfx.tilemap.Entity;
 import de.dreierschach.daddel.gfx.tilemap.Entity.Dir;
-import de.dreierschach.daddel.listener.EntityMoveFinishedListener;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
+import de.dreierschach.daddel.listener.SpriteMoveFinishedListener;
 import de.dreierschach.daddel.model.MapPos;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.validator.Validator;
@@ -220,7 +220,7 @@ public class Pacman extends Daddel {
 				.mapPos(pacmanLevelPos).rotate(180).moveSpeed(PACMAN_SPEED).r(0.8);
 		pacman.animation().imageStart(0).imageEnd(0).speed(PACMAN_ANIMATION_SPEED).bounce(false);
 		map.focus(pacman);
-		pacman.onFinishMove((me, map) -> pacmanGo());
+		pacman.onFinishMove(me -> pacmanGo());
 
 		pacman.collision((me, other) -> {
 			if (other.type() != TYPE_GHOST) {
@@ -310,11 +310,12 @@ public class Pacman extends Daddel {
 			ghosts[i].animation().speed(GHOST_ANIMATION_SPEED);
 			// do first move
 			// TODO: automate
-			ghostMoveFinischedListener.onDestinationReached(ghosts[i], map);
+			ghostMoveFinischedListener.onDestinationReached(ghosts[i]);
 		}
 	}
 
-	private final EntityMoveFinishedListener ghostMoveFinischedListener = (ghost, map) -> {
+	private final SpriteMoveFinishedListener ghostMoveFinischedListener = me -> {
+		Entity ghost = (Entity) me; 
 		Dir dir = ghost.lastMove();
 		if (ghost.checkType(Dir.UP, type -> type == TYPE_GATE)) {
 			dir = Dir.UP;
