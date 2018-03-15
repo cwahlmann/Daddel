@@ -105,7 +105,7 @@ public class TutorialMondauto07BewegungMarsipolinchen extends Daddel {
 
 	private void erzeugeMarsipolinchen(MapPos pos) {
 		marsipolinchen = entity(MARSIPOLINCHEN_TYPE, 1.5, Gfx.MOON_MARSIPOLINCHEN).mapPos(pos).moveSpeed(4)
-				.onFinishMove((marsipolinchen, tilemap) -> bewegeMarsipolinchen(marsipolinchen));
+				.onFinishMove(marsipolinchen -> bewegeMarsipolinchen((Entity) marsipolinchen));
 	}
 
 	private void erzeugeMondauto(MapPos pos) {
@@ -113,19 +113,19 @@ public class TutorialMondauto07BewegungMarsipolinchen extends Daddel {
 				Gfx.MOON_MONDAUTO_L3, Gfx.MOON_MONDAUTO_R0, Gfx.MOON_MONDAUTO_R1, Gfx.MOON_MONDAUTO_R2,
 				Gfx.MOON_MONDAUTO_R3) //
 						.moveSpeed(5).mapPos(pos) //
-						.onFinishMove((mondauto, tilemap) -> bewegeMondauto(mondauto));
+						.onFinishMove(mondauto -> bewegeMondauto((Entity) mondauto));
 		mondauto.animation().imageStart(0).imageEnd(3).speed(2);
 	}
 
 	// Steuerung Marsipolinchen
-	
+
 	private void bewegeMarsipolinchen(Entity marsipolinchen) {
 		Dir richtung = sucheRichtung(marsipolinchen);
 		marsipolinchen.move(richtung);
 	}
 
 	// Steuerung Mondauto
-	
+
 	private void bewegeMondauto(Entity mondauto) {
 		Dir richtung = sucheRichtung(mondauto);
 		dreheMondauto(mondauto, richtung);

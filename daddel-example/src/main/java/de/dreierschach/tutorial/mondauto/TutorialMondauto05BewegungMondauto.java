@@ -112,7 +112,7 @@ public class TutorialMondauto05BewegungMondauto extends Daddel {
 				Gfx.MOON_MONDAUTO_L3, Gfx.MOON_MONDAUTO_R0, Gfx.MOON_MONDAUTO_R1, Gfx.MOON_MONDAUTO_R2,
 				Gfx.MOON_MONDAUTO_R3) //
 						.moveSpeed(5).mapPos(pos) //
-						.onFinishMove((mondauto, tilemap) -> bewegeMondauto(mondauto));
+						.onFinishMove(mondauto -> bewegeMondauto((Entity)mondauto));
 		mondauto.animation().imageStart(0).imageEnd(3).speed(2);
 	}
 
