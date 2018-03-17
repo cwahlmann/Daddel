@@ -40,7 +40,8 @@ project (':daddel-api') {
 	}
 		
 	javadoc {
-	    options.charSet= 'UTF-8'
+	    options.charSet = 'UTF-8'
+	    destinationDir = file('/../docs')
 	}
 	
 	task sourcesJar(type: Jar, dependsOn: classes) {
