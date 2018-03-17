@@ -114,4 +114,10 @@ public class Pos {
 		return new Scr((int) this.x, (int) this.y);
 	}
 
+	public double squareDistance(Pos other) {
+		double dx = this.x - other.x;
+		double dy = this.y - other.y;
+		return dx * dx + dy * dy;
+	}
+
 }

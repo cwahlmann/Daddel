@@ -26,7 +26,7 @@ import javafx.scene.transform.Rotate;
  */
 public abstract class Sprite implements Comparable<Sprite> {
 	public static final int NO_TYPE = -1;
-	public static final Sprite NONE = new Sprite(null, NO_TYPE, 0) {
+	public static final Sprite NONE = new Sprite(null, NO_TYPE, -99999) {
 		@Override
 		public void draw(GraphicsContext g) {
 		}
@@ -273,9 +273,8 @@ public abstract class Sprite implements Comparable<Sprite> {
 		if (!other.alive()) {
 			return false;
 		}
-		double dx = other.effektivePos().x() - this.effektivePos().x();
-		double dy = other.effektivePos().y() - this.effektivePos().y();
-		double dd = dx * dx + dy * dy;
+		
+		double dd = this.pos().squareDistance(other.pos());
 		double dr = other.r + this.r;
 		double ddr = dr * dr;
 		return dd < ddr;
