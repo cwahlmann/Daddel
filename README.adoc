@@ -2,6 +2,9 @@
 
 = Daddel - eine JavaFX-basierte 2D-Spieleengine
 
+* https://github.com/cwahlmann/Daddel/wiki/Daddel-API[Daddel-API]
+* https://cwahlmann.github.io/Daddel[JavaDoc]
+
 == Am Anfang ist der Berg immer höher als man nachher denkt...
 
 [.lead]
@@ -183,3 +186,4 @@ image::screenshots/Losdaddeln2.jpg[Losdaddeln2,400,225]
 == Willst du mehr wissen?
 
 Dann lies weiter bei https://github.com/cwahlmann/Daddel/wiki/Daddel-API[Daddel-API]
+und https://cwahlmann.github.io/Daddel[JavaDoc]
