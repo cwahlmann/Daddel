@@ -11,6 +11,7 @@ import de.dreierschach.daddel.gfx.text.TextSprite;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.listener.InputListener;
 import de.dreierschach.daddel.listener.KeyListener;
+import de.dreierschach.daddel.listener.MouseListener;
 import de.dreierschach.daddel.model.GameLoop;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
@@ -22,10 +23,12 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.VPos;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -51,13 +54,14 @@ public class Screen {
 	private boolean enableInput = false;
 	private int inputLaenge = 0;
 	private SortedSet<Sprite> sprites = new TreeSet<>();
-//	private SortedSet<TextSprite> texts = new TreeSet<>();
 	private TileMap tileMap = null;
 	private Color foreground = Color.WHITE;
 	private Color background = Color.BLACK;
 	private Transformation transformation;
 	private GameLoop gameLoop = (gesamtZeit, deltaZeit) -> {
 	};
+	private Sprite mouse = Sprite.NONE;
+	private boolean mouseVisible = false;
 
 	// debug
 
@@ -137,7 +141,9 @@ public class Screen {
 		pane = loader.load();
 		output.setWidth(screenWidth);
 		output.setHeight(screenHeight);
+	
 		output.setOnKeyTyped(keyEvent -> onOutputKeyTyped(keyEvent));
+				
 		output.setFocusTraversable(true);
 		GraphicsContext g = output.getGraphicsContext2D();
 		g.setFont(font);
@@ -370,7 +376,7 @@ public class Screen {
 	 */
 	public void addText(TextSprite text) {
 		this.sprites.add(text);
-//		this.texts.add(text);
+		// this.texts.add(text);
 	}
 
 	/**
@@ -382,19 +388,19 @@ public class Screen {
 	 */
 	public boolean deleteText(TextSprite text) {
 		if (!sprites.contains(text)) {
-//		if (!texts.contains(text)) {
+			// if (!texts.contains(text)) {
 			return false;
 		}
 		this.sprites.remove(text);
 		return true;
 	}
 
-//	/**
-//	 * @return einen Liste mit allen Text-Sprites
-//	 */
-//	public SortedSet<TextSprite> getTexts() {
-//		return texts;
-//	}
+	// /**
+	// * @return einen Liste mit allen Text-Sprites
+	// */
+	// public SortedSet<TextSprite> getTexts() {
+	// return texts;
+	// }
 
 	/**
 	 * Legt das anzuzeigende gekachelte Spielfeld fest; ist es null, wird kein
@@ -422,8 +428,20 @@ public class Screen {
 		return pane;
 	}
 
-	// private methoden
+	// Mouse
 
+	public void setMouse(Sprite mouse) {
+		this.mouse = mouse;
+	}
+
+	public Sprite getMouse() {
+		return mouse;
+	}
+	
+	public void setMouseVisible(boolean mouseVisible) {
+		this.mouseVisible = mouseVisible;
+	}
+	
 	private void refresh() {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -449,6 +467,11 @@ public class Screen {
 				if (debug.info()) {
 					g.save();
 					debugInfo.draw(g);
+					g.restore();
+				}
+				if (mouseVisible) {
+					g.save();
+					mouse.drawSprite(g);
 					g.restore();
 				}
 			}
