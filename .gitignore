@@ -9,6 +9,8 @@ bin
 .project
 .classpath
 .gradle
+config
+gfx_source
 
 # Compiled class file
 *.class

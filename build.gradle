@@ -1,16 +1,18 @@
-apply plugin: "java"
-apply plugin: "eclipse"
+plugins {
+    id "com.jfrog.bintray" version "1.7.3"
+}
 
-project(':engine') {	
-	
-	apply plugin: "java"
+project (':daddel-api') {	
+	apply plugin: 'java-library'
 	apply plugin: "eclipse"
-
+	apply plugin: 'maven-publish'
+	apply plugin: 'com.jfrog.bintray'
+	 
 	repositories {
 	    jcenter()
 		mavenCentral()
 	}
-
+	
 	dependencies {
 		compile 'log4j:log4j:1.2.17'
 		compile 'commons-lang:commons-lang:2.6'
@@ -18,23 +20,113 @@ project(':engine') {
 		
 		testCompile 'junit:junit:4.12'
 	}
+	
+	bintray {
+	    user = 'cwahlmann'
+		key = System.getenv('BINTRAY_KEY')
+	    pkg {
+	        repo = 'Daddel'
+	        name = 'daddel-api'
+	//        userOrg = 'de.dreierschach.daddel'
+	        licenses = ['LGPL-3.0']
+	        vcsUrl = 'https://github.com/cwahlmann/Daddel.git'
+	        publications = ['mavenJava']
+	        version {
+//		        name = $daddelVersion
+		        desc = 'alpha version'
+		        released  = new Date()
+	        }
+	    }
+	}
+		
+	javadoc {
+	    options.charSet= 'UTF-8'
+	}
+	
+	task sourcesJar(type: Jar, dependsOn: classes) {
+	    classifier = 'sources'
+	    from sourceSets.main.allSource
+	}
+		
+	task javadocJar(type: Jar, dependsOn: javadoc) {
+	    classifier = 'javadoc'
+	    from javadoc.destinationDir
+	}
+		
+	artifacts {
+	    archives sourcesJar
+	    archives javadocJar
+	}
+	
+	publishing {
+	    publications {
+	        mavenJava(MavenPublication) {
+	            from components.java
+	            artifact sourcesJar {
+	                classifier "sources"
+	            }
+				artifact javadocJar {
+				    classifier = 'javadoc'
+				}
+	            groupId 'de.dreierschach.daddel'
+	            artifactId 'daddel-api'
+//	            version $daddelVersion
+	        }
+	    }
+	}
 }
 
-project(':game') {	
-	
+project (':daddel-example') {
 	apply plugin: "java"
 	apply plugin: "eclipse"
-
+	
 	repositories {
 	    jcenter()
 		mavenCentral()
 	}
-
+	
+	javadoc {
+	    options.charSet= 'UTF-8'
+	}
+	
 	dependencies {
-		compile project(':engine')
+		compile project(':daddel-api')
 		compile 'log4j:log4j:1.2.17'
 		compile 'commons-lang:commons-lang:2.6'
 		
 		testCompile 'junit:junit:4.12'		
+	}
+	
+	task ('spaceinvader', dependsOn: ':daddel-api:build', type: Jar) {
+		group 'build'
+		description 'Creates a executable fat jat for SpaceInvader'
+	    manifest {
+	        attributes 'Main-Class': 'de.dreierschach.invader.SpaceInvader'
+	    }
+	    baseName = 'space-invader'
+	    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	    with jar
+	}
+
+	task ('pacman', dependsOn: ':daddel-api:build', type: Jar) {
+		group 'build'
+		description 'Creates a executable fat jat for Pacman'
+	    manifest {
+	        attributes 'Main-Class': 'de.dreierschach.pacman.Pacman'
+	    }
+	    baseName = 'pacman'
+	    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	    with jar
+	}
+
+	task ('losdaddeln2', dependsOn: ':daddel-api:build', type: Jar) {
+		group 'build'
+		description 'Creates a executable fat jat for Losdaddeln2'
+	    manifest {
+	        attributes 'Main-Class': 'de.dreierschach.tutorial.Losdaddeln2'
+	    }
+	    baseName = 'losdaddeln2'
+	    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+	    with jar
 	}
 }
