@@ -1,0 +1,13 @@
+de.dreierschach.daddel
+de.dreierschach.daddel.audio
+de.dreierschach.daddel.gfx
+de.dreierschach.daddel.gfx.menu
+de.dreierschach.daddel.gfx.roll
+de.dreierschach.daddel.gfx.sprite
+de.dreierschach.daddel.gfx.text
+de.dreierschach.daddel.gfx.tilemap
+de.dreierschach.daddel.listener
+de.dreierschach.daddel.model
+de.dreierschach.daddel.setup
+de.dreierschach.daddel.util
+de.dreierschach.daddel.validator
