@@ -1,5 +1,7 @@
 package de.dreierschach.daddel.gfx;
 
+import de.dreierschach.daddel.model.Pos;
+
 public interface Gfx {
 	// Sprites
 
@@ -19,6 +21,44 @@ public interface Gfx {
 
 	final static String[] EXPLOSION = { "gfx/invader/explosion-1.png", "gfx/invader/explosion-2.png",
 			"gfx/invader/explosion-3.png", "gfx/invader/explosion-4.png" };
+
+	// Mousepointer
+	
+	final static String MOUSE_CROSS1_CLASSIC = "gfx/mouse/mouse-cross1-classic.png";
+	final static String MOUSE_CROSS1_WHITE = "gfx/mouse/mouse-cross1-white.png";
+	final static String MOUSE_CROSS1_BLACK = "gfx/mouse/mouse-cross1-black.png";
+	final static String MOUSE_CROSS1_RED = "gfx/mouse/mouse-cross1-red.png";
+	final static String MOUSE_CROSS1_GREEN = "gfx/mouse/mouse-cross1-green.png";
+	final static String MOUSE_CROSS1_BLUE = "gfx/mouse/mouse-cross1-blue.png";
+	final static String MOUSE_CROSS1_YELLOW = "gfx/mouse/mouse-cross1-yellow.png";
+	final static Pos MOUSE_CROSS1_SPOT = new Pos(0,0);
+	
+	final static String MOUSE_CROSS2_CLASSIC = "gfx/mouse/mouse-cross2-classic.png";
+	final static String MOUSE_CROSS2_WHITE = "gfx/mouse/mouse-cross2-white.png";
+	final static String MOUSE_CROSS2_BLACK = "gfx/mouse/mouse-cross2-black.png";
+	final static String MOUSE_CROSS2_RED = "gfx/mouse/mouse-cross2-red.png";
+	final static String MOUSE_CROSS2_GREEN = "gfx/mouse/mouse-cross2-green.png";
+	final static String MOUSE_CROSS2_BLUE = "gfx/mouse/mouse-cross2-blue.png";
+	final static String MOUSE_CROSS2_YELLOW = "gfx/mouse/mouse-cross2-yellow.png";
+	final static Pos MOUSE_CROSS2_SPOT = new Pos(0,0);
+
+	final static String MOUSE_POINTER_CLASSIC = "gfx/mouse/mouse-pointer-classic.png";
+	final static String MOUSE_POINTER_WHITE = "gfx/mouse/mouse-pointer-white.png";
+	final static String MOUSE_POINTER_BLACK = "gfx/mouse/mouse-pointer-black.png";
+	final static String MOUSE_POINTER_RED = "gfx/mouse/mouse-pointer-red.png";
+	final static String MOUSE_POINTER_GREEN = "gfx/mouse/mouse-pointer-green.png";
+	final static String MOUSE_POINTER_BLUE = "gfx/mouse/mouse-pointer-blue.png";
+	final static String MOUSE_POINTER_YELLOW = "gfx/mouse/mouse-pointer-yellow.png";
+	final static Pos MOUSE_POINTER_SPOT = new Pos(-0.5, -0.5);
+
+	final static String MOUSE_HAND_CLASSIC = "gfx/mouse/mouse-hand-classic.png";
+	final static String MOUSE_HAND_WHITE = "gfx/mouse/mouse-hand-white.png";
+	final static String MOUSE_HAND_BLACK = "gfx/mouse/mouse-hand-black.png";
+	final static String MOUSE_HAND_RED = "gfx/mouse/mouse-hand-red.png";
+	final static String MOUSE_HAND_GREEN = "gfx/mouse/mouse-hand-green.png";
+	final static String MOUSE_HAND_BLUE = "gfx/mouse/mouse-hand-blue.png";
+	final static String MOUSE_HAND_YELLOW = "gfx/mouse/mouse-hand-yellow.png";
+	final static Pos MOUSE_HAND_SPOT = new Pos(-0.45, -0.45);
 
 	// Pacman
 

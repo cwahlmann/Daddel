@@ -32,7 +32,7 @@ public class ImageSprite extends Sprite {
 	private Pos size;
 	private int actualImage;
 	private double alpha = 1f;
-
+			
 	/**
 	 * Constructor
 	 * 
