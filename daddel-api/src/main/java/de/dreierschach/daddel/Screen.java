@@ -6,12 +6,12 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import de.dreierschach.daddel.gfx.sprite.InvisibleSprite;
 import de.dreierschach.daddel.gfx.sprite.Sprite;
 import de.dreierschach.daddel.gfx.text.TextSprite;
 import de.dreierschach.daddel.gfx.tilemap.TileMap;
 import de.dreierschach.daddel.listener.InputListener;
 import de.dreierschach.daddel.listener.KeyListener;
-import de.dreierschach.daddel.listener.MouseListener;
 import de.dreierschach.daddel.model.GameLoop;
 import de.dreierschach.daddel.model.Pos;
 import de.dreierschach.daddel.model.Scr;
@@ -23,12 +23,10 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.VPos;
-import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -61,6 +59,7 @@ public class Screen {
 	private GameLoop gameLoop = (gesamtZeit, deltaZeit) -> {
 	};
 	private Sprite mouse = Sprite.NONE;
+	private Sprite mouseParent = new InvisibleSprite(transformation, 0, 0, 1).pos(0, 0);
 	private boolean mouseVisible = false;
 
 	// debug
@@ -141,9 +140,9 @@ public class Screen {
 		pane = loader.load();
 		output.setWidth(screenWidth);
 		output.setHeight(screenHeight);
-	
+
 		output.setOnKeyTyped(keyEvent -> onOutputKeyTyped(keyEvent));
-				
+
 		output.setFocusTraversable(true);
 		GraphicsContext g = output.getGraphicsContext2D();
 		g.setFont(font);
@@ -431,17 +430,21 @@ public class Screen {
 	// Mouse
 
 	public void setMouse(Sprite mouse) {
-		this.mouse = mouse;
+		this.mouse = mouse.parent(mouseParent);
 	}
 
 	public Sprite getMouse() {
 		return mouse;
 	}
+
+	public void setMouseSpot(Pos pos) {
+		this.mouseParent.pos(pos.mul(-1));		
+	}
 	
 	public void setMouseVisible(boolean mouseVisible) {
 		this.mouseVisible = mouseVisible;
 	}
-	
+
 	private void refresh() {
 		Platform.runLater(new Runnable() {
 			@Override
