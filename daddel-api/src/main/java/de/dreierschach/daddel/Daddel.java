@@ -99,6 +99,12 @@ public abstract class Daddel extends Application {
 	};
 	private MouseListener mouseMiddleReleasedListener = pos -> {
 	};
+	private MouseListener mouseLeftDraggedListener = pos -> {
+	};
+	private MouseListener mouseMiddleDraggedListener = pos -> {
+	};
+	private MouseListener mouseRightDraggedListener = pos -> {
+	};
 
 	public final static String INI_SETUP_FILE = "setup-file";
 	public final static String INI_WIDTH = "width";
@@ -1260,17 +1266,51 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
+	 * Legt das aktuelle anzuzeigende Mausbild fest
+	 * 
+	 * @param image
+	 *            der Index des Bilds
+	 * @return this
+	 */
+	public Daddel mouseImage(int image) {
+		if (screen.getMouse() != Sprite.NONE) {
+			((ImageSprite) screen.getMouse()).actualImage(image);
+		}
+		return this;
+	}
+
+	/**
 	 * Bestimmt das Aussehen des Mauszeigers
 	 * 
 	 * @param groesse
 	 *            die Größe in Spielraster-Punkten
-	 * @param bild
-	 *            das Bild des Mauszeigers
+	 * @param bilder
+	 *            die Bilder des Mauszeigers
 	 * @return this
 	 */
-	public Daddel mouse(double groesse, String bild) {
-		ImageSprite mouse = new ImageSprite(transformation, 0, 0, groesse, bild);
+	public Daddel mouse(double groesse, String... bilder) {
+		return mouse(groesse, new Pos(0, 0), bilder);
+	}
+
+	/**
+	 * /** Bestimmt das Aussehen des Mauszeigers
+	 * 
+	 * @param groesse
+	 *            die Größe in Spielraster-Punkten
+	 * @param mouseSpot
+	 *            der Aktionspunkt des Mauszeigers (-0.5, 0.5) ist links oben, (0.5,
+	 *            0.5) ist rechts unten, (0,0) die Mitte
+	 * @param bilder
+	 *            die Bilder des Mauszeigers
+	 * @return this
+	 */
+	public Daddel mouse(double groesse, Pos mouseSpot, String... bilder) {
+		ImageSprite mouse = new ImageSprite(transformation, 0, 0, groesse, bilder);
+		if (screen.getMouse() != null) {
+			mouse.pos(screen.getMouse().pos());
+		}
 		screen.setMouse(mouse);
+		screen.setMouseSpot(mouseSpot.mul(groesse));
 		return this;
 	}
 
@@ -1356,7 +1396,7 @@ public abstract class Daddel extends Application {
 	 *            die auszuführende Aktion
 	 * @return this
 	 */
-	public Daddel onLeftMousePressed(MouseListener mouseLeftPressedListener) {
+	public Daddel onMouseLeftPressed(MouseListener mouseLeftPressedListener) {
 		this.mouseLeftPressedListener = mouseLeftPressedListener;
 		return this;
 	}
@@ -1427,6 +1467,45 @@ public abstract class Daddel extends Application {
 	}
 
 	/**
+	 * legt die Aktion fest, die ausgeführt wird, wenn die Maus mit der linken
+	 * Maustaste gezogen wird
+	 * 
+	 * @param mouseLeftDraggedListener
+	 *            die auszuführende Aktion
+	 * @return this
+	 */
+	public Daddel onMouseLeftDragged(MouseListener mouseLeftDraggedListener) {
+		this.mouseLeftDraggedListener = mouseLeftDraggedListener;
+		return this;
+	}
+
+	/**
+	 * legt die Aktion fest, die ausgeführt wird, wenn die Maus mit der mittleren
+	 * Maustaste gezogen wird
+	 * 
+	 * @param mouseMiddleDraggedListener
+	 *            die auszuführende Aktion
+	 * @return this
+	 */
+	public Daddel onMouseMiddleDragged(MouseListener mouseMiddleDraggedListener) {
+		this.mouseMiddleDraggedListener = mouseMiddleDraggedListener;
+		return this;
+	}
+
+	/**
+	 * legt die Aktion fest, die ausgeführt wird, wenn die Maus mit der rechten
+	 * Maustaste gezogen wird
+	 * 
+	 * @param mouseRightDraggedListener
+	 *            die auszuführende Aktion
+	 * @return this
+	 */
+	public Daddel onMouseRightDragged(MouseListener mouseRightDraggedListener) {
+		this.mouseRightDraggedListener = mouseRightDraggedListener;
+		return this;
+	}
+
+	/**
 	 * Gibt den vordersten Sprite zurück, der mit der angegebenen Position
 	 * kollidiert. Kann z.B. genutzt werden, um bei einem Mausklick den angeklickten
 	 * Sprite herauszufinden.
@@ -1449,7 +1528,7 @@ public abstract class Daddel extends Application {
 
 	private void onMouseClicked(MouseEvent mouseEvent) {
 		if (mouseEnabled && mouseInside) {
-			Pos pos = setMousePosition(mouseEvent);
+			Pos pos = getMousePosition(mouseEvent);
 			switch (mouseEvent.getButton()) {
 			case PRIMARY:
 				mouseLeftClickedListener.onMouseEvent(pos);
@@ -1467,8 +1546,28 @@ public abstract class Daddel extends Application {
 
 	private void onMouseMoved(MouseEvent mouseEvent) {
 		if (mouseEnabled && mouseInside) {
-			Pos pos = setMousePosition(mouseEvent);
+			Pos pos = getMousePosition(mouseEvent);
+			screen.getMouse().pos(pos);
 			mouseMovedListener.onMouseEvent(pos);
+		}
+	}
+
+	private void onMouseDragged(MouseEvent mouseEvent) {
+		if (mouseEnabled && mouseInside) {
+			Pos pos = getMousePosition(mouseEvent);
+			screen.getMouse().pos(pos);
+			switch (mouseEvent.getButton()) {
+			case PRIMARY:
+				mouseLeftDraggedListener.onMouseEvent(pos);
+				break;
+			case SECONDARY:
+				mouseRightDraggedListener.onMouseEvent(pos);
+				break;
+			case MIDDLE:
+				mouseMiddleDraggedListener.onMouseEvent(pos);
+				break;
+			default:
+			}
 		}
 	}
 
@@ -1476,7 +1575,8 @@ public abstract class Daddel extends Application {
 		mouseInside = true;
 		screen.setMouseVisible(mouseEnabled);
 		if (mouseEnabled) {
-			Pos pos = setMousePosition(mouseEvent);
+			Pos pos = getMousePosition(mouseEvent);
+			screen.getMouse().pos(pos);
 			mouseEnteredListener.onMouseEvent(pos);
 		}
 	}
@@ -1485,14 +1585,14 @@ public abstract class Daddel extends Application {
 		mouseInside = false;
 		screen.setMouseVisible(false);
 		if (mouseEnabled) {
-			Pos pos = setMousePosition(mouseEvent);
+			Pos pos = getMousePosition(mouseEvent);
 			mouseExitedListener.onMouseEvent(pos);
 		}
 	}
 
 	private void onMousePressed(MouseEvent mouseEvent) {
 		if (mouseEnabled && mouseInside) {
-			Pos pos = setMousePosition(mouseEvent);
+			Pos pos = getMousePosition(mouseEvent);
 			switch (mouseEvent.getButton()) {
 			case PRIMARY:
 				mouseLeftPressedListener.onMouseEvent(pos);
@@ -1510,7 +1610,7 @@ public abstract class Daddel extends Application {
 
 	private void onMouseReleased(MouseEvent mouseEvent) {
 		if (mouseEnabled && mouseInside) {
-			Pos pos = setMousePosition(mouseEvent);
+			Pos pos = getMousePosition(mouseEvent);
 			switch (mouseEvent.getButton()) {
 			case PRIMARY:
 				mouseLeftReleasedListener.onMouseEvent(pos);
@@ -1526,10 +1626,9 @@ public abstract class Daddel extends Application {
 		}
 	}
 
-	private Pos setMousePosition(MouseEvent mouseEvent) {
+	private Pos getMousePosition(MouseEvent mouseEvent) {
 		Scr scr = new Scr((int) mouseEvent.getX(), (int) mouseEvent.getY());
 		Pos pos = transformation.t(scr);
-		screen.getMouse().pos(pos);
 		return pos;
 	}
 
@@ -1633,13 +1732,6 @@ public abstract class Daddel extends Application {
 		}
 	}
 
-	private void runTileMap(long delta) {
-		if (screen.getTileMap() == null) {
-			return;
-		}
-		screen.getTileMap().gameLoop(delta);
-	}
-
 	private void checkCollisions() {
 		List<Sprite> sprites = new ArrayList<>(screen.getSprites());
 		if (screen.getTileMap() != null) {
@@ -1718,6 +1810,7 @@ public abstract class Daddel extends Application {
 		scene.setOnMouseExited(mouseEvent -> onMouseExited(mouseEvent));
 		scene.setOnMousePressed(mouseEvent -> onMousePressed(mouseEvent));
 		scene.setOnMouseReleased(mouseEvent -> onMouseReleased(mouseEvent));
+		scene.setOnMouseDragged(mouseEvent -> onMouseDragged(mouseEvent));
 
 		stage.setTitle(getTitle());
 		stage.setScene(scene);
